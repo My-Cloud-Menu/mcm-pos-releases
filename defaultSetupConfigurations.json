@@ -1,0 +1,45 @@
+{
+  "masterPassword": "0000",
+  "devPassword": "0101",
+  "advanced": {
+    "password_length": 4,
+    "showErrors": false,
+    "siteId": "1020501",
+    "url": "http://172.17.0.1:3000",
+    "showTableSelector": true,
+    "employeesShouldSeeJustTheirTables": true
+  },
+  "general": {
+    "orderType": {
+      "available": true,
+      "id": "1",
+      "name": "Dine In",
+      "pos_id": "1"
+    }
+  },
+  "adminConfiguration": {
+    "id": "976",
+    "birthday": null,
+    "check_name": "ADMIN",
+    "email": null,
+    "first_name": "ADMIN",
+    "last_name": "",
+    "login": "0000",
+    "middle_name": null,
+    "payroll_id": null,
+    "phone": null,
+    "pos_id": null,
+    "start_date": null,
+    "role": "admin"
+  },
+  "ecrSetup": {
+    "terminal_id": "30DR3477",
+    "station_number": "1234",
+    "cashier_id": "4321",
+    "reference": "0",
+    "ipDev": "https://564c961b-1f3a-41a1-a37d-a2b0b620645b.mock.pstmn.io",
+    "ip": "127.0.0.1",
+    "port": "2030",
+    "api_key": "f6196298e20d41ada45de8dc4d1963c5"
+  }
+}
