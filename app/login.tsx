@@ -17,7 +17,7 @@ const LoginScreen = () => {
 
   const goBack = () => router.back();
   const onSubmit = () => {
-    router.replace("/menu");
+    router.push("/(menu)/menu");
     console.log("nice");
   };
 

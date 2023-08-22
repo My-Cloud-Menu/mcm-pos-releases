@@ -1,11 +1,11 @@
 import { ScrollView, StyleSheet } from "react-native";
 import React, { useRef, useState } from "react";
 import { Button, Colors, Text, View } from "react-native-ui-lib";
-import fonts from "../modules/common/theme/fonts";
+import fonts from "../../modules/common/theme/fonts";
 import { Entypo, FontAwesome, SimpleLineIcons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import { getCategoriesWithProducts } from "../modules/menu/MenuApi";
-import CategoriesScrolleable from "../modules/menu/components/CategoriesScrolleable";
+import { getCategoriesWithProducts } from "../../modules/menu/MenuApi";
+import CategoriesScrolleable from "../../modules/menu/components/CategoriesScrolleable";
 
 const MenuScreen = () => {
   const thereIsItemInCart = true;

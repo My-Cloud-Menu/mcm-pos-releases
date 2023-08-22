@@ -6,7 +6,7 @@ Colors.loadColors({
   primaryLight: "#ffc745",
   secondary: "#9fdb82",
   third: "#fff09c",
-  gray: "#50505044",
+  gray: "#757575",
   grayActive: "#2a2a2a",
   black: "#000",
   white: "#fff",
@@ -26,20 +26,55 @@ Assets.loadAssetsGroup("assets", {
 });
 
 ThemeManager.setComponentTheme("Text", (props, context) => {
-  return {
-    color: "#131313",
-  };
+
+
+
 });
 
 ThemeManager.setComponentTheme("Button", (props, context) => {
-  console.log("AQUIII", props.variant);
 
-  return styles.Button;
+  let themeStyles = styles.Button
+
+  if (props.variant == "iconButtonWithLabelCenter") {
+    themeStyles = {
+      ...themeStyles,
+      ...styles.iconButtonWithLabelCenter
+    }
+  }
+
+  if (props.variant == "iconButtonWithLabelCenter" && props.active) {
+    themeStyles = {
+      ...themeStyles,
+      ...styles.iconButtonWithLabelCenterActive
+    }
+  }
+
+  return { style: themeStyles };
 });
 
 const styles = StyleSheet.create({
   Button: {
     backgroundColor: Colors.primary,
     borderRadius: 10,
+    minWidth: 0
+
   },
+  iconButtonWithLabelCenter: {
+    backgroundColor: "transparent",
+    display: "flex",
+    flexDirection: "column",
+    borderRadius: 10,
+    paddingVertical: 11,
+    width: 65
+
+  },
+
+  iconButtonWithLabelCenterActive: {
+    backgroundColor: Colors.primary,
+
+    color: "#000",
+    display: "flex",
+    flexDirection: "column",
+    borderRadius: 10,
+  }
 });
