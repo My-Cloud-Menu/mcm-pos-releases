@@ -25,30 +25,31 @@ Assets.loadAssetsGroup("assets", {
   arrowBack: require("../../../assets/images/arrow-back.png"),
 });
 
-ThemeManager.setComponentTheme("Text", (props, context) => {
-
-
-
-});
+ThemeManager.setComponentTheme("Text", (props, context) => {});
 
 ThemeManager.setComponentTheme("Button", (props, context) => {
-
-  let themeStyles = styles.Button
+  let themeStyles = styles.Button;
 
   if (props.variant == "iconButtonWithLabelCenter") {
     themeStyles = {
       ...themeStyles,
-      ...styles.iconButtonWithLabelCenter
-    }
+      ...styles.iconButtonWithLabelCenter,
+    };
   }
 
   if (props.variant == "iconButtonWithLabelCenter" && props.active) {
     themeStyles = {
       ...themeStyles,
-      ...styles.iconButtonWithLabelCenterActive
-    }
+      ...styles.iconButtonWithLabelCenterActive,
+    };
   }
 
+  if (props.variant == "iconButtonWithLabelCenterOutline") {
+    themeStyles = {
+      ...themeStyles,
+      ...styles.iconButtonWithLabelCenterOutline,
+    };
+  }
   return { style: themeStyles };
 });
 
@@ -56,8 +57,7 @@ const styles = StyleSheet.create({
   Button: {
     backgroundColor: Colors.primary,
     borderRadius: 10,
-    minWidth: 0
-
+    minWidth: 0,
   },
   iconButtonWithLabelCenter: {
     backgroundColor: "transparent",
@@ -65,16 +65,24 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     borderRadius: 10,
     paddingVertical: 11,
-    width: 65
-
+    width: 65,
   },
 
   iconButtonWithLabelCenterActive: {
     backgroundColor: Colors.primary,
-
     color: "#000",
     display: "flex",
     flexDirection: "column",
     borderRadius: 10,
-  }
+  },
+  iconButtonWithLabelCenterOutline: {
+    backgroundColor: Colors.white,
+    display: "flex",
+    flexDirection: "column",
+    borderRadius: 10,
+    paddingVertical: 15,
+    minWidth: 65,
+    borderWidth: 0.05,
+    borderColor: "#E0E0E0",
+  },
 });
