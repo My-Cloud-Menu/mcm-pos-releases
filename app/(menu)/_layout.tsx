@@ -7,7 +7,11 @@ const MenuLayout = () => {
   return (
     <View style={styles.container}>
       <DefaultNavBar />
-      <Slot />
+      <View style={{ flex: 1 }}>
+        <Stack >
+          <Stack.Screen name="menu" options={{ headerShown: false, contentStyle: { backgroundColor: "#fff" } }} />
+        </Stack>
+      </View>
     </View>
   );
 };

@@ -27,7 +27,6 @@ Assets.loadAssetsGroup("assets", {
   arrowBack: require("../../../assets/images/arrow-back.png"),
 });
 
-ThemeManager.setComponentTheme("Text", (props, context) => { });
 
 ThemeManager.setComponentTheme("Button", (props, context) => {
   let themeStyles = styles.Button;
@@ -60,6 +59,15 @@ ThemeManager.setComponentTheme("Button", (props, context) => {
     };
   }
 
+  if (props.useMinSize) {
+    themeStyles = {
+      ...themeStyles,
+      ...styles.useMinSize,
+    };
+  }
+
+
+
   return { style: themeStyles };
 });
 
@@ -90,8 +98,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     borderRadius: 10,
-    paddingVertical: 15,
-    minWidth: 65,
+    paddingVertical: 10,
     borderWidth: 1,
     borderColor: "#EEEEEE",
   },
@@ -99,4 +106,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
     backgroundColor: Colors.rgba(Colors.primary, 0.06)
   },
+  useMinSize: {
+    paddingVertical: 4,
+    paddingHorizontal: 5,
+
+  }
 });

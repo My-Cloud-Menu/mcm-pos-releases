@@ -11,54 +11,64 @@ const initialData = [
     name: "All",
     image: {
       normal:
-        "https://i.pinimg.com/originals/c6/1c/a5/c61ca5bebd5fac190227f602ab0d6fe8.png",
+        "https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_clear_all_48px-512.png",
     },
   },
   {
     id: 2,
-    name: "Coffe", image: {
+    name: "Pizza", image: {
       normal:
-        "https://i.pinimg.com/originals/c6/1c/a5/c61ca5bebd5fac190227f602ab0d6fe8.png",
+        "https://cdn-icons-png.flaticon.com/512/6978/6978255.png",
     },
   },
   {
-    id: 3, name: "Pizza", image: {
+    id: 3, name: "Coffe", image: {
       normal:
-        "https://i.pinimg.com/originals/c6/1c/a5/c61ca5bebd5fac190227f602ab0d6fe8.png",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsfTXOmTwE1v2bwz-NqdZb0cRL8y6YDZgGfA&usqp=CAU",
     },
   },
   {
-    id: 5, name: "Pizza de Jamon", image: {
+    id: 5, name: "Hamburguer", image: {
       normal:
-        "https://i.pinimg.com/originals/c6/1c/a5/c61ca5bebd5fac190227f602ab0d6fe8.png",
+        "https://cdn-icons-png.flaticon.com/512/3075/3075977.png",
     },
   },
   {
-    id: 6, name: "All", image: {
+    id: 6, name: "Beer", image: {
       normal:
         "https://i.pinimg.com/originals/c6/1c/a5/c61ca5bebd5fac190227f602ab0d6fe8.png",
     },
   }, {
-    id: 6, name: "All", image: {
+    id: 2,
+    name: "Pizza", image: {
       normal:
-        "https://i.pinimg.com/originals/c6/1c/a5/c61ca5bebd5fac190227f602ab0d6fe8.png",
+        "https://cdn-icons-png.flaticon.com/512/6978/6978255.png",
     },
-  }, {
-    id: 6, name: "All", image: {
+  },
+  {
+    id: 10, name: "Coffe", image: {
       normal:
-        "https://i.pinimg.com/originals/c6/1c/a5/c61ca5bebd5fac190227f602ab0d6fe8.png",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsfTXOmTwE1v2bwz-NqdZb0cRL8y6YDZgGfA&usqp=CAU",
     },
-  }, {
-    id: 6, name: "All", image: {
+  },
+  {
+    id: 2,
+    name: "Pizza", image: {
       normal:
-        "https://i.pinimg.com/originals/c6/1c/a5/c61ca5bebd5fac190227f602ab0d6fe8.png",
+        "https://cdn-icons-png.flaticon.com/512/6978/6978255.png",
+    },
+  },
+  {
+    id: 13, name: "Coffe", image: {
+      normal:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsfTXOmTwE1v2bwz-NqdZb0cRL8y6YDZgGfA&usqp=CAU",
     },
   },
 ];
 
 const CategoriesCarousel = () => {
 
-  const { category: categorySelected } =
+  const { categoryId: categoryIdSelected } =
     useLocalSearchParams();
 
 
@@ -77,7 +87,7 @@ const CategoriesCarousel = () => {
         horizontal
         data={data}
         renderItem={({ item }) => {
-          let isNavItemActive = categorySelected == item.id;
+          let isNavItemActive = categoryIdSelected == item.id;
           return (
             <Button
               onPress={() => onPressCategory(item)}
@@ -111,8 +121,8 @@ export default CategoriesCarousel;
 const styles = StyleSheet.create({
   image: {
 
-    width: 40,
-    height: 30,
+    width: 36,
+    height: 36,
     borderRadius: 8,
   },
 });

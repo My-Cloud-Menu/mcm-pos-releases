@@ -64,6 +64,7 @@ const DefaultNavBar = () => {
           let isNavItemActive = navItem.pathname == activePathName;
           return (
             <Button
+
               key={`navitem-${idx}`}
               variant="iconButtonWithLabelCenter"
               active={isNavItemActive}

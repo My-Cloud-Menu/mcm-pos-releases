@@ -3,12 +3,14 @@ import React, { useState } from "react";
 import { Colors, Image, Text, View } from "react-native-ui-lib";
 import NativeNumericPad from "../modules/auth/components/NativeNumericPad";
 import fonts from "../modules/common/theme/fonts";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import Counter from "../modules/auth/components/Counter";
 
 const LoginScreen = () => {
   const { title = "Mozo", subTitle = "Los Especiales del dia" } =
     useLocalSearchParams<{ title: string; subTitle: string }>();
+
+  const navigation = useNavigation()
 
   const [isLoading, setIsLoading] = useState(false);
   const [userInput, setUserInput] = useState("");
@@ -17,8 +19,8 @@ const LoginScreen = () => {
 
   const goBack = () => router.back();
   const onSubmit = () => {
-    router.push("/(menu)/menu");
-    console.log("nice");
+    navigation.navigate("(menu)", { screen: "menu" })
+
   };
 
   return (
