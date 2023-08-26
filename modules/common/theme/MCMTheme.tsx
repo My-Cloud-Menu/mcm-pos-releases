@@ -1,8 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Assets, Colors, ThemeManager } from "react-native-ui-lib";
 
-
-
 Colors.loadColors({
   primary: "#002C51",
   primaryLight: "#ffc745",
@@ -18,7 +16,7 @@ Colors.loadColors({
   disable: "#f5f5f5",
   titleBackground: "#e0e0e0",
   subtitleBackground: "#abe690",
-  graySoft: "rgba(217, 217, 217, 0.3);",
+  graySoft: "#f9f8fb",
   yellow: "#FFCA28",
 });
 
@@ -27,8 +25,7 @@ Assets.loadAssetsGroup("assets", {
   arrowBack: require("../../../assets/images/arrow-back.png"),
 });
 
-
-ThemeManager.setComponentTheme("Button", (props, context) => {
+ThemeManager.setComponentForcedTheme("Button", (props, context) => {
   let themeStyles = styles.Button;
 
   if (props.variant == "iconButtonWithLabelCenter") {
@@ -66,9 +63,7 @@ ThemeManager.setComponentTheme("Button", (props, context) => {
     };
   }
 
-
-
-  return { style: themeStyles };
+  return { style: { ...themeStyles, ...props.style } };
 });
 
 const styles = StyleSheet.create({
@@ -104,11 +99,10 @@ const styles = StyleSheet.create({
   },
   iconButtonWithLabelCenterOutlineActive: {
     borderColor: Colors.primary,
-    backgroundColor: Colors.rgba(Colors.primary, 0.06)
+    backgroundColor: Colors.rgba(Colors.primary, 0.06),
   },
   useMinSize: {
     paddingVertical: 4,
     paddingHorizontal: 5,
-
-  }
+  },
 });

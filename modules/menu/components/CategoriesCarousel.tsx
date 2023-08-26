@@ -16,50 +16,60 @@ const initialData = [
   },
   {
     id: 2,
-    name: "Pizza", image: {
-      normal:
-        "https://cdn-icons-png.flaticon.com/512/6978/6978255.png",
+    name: "Pizza",
+    image: {
+      normal: "https://cdn-icons-png.flaticon.com/512/6978/6978255.png",
     },
   },
   {
-    id: 3, name: "Coffe", image: {
+    id: 3,
+    name: "Coffe",
+    image: {
       normal:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsfTXOmTwE1v2bwz-NqdZb0cRL8y6YDZgGfA&usqp=CAU",
     },
   },
   {
-    id: 5, name: "Hamburguer", image: {
-      normal:
-        "https://cdn-icons-png.flaticon.com/512/3075/3075977.png",
+    id: 5,
+    name: "Hamburguer",
+    image: {
+      normal: "https://cdn-icons-png.flaticon.com/512/3075/3075977.png",
     },
   },
   {
-    id: 6, name: "Beer", image: {
+    id: 8,
+    name: "Beer",
+    image: {
       normal:
         "https://i.pinimg.com/originals/c6/1c/a5/c61ca5bebd5fac190227f602ab0d6fe8.png",
     },
-  }, {
-    id: 2,
-    name: "Pizza", image: {
-      normal:
-        "https://cdn-icons-png.flaticon.com/512/6978/6978255.png",
+  },
+  {
+    id: 9,
+    name: "Pizza",
+    image: {
+      normal: "https://cdn-icons-png.flaticon.com/512/6978/6978255.png",
     },
   },
   {
-    id: 10, name: "Coffe", image: {
+    id: 10,
+    name: "Coffe",
+    image: {
       normal:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsfTXOmTwE1v2bwz-NqdZb0cRL8y6YDZgGfA&usqp=CAU",
     },
   },
   {
-    id: 2,
-    name: "Pizza", image: {
-      normal:
-        "https://cdn-icons-png.flaticon.com/512/6978/6978255.png",
+    id: 12,
+    name: "Pizza",
+    image: {
+      normal: "https://cdn-icons-png.flaticon.com/512/6978/6978255.png",
     },
   },
   {
-    id: 13, name: "Coffe", image: {
+    id: 13,
+    name: "Coffe",
+    image: {
       normal:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsfTXOmTwE1v2bwz-NqdZb0cRL8y6YDZgGfA&usqp=CAU",
     },
@@ -67,18 +77,15 @@ const initialData = [
 ];
 
 const CategoriesCarousel = () => {
-
-  const { categoryId: categoryIdSelected } =
-    useLocalSearchParams();
-
+  const { categoryId: categoryIdSelected } = useLocalSearchParams();
 
   // ESTE CODIGO NO ME GUSTA, VER SI HAY UNA MEJOR MANERA DE REFRESH
-  const [data, setData] = useState(initialData)
+  const [data, setData] = useState(initialData);
 
   const onPressCategory = (category: any) => {
-    router.setParams({ categoryId: category.id, categoryName: category.name })
-    setData([...initialData])
-  }
+    router.setParams({ categoryId: category.id, categoryName: category.name });
+    setData([...initialData]);
+  };
 
   return (
     <View>
@@ -96,7 +103,18 @@ const CategoriesCarousel = () => {
               marginV-2
               marginH-5
             >
-              {item?.image?.normal ? <Image source={{ uri: item.image.normal }} style={styles.image} /> : <Ionicons name="md-restaurant-outline" size={27} color={Colors.primary} />}
+              {item?.image?.normal ? (
+                <Image
+                  source={{ uri: item.image.normal }}
+                  style={styles.image}
+                />
+              ) : (
+                <Ionicons
+                  name="md-restaurant-outline"
+                  size={27}
+                  color={Colors.primary}
+                />
+              )}
               <View style={{ maxWidth: 150 }}>
                 <Text
                   center
@@ -120,7 +138,6 @@ export default CategoriesCarousel;
 
 const styles = StyleSheet.create({
   image: {
-
     width: 36,
     height: 36,
     borderRadius: 8,

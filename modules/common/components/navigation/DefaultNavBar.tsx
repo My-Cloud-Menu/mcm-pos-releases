@@ -7,12 +7,12 @@ import {
   FontAwesome5,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { router, usePathname } from "expo-router";
+import { router, useNavigation, usePathname } from "expo-router";
 
 const navItems = [
   {
     name: "Home",
-    pathname: "/home",
+    pathname: "/welcome",
     icon: (props = {}) => <FontAwesome size={25} name="home" {...props} />,
   },
   {
@@ -48,8 +48,9 @@ const navItems = [
 
 const DefaultNavBar = () => {
   const activePathName = usePathname();
+  const navigation = useNavigation();
 
-  const onLogoutPress = () => router.push("/index");
+  const onLogoutPress = () => navigation.dispatch({ type: "POP_TO_TOP" });
 
   return (
     <View style={styles.container}>
@@ -64,7 +65,7 @@ const DefaultNavBar = () => {
           let isNavItemActive = navItem.pathname == activePathName;
           return (
             <Button
-
+              onPress={() => router.push(navItem.pathname)}
               key={`navitem-${idx}`}
               variant="iconButtonWithLabelCenter"
               active={isNavItemActive}
@@ -107,6 +108,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 10,
+    backgroundColor: Colors.white,
+    borderTopEndRadius: 12,
+    borderBottomEndRadius: 12,
   },
   logo: {
     width: 40,

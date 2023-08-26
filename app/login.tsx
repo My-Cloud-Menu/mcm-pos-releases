@@ -10,7 +10,7 @@ const LoginScreen = () => {
   const { title = "Mozo", subTitle = "Los Especiales del dia" } =
     useLocalSearchParams<{ title: string; subTitle: string }>();
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const [isLoading, setIsLoading] = useState(false);
   const [userInput, setUserInput] = useState("");
@@ -19,8 +19,8 @@ const LoginScreen = () => {
 
   const goBack = () => router.back();
   const onSubmit = () => {
-    navigation.navigate("(menu)", { screen: "menu" })
-
+    router.push("/welcome");
+    // navigation.navigate("(menu)", { screen: "menu" })
   };
 
   return (
