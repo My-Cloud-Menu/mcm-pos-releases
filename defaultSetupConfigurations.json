@@ -4,7 +4,7 @@
   "advanced": {
     "password_length": 4,
     "showErrors": false,
-    "siteId": "1020501",
+    "siteId": "25102010",
     "url": "http://172.17.0.1:3000",
     "showTableSelector": true,
     "employeesShouldSeeJustTheirTables": true

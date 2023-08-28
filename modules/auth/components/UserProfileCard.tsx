@@ -2,21 +2,27 @@ import { StyleSheet } from "react-native";
 import React from "react";
 import { Colors, Image, Text, View } from "react-native-ui-lib";
 import { Feather } from "@expo/vector-icons";
+import useAuthStore from "../AuthStore";
 
-const imageUrl =
-  "https://foodie.sysco.com/wp-content/uploads/2019/07/MarcusMeansChefProfile_800x850.jpg";
+// const imageUrl =
+//   "https://foodie.sysco.com/wp-content/uploads/2019/07/MarcusMeansChefProfile_800x850.jpg";
 
 const UserProfileCard = () => {
+  const employeeLogged = useAuthStore((state) => state.employeeLogged);
+
   return (
     <View style={styles.container}>
       <View row centerV>
-        <Image source={{ uri: imageUrl }} style={styles.image} />
+        <Image
+          source={{ uri: employeeLogged?.avatar_url }}
+          style={styles.image}
+        />
 
         <View marginL-20 marginR-50>
           <Text text80L $textNeutralLight>
             I'm a Waiter
           </Text>
-          <Text text65>Carlos Santos</Text>
+          <Text text65>{employeeLogged.first_name}</Text>
         </View>
         <Feather name="bell" size={24} color={Colors.grayActive} />
       </View>

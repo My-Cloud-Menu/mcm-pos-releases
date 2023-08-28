@@ -5,6 +5,7 @@ import NativeNumericPad from "../modules/auth/components/NativeNumericPad";
 import fonts from "../modules/common/theme/fonts";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import Counter from "../modules/auth/components/Counter";
+import useAuthStore from "../modules/auth/AuthStore";
 
 const LoginScreen = () => {
   const { title = "Mozo", subTitle = "Los Especiales del dia" } =
@@ -14,11 +15,13 @@ const LoginScreen = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [userInput, setUserInput] = useState("");
-  const [passwordMaxLength, setPasswordMaxLength] = useState(3);
+  const [passwordMaxLength, setPasswordMaxLength] = useState(4);
   const [error, setError] = useState(null);
+  const authStore = useAuthStore((state) => state);
 
   const goBack = () => router.back();
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    await authStore.login(userInput);
     router.push("/welcome");
     // navigation.navigate("(menu)", { screen: "menu" })
   };
@@ -39,7 +42,7 @@ const LoginScreen = () => {
       </View>
       <Counter item={userInput} length={passwordMaxLength} />
       <View>
-        {isLoading && (
+        {authStore.isLoading && (
           <>
             <ActivityIndicator color={Colors.primary} size={45} />
             <Text style={{ textAlign: "center" }}>{/* {loadingStatus} */}</Text>

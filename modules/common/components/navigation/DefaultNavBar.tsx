@@ -8,6 +8,7 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import { router, useNavigation, usePathname } from "expo-router";
+import useAuthStore from "../../../auth/AuthStore";
 
 const navItems = [
   {
@@ -49,8 +50,12 @@ const navItems = [
 const DefaultNavBar = () => {
   const activePathName = usePathname();
   const navigation = useNavigation();
+  const authStore = useAuthStore((state) => state);
 
-  const onLogoutPress = () => navigation.dispatch({ type: "POP_TO_TOP" });
+  const onLogoutPress = async () => {
+    await authStore.logout();
+    navigation.dispatch({ type: "POP_TO_TOP" });
+  };
 
   return (
     <View style={styles.container}>
