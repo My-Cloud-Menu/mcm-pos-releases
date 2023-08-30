@@ -21,7 +21,7 @@ const LoginScreen = () => {
 
   const goBack = () => router.back();
   const onSubmit = async () => {
-    await authStore.login(userInput);
+    // await authStore.login(userInput);
     router.push("/welcome");
     // navigation.navigate("(menu)", { screen: "menu" })
   };
