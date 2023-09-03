@@ -11,7 +11,7 @@ import { useColorScheme } from "react-native";
 import "../modules/common/theme/MCMTheme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 export {
   // Catch any errors thrown by the Layout component.
