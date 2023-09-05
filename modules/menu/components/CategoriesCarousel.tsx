@@ -6,21 +6,21 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "../../common/axios";
 import { Category } from "../../../types";
 import { useGlobal } from "../../../stores/global";
+import { makeMcmRequest } from "../../common/PetitionsHelper";
 
 const CategoriesCarousel = () => {
-
-  const { data: { categories } } = useQuery<{ categories: Array<Category> }>({
-    queryKey: ['/categories'],
-    queryFn: () => axios.get('/categories?site_id=25102010&withoutPaginate=true'),
-    initialData: { categories: [] }
+  const {
+    data: { categories },
+  } = useQuery<{ categories: Array<Category> }>({
+    queryKey: ["/categories"],
+    queryFn: () => makeMcmRequest("front/categories"),
+    initialData: { categories: [] },
   });
-  const { selectedCategory, setSelectedCategory } = useGlobal()
-
+  const { selectedCategory, setSelectedCategory } = useGlobal();
 
   const onPressCategory = (category: any) => {
     setSelectedCategory(category);
   };
-
 
   return (
     <View style={{}}>
@@ -73,9 +73,10 @@ const CategoriesCarousel = () => {
           );
         }}
       /> */}
-      <View style={{
-        flexDirection: 'row'
-      }}
+      <View
+        style={{
+          flexDirection: "row",
+        }}
       >
         <Button
           onPress={() => onPressCategory(null)}
@@ -85,17 +86,14 @@ const CategoriesCarousel = () => {
           marginH-5
         >
           <Image
-            source={{ uri: 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_clear_all_48px-512.png' }}
+            source={{
+              uri: "https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_clear_all_48px-512.png",
+            }}
             style={styles.image}
           />
           <View style={{ maxWidth: 150 }}>
-            <Text
-              center
-              color={Colors.primary}
-              marginT-14
-              text80BL
-            >
-              {'All'}
+            <Text center color={Colors.primary} marginT-14 text80BL>
+              {"All"}
             </Text>
           </View>
         </Button>

@@ -8,7 +8,7 @@ const MenuLayout = () => {
   return (
     <View style={styles.container}>
       <DefaultNavBar />
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: Colors.graySoft }}>
         <Stack>
           <Stack.Screen
             name="menu"

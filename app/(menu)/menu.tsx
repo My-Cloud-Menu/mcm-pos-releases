@@ -18,7 +18,7 @@ const Menu = () => {
 
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
-      <View flex paddingT-25 paddingB-3 paddingL-20 paddingR-15>
+      <View flex paddingT-25 paddingB-15 paddingL-20 paddingR-15>
         <View flex>
           <CategoriesCarousel />
           <Text marginT-23 marginB-15 text50L>
@@ -73,31 +73,32 @@ const Menu = () => {
         <View flex>
           <UserProfileCard />
           <ScrollView style={{}}>
-
             {cartProducts.length ? (
               <>
                 <Text text60 marginT-10>
                   Bills
                 </Text>
 
-                <View
-                  style={{
-                  }}
-                >
+                <View style={{}}>
                   <FlashList
-                    contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
-                    ItemSeparatorComponent={() => <View style={{ height: 25 }} />}
+                    contentContainerStyle={{
+                      paddingTop: 20,
+                      paddingBottom: 50,
+                    }}
+                    ItemSeparatorComponent={() => (
+                      <View style={{ height: 25 }} />
+                    )}
                     data={cartProducts}
                     renderItem={({ item }) => {
                       return <CartItem product={item} />;
                     }}
                   />
                 </View>
-                <CartCharges /></>
+                <CartCharges />
+              </>
             ) : (
               <Text>No products Added</Text>
             )}
-
           </ScrollView>
         </View>
 

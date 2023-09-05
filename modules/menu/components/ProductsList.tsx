@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Product, ProductResponse } from "../../../types";
 import axios from "../../common/axios";
 import { useGlobal } from "../../../stores/global";
+import { makeMcmRequest } from "../../common/PetitionsHelper";
 
 const getColumsNumbers = () => {
   if (metrics.screenWidth > 1700) return 4;
@@ -17,12 +18,12 @@ const getColumsNumbers = () => {
 
 const ProductsList = () => {
   const { data: productResponse } = useQuery<ProductResponse>({
-    queryKey: ['/products'],
-    queryFn: () => axios.get('/products?site_id=25102010&withoutPaginate=true'),
+    queryKey: ["/products"],
+    queryFn: () => makeMcmRequest("front/products?withoutPaginate=true"),
     initialData: {
       products: [],
       count: 0,
-      lastEvaluatedKey: null
+      lastEvaluatedKey: null,
     },
   });
 
@@ -31,7 +32,9 @@ const ProductsList = () => {
 
   const onPressProduct = (product: Product) => {
     let newProductIds = productIdsSelected.includes(product.id)
-      ? productIdsSelected.filter((productId: number) => productId != product.id)
+      ? productIdsSelected.filter(
+          (productId: number) => productId != product.id
+        )
       : [...productIdsSelected, product.id];
 
     setProductIdsSelected(newProductIds);
@@ -39,11 +42,12 @@ const ProductsList = () => {
 
   const products = useMemo(() => {
     if (selectedCategory) {
-      return productResponse.products.filter(p => p.categories_id.some(c => c === selectedCategory?.id));
+      return productResponse.products.filter((p) =>
+        p.categories_id.some((c) => c === selectedCategory?.id)
+      );
     }
     return productResponse.products;
   }, [productResponse, selectedCategory]);
-
 
   return (
     <FlashList

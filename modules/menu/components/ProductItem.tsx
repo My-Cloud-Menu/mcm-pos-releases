@@ -8,8 +8,16 @@ import { useCart } from "../../../stores/cart";
 import { AntDesign } from "@expo/vector-icons";
 
 const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
-  const { addProduct, updateProduct, cartProducts, increaseProduct, decrementProduct } = useCart();
-  const quantity = cartProducts.find(cartProduct => cartProduct.product.id === product.id)?.quantity || 0;
+  const {
+    addProduct,
+    updateProduct,
+    cartProducts,
+    increaseProduct,
+    decrementProduct,
+  } = useCart();
+  const quantity =
+    cartProducts.find((cartProduct) => cartProduct.product.id === product.id)
+      ?.quantity || 0;
 
   return (
     <Pressable onPress={() => onPress && onPress()} style={styles.container}>
@@ -34,7 +42,6 @@ const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
             {product.price}
           </Text>
         </View>
-
       </View>
 
       {isActive && (
@@ -55,63 +62,67 @@ const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
         />
       )}
       {quantity ? (
-        <View
-          style={{
-            flexDirection: 'row',
-            gap: 5,
-            alignItems: 'center',
-            marginTop: 10
-          }}
-        >
-          <AntDesign
-            onPress={() => quantity > 0 && decrementProduct(product.id)}
-            name="minus"
-            size={20}
-            color="rgb(119,198,159)"
+        <View centerH>
+          <View
             style={{
-              padding: 5,
-              borderWidth: 1,
-              borderColor: 'rgb(119,198,159)',
-              borderRadius: 5,
-              textAlign: 'center'
+              flexDirection: "row",
+              gap: 5,
+              alignItems: "center",
+              marginTop: 10,
             }}
-          />
-          <Text
-            style={{
-              fontWeight: 'bold',
-              paddingHorizontal: (10),
-              paddingVertical: (2),
-              borderRadius: (1),
-              fontSize: (20)
-            }}
-          >{quantity}</Text>
-          <AntDesign
-            onPress={() => increaseProduct(product.id)}
-            name="plus"
-            size={(20)}
-            color="rgb(119,198,159)"
-            style={{
-              padding: 5,
-              color: 'white',
-              backgroundColor: `rgb(119,198,159)`,
-              borderRadius: 5,
-              textAlign: 'center'
-            }}
-          />
+          >
+            <AntDesign
+              onPress={() => quantity > 0 && decrementProduct(product.id)}
+              name="minus"
+              size={20}
+              color={Colors.primary}
+              style={{
+                paddingVertical: 5,
+                paddingHorizontal: 7,
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: Colors.primary,
+                textAlign: "center",
+              }}
+            />
+            <Text
+              style={{
+                fontWeight: "bold",
+                paddingHorizontal: 10,
+                paddingVertical: 2,
+                borderRadius: 1,
+                fontSize: 20,
+              }}
+            >
+              {quantity}
+            </Text>
+            <AntDesign
+              onPress={() => increaseProduct(product.id)}
+              name="plus"
+              size={20}
+              color={Colors.primary}
+              style={{
+                paddingVertical: 5,
+                paddingHorizontal: 7,
+                color: "white",
+                backgroundColor: Colors.primary,
+                borderRadius: 5,
+                textAlign: "center",
+              }}
+            />
+          </View>
         </View>
-      )
-        : (
-          <Button
-            onPress={() => addProduct({ product, quantity: 1 })}
-            marginT-20
-            marginH-5
-            size="medium"
-            label="Add to Billing"
-            fullWidth
-          />
-        )}
+      ) : (
+        <Button
+          onPress={() => addProduct({ product, quantity: 1 })}
+          marginT-20
+          marginH-5
+          size="medium"
+          label="Add to Billing"
+          fullWidth
+        />
+      )}
     </Pressable>
-
   );
 };
 

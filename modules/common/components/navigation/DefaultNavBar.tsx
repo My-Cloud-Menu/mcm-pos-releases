@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet } from "react-native";
 import React from "react";
 import { Button, Colors, Image, Text, View } from "react-native-ui-lib";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@expo/vector-icons";
 import { router, useNavigation, usePathname } from "expo-router";
 import useAuthStore from "../../../auth/AuthStore";
+import { showWarningAlert } from "../../AlertHelper";
 
 const navItems = [
   {
@@ -53,8 +54,13 @@ const DefaultNavBar = () => {
   const authStore = useAuthStore((state) => state);
 
   const onLogoutPress = async () => {
-    await authStore.logout();
-    navigation.dispatch({ type: "POP_TO_TOP" });
+    try {
+      await authStore.logout();
+      navigation.dispatch({ type: "POP_TO_TOP" });
+    } catch (error: any) {
+      console.log(error);
+      showWarningAlert("Error in Logout, please try again");
+    }
   };
 
   return (
@@ -95,11 +101,18 @@ const DefaultNavBar = () => {
         variant="iconButtonWithLabelCenter"
         marginV-5
         onPress={onLogoutPress}
+        disabled={authStore.isLoading}
       >
-        <MaterialIcons name="logout" size={25} color={Colors.gray} />
-        <Text color={Colors.gray} marginT-8 text90BL>
-          Logout
-        </Text>
+        {authStore.isLoading ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <>
+            <MaterialIcons name="logout" size={25} color={Colors.gray} />
+            <Text color={Colors.gray} marginT-8 text90BL>
+              Logout
+            </Text>
+          </>
+        )}
       </Button>
     </View>
   );
