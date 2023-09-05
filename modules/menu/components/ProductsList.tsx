@@ -37,7 +37,6 @@ const ProductsList = () => {
     setProductIdsSelected(newProductIds);
   };
 
-
   const products = useMemo(() => {
     if (selectedCategory) {
       return productResponse.products.filter(p => p.categories_id.some(c => c === selectedCategory?.id));
@@ -55,7 +54,6 @@ const ProductsList = () => {
       scrollEnabled
       renderItem={({ item }) => {
         let isActive = productIdsSelected.includes(item.id);
-
         return (
           <ProductItem
             product={item}

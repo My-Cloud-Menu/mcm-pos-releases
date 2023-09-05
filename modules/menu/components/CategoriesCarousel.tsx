@@ -1,7 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
 import { Button, Colors, Image, Text } from "react-native-ui-lib";
-import { FlashList } from "@shopify/flash-list";
 import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import axios from "../../common/axios";
@@ -78,6 +77,28 @@ const CategoriesCarousel = () => {
         flexDirection: 'row'
       }}
       >
+        <Button
+          onPress={() => onPressCategory(null)}
+          variant="iconButtonWithLabelCenterOutline"
+          active={!selectedCategory?.id}
+          marginV-2
+          marginH-5
+        >
+          <Image
+            source={{ uri: 'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_clear_all_48px-512.png' }}
+            style={styles.image}
+          />
+          <View style={{ maxWidth: 150 }}>
+            <Text
+              center
+              color={Colors.primary}
+              marginT-14
+              text80BL
+            >
+              {'All'}
+            </Text>
+          </View>
+        </Button>
         {categories.map((item) => {
           let isNavItemActive = selectedCategory?.id == item.id;
           // let isNavItemActive = false;

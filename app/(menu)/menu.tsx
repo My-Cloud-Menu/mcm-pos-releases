@@ -10,9 +10,11 @@ import CartItem from "../../modules/menu/components/CartItem";
 import CartCharges from "../../modules/menu/components/CartCharges";
 import PaymentMethodSelector from "../../modules/menu/components/PaymentMethodSelector";
 import OrderCardItem from "../../modules/orders/components/OrderCardItem";
+import { useCart } from "../../stores/cart";
 
 const Menu = () => {
   const { categoryName = "" } = useLocalSearchParams();
+  const { cartProducts } = useCart();
 
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
@@ -70,18 +72,23 @@ const Menu = () => {
       >
         <View flex>
           <UserProfileCard />
-          <ScrollView>
+          <ScrollView style={{}}>
             <Text text60 marginT-10>
               Bills
             </Text>
 
-            <View style={{ maxHeight: "75%" }}>
+            <View
+              style={{
+                // maxHeight: "100%",
+                // height: '75%'
+              }}
+            >
               <FlashList
                 contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
                 ItemSeparatorComponent={() => <View style={{ height: 25 }} />}
-                data={[{ name: "Size" }, { name: "Sugar" }, { name: "Ice" }]}
+                data={cartProducts}
                 renderItem={({ item }) => {
-                  return <CartItem />;
+                  return <CartItem product={item} />;
                 }}
               />
             </View>

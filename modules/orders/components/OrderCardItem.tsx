@@ -2,8 +2,13 @@ import { StyleSheet } from "react-native";
 import React from "react";
 import { Chip, Colors, Text, View } from "react-native-ui-lib";
 import { MaterialIcons } from "@expo/vector-icons";
+import { ProductCart } from "../../../types";
 
-const OrderCardItem = ({ order }: any) => {
+type Props = {
+  order: any
+}
+
+const OrderCardItem = ({ order }: Props) => {
   return (
     <View style={styles.container}>
       <View row centerV>
