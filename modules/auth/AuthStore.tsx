@@ -4,9 +4,10 @@ import * as authApi from "./AuthApi";
 const useAuthStore = create((set, get) => ({
   isLoading: false,
   isLogged: false,
+  error: null,
   employeeLogged: null,
-  login: async (pin) => {
-    set(() => ({ isLoading: true }));
+  login: async (pin: string) => {
+    set(() => ({ isLoading: true, error: null }));
 
     try {
       const loginResponse = await authApi.login(pin);
@@ -14,8 +15,12 @@ const useAuthStore = create((set, get) => ({
       set(() => ({ employeeLogged: loginResponse.employee, isLogged: true }));
 
       return loginResponse;
-    } catch (error) {
-      set(() => ({ isLoading: false }));
+    } catch (error: any) {
+      let errorMessage = "Something went wrong";
+
+      if (error?.message == "Pin Incorrect") errorMessage = "Pin Incorrect";
+
+      set(() => ({ isLoading: false, error: errorMessage }));
 
       throw error;
     }
