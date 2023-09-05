@@ -4,13 +4,17 @@ import { Button, Colors, Image, Text, View } from "react-native-ui-lib";
 import { FlashList } from "@shopify/flash-list";
 import IngredientGroupItem from "./IngredientGroupItem";
 import { shadowProps } from "../../common/theme/shadows";
+import { useCart } from "../../../stores/cart";
+import { AntDesign } from "@expo/vector-icons";
 
 const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
+  const { addProduct, updateProduct, cartProducts, increaseProduct, decrementProduct } = useCart();
+  const quantity = cartProducts.find(cartProduct => cartProduct.product.id === product.id)?.quantity || 0;
+
   return (
     <Pressable onPress={() => onPress && onPress()} style={styles.container}>
       <View row>
         <Image source={{ uri: product.image.normal }} style={styles.image} />
-
         <View marginL-20 style={{ width: "100%" }}>
           <Text text60L black style={{ maxWidth: "40%" }}>
             {product.name}
@@ -19,18 +23,18 @@ const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
             marginT-10
             text90L
             color={Colors.gray}
-            style={{ maxWidth: "55%" }}
+            style={{ maxWidth: "55%", padding: 5 }}
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae
-            quibusdam, numquam
+            {product.description}
           </Text>
-          <Text text65BL black marginT-12>
-            <Text text100 $textNeutralLight>
+          <Text text65BL black marginT-12 style={{ padding: 5 }}>
+            <Text text100 black $textNeutralLight text65BL>
               ${" "}
             </Text>
-            3,95
+            {product.price}
           </Text>
         </View>
+
       </View>
 
       {isActive && (
@@ -50,14 +54,64 @@ const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
           estimatedItemSize={4}
         />
       )}
-      <Button
-        marginT-20
-        marginH-5
-        size="medium"
-        label="Add to Billing"
-        fullWidth
-      />
+      {quantity ? (
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: 5,
+            alignItems: 'center',
+            marginTop: 10
+          }}
+        >
+          <AntDesign
+            onPress={() => quantity > 0 && decrementProduct(product.id)}
+            name="minus"
+            size={20}
+            color="rgb(119,198,159)"
+            style={{
+              padding: 5,
+              borderWidth: 1,
+              borderColor: 'rgb(119,198,159)',
+              borderRadius: 5,
+              textAlign: 'center'
+            }}
+          />
+          <Text
+            style={{
+              fontWeight: 'bold',
+              paddingHorizontal: (10),
+              paddingVertical: (2),
+              borderRadius: (1),
+              fontSize: (20)
+            }}
+          >{quantity}</Text>
+          <AntDesign
+            onPress={() => increaseProduct(product.id)}
+            name="plus"
+            size={(20)}
+            color="rgb(119,198,159)"
+            style={{
+              padding: 5,
+              color: 'white',
+              backgroundColor: `rgb(119,198,159)`,
+              borderRadius: 5,
+              textAlign: 'center'
+            }}
+          />
+        </View>
+      )
+        : (
+          <Button
+            onPress={() => addProduct({ product, quantity: 1 })}
+            marginT-20
+            marginH-5
+            size="medium"
+            label="Add to Billing"
+            fullWidth
+          />
+        )}
     </Pressable>
+
   );
 };
 

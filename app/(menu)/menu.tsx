@@ -10,9 +10,11 @@ import CartItem from "../../modules/menu/components/CartItem";
 import CartCharges from "../../modules/menu/components/CartCharges";
 import PaymentMethodSelector from "../../modules/menu/components/PaymentMethodSelector";
 import OrderCardItem from "../../modules/orders/components/OrderCardItem";
+import { useCart } from "../../stores/cart";
 
 const Menu = () => {
   const { categoryName = "" } = useLocalSearchParams();
+  const { cartProducts } = useCart();
 
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
@@ -70,22 +72,32 @@ const Menu = () => {
       >
         <View flex>
           <UserProfileCard />
-          <ScrollView>
-            <Text text60 marginT-10>
-              Bills
-            </Text>
+          <ScrollView style={{}}>
 
-            <View style={{ maxHeight: "75%" }}>
-              <FlashList
-                contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
-                ItemSeparatorComponent={() => <View style={{ height: 25 }} />}
-                data={[{ name: "Size" }, { name: "Sugar" }, { name: "Ice" }]}
-                renderItem={({ item }) => {
-                  return <CartItem />;
-                }}
-              />
-            </View>
-            <CartCharges />
+            {cartProducts.length ? (
+              <>
+                <Text text60 marginT-10>
+                  Bills
+                </Text>
+
+                <View
+                  style={{
+                  }}
+                >
+                  <FlashList
+                    contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
+                    ItemSeparatorComponent={() => <View style={{ height: 25 }} />}
+                    data={cartProducts}
+                    renderItem={({ item }) => {
+                      return <CartItem product={item} />;
+                    }}
+                  />
+                </View>
+                <CartCharges /></>
+            ) : (
+              <Text>No products Added</Text>
+            )}
+
           </ScrollView>
         </View>
 
