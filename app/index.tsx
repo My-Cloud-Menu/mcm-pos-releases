@@ -1,10 +1,11 @@
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
-import { Colors, Image, Text, Typography, View } from "react-native-ui-lib";
+import { Colors, Image, Text, View } from "react-native-ui-lib";
 import metrics from "../modules/common/theme/metrics";
 import { Ionicons } from "@expo/vector-icons";
 import fonts from "../modules/common/theme/fonts";
 import { router } from "expo-router";
+import { showWarningAlert } from "../modules/common/AlertHelper";
 
 const version = "1.0.0";
 
@@ -17,6 +18,8 @@ const HomeScreen = () => {
     router.push(`/login?title=ADMIN&subTitle=Linda Linda`);
   };
 
+  const onPressConfig = () => showWarningAlert("We are working on it");
+
   return (
     <View style={styles.container}>
       <View style={styles.containerHeader}>
@@ -26,6 +29,7 @@ const HomeScreen = () => {
           size={40}
           color="black"
           style={styles.iconConfig}
+          onPress={onPressConfig}
           // onPress={goSetupPage}
         />
       </View>

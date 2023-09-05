@@ -21,7 +21,7 @@ const LoginScreen = () => {
 
   const goBack = () => router.back();
   const onSubmit = async () => {
-    // await authStore.login(userInput);
+    await authStore.login(userInput);
     router.push("/welcome");
     // navigation.navigate("(menu)", { screen: "menu" })
   };
@@ -44,15 +44,15 @@ const LoginScreen = () => {
       <View>
         {authStore.isLoading && (
           <>
-            <ActivityIndicator color={Colors.primary} size={45} />
+            <ActivityIndicator color={Colors.primary} size={"large"} />
             <Text style={{ textAlign: "center" }}>{/* {loadingStatus} */}</Text>
           </>
         )}
-        {/* {error && (
-          <Text style={{ textAlign: "center", color: colors.danger }}>
-            {error}
+        {authStore.error && (
+          <Text style={{ textAlign: "center", color: Colors.danger }}>
+            {authStore.error}
           </Text>
-        )} */}
+        )}
       </View>
       {!isLoading && (
         <NativeNumericPad

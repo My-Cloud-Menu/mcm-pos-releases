@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import "../modules/common/theme/MCMTheme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import FlashMessage from "react-native-flash-message";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ function RootLayoutNav() {
           <Stack.Screen name="welcome" options={{ headerShown: false }} />
         </Stack>
       </ThemeProvider> */}
+      <FlashMessage position="top" />
     </QueryClientProvider>
   );
 }
