@@ -58,7 +58,7 @@ const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
         <View
           style={{
             flexDirection: 'row',
-            gap: 2,
+            gap: 5,
             alignItems: 'center',
             marginTop: 10
           }}
@@ -66,12 +66,18 @@ const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
           <AntDesign
             onPress={() => quantity > 0 && decrementProduct(product.id)}
             name="minus"
-            size={25}
-            color="black"
+            size={20}
+            color="rgb(119,198,159)"
+            style={{
+              padding: 5,
+              borderWidth: 1,
+              borderColor: 'rgb(119,198,159)',
+              borderRadius: 5,
+              textAlign: 'center'
+            }}
           />
           <Text
             style={{
-              backgroundColor: '#DDDDDD',
               fontWeight: 'bold',
               paddingHorizontal: (10),
               paddingVertical: (2),
@@ -82,10 +88,16 @@ const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
           <AntDesign
             onPress={() => increaseProduct(product.id)}
             name="plus"
-            size={(25)}
-            color="black"
+            size={(20)}
+            color="rgb(119,198,159)"
+            style={{
+              padding: 5,
+              color: 'white',
+              backgroundColor: `rgb(119,198,159)`,
+              borderRadius: 5,
+              textAlign: 'center'
+            }}
           />
-
         </View>
       )
         : (

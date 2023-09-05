@@ -73,26 +73,31 @@ const Menu = () => {
         <View flex>
           <UserProfileCard />
           <ScrollView style={{}}>
-            <Text text60 marginT-10>
-              Bills
-            </Text>
 
-            <View
-              style={{
-                // maxHeight: "100%",
-                // height: '75%'
-              }}
-            >
-              <FlashList
-                contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
-                ItemSeparatorComponent={() => <View style={{ height: 25 }} />}
-                data={cartProducts}
-                renderItem={({ item }) => {
-                  return <CartItem product={item} />;
-                }}
-              />
-            </View>
-            <CartCharges />
+            {cartProducts.length ? (
+              <>
+                <Text text60 marginT-10>
+                  Bills
+                </Text>
+
+                <View
+                  style={{
+                  }}
+                >
+                  <FlashList
+                    contentContainerStyle={{ paddingTop: 20, paddingBottom: 50 }}
+                    ItemSeparatorComponent={() => <View style={{ height: 25 }} />}
+                    data={cartProducts}
+                    renderItem={({ item }) => {
+                      return <CartItem product={item} />;
+                    }}
+                  />
+                </View>
+                <CartCharges /></>
+            ) : (
+              <Text>No products Added</Text>
+            )}
+
           </ScrollView>
         </View>
 
