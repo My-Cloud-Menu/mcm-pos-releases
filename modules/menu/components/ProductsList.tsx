@@ -10,9 +10,8 @@ import { useGlobal } from "../../../stores/global";
 import { makeMcmRequest } from "../../common/PetitionsHelper";
 
 const getColumsNumbers = () => {
-  if (metrics.screenWidth > 1700) return 4;
-  else if (metrics.screenWidth > 800) return 3;
-  else if (metrics.screenWidth > 820) return 3;
+  if (metrics.screenWidth > 900) return 4;
+  else if (metrics.screenWidth > 500) return 3;
   else return 2;
 };
 

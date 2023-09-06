@@ -7,10 +7,11 @@ import {
 import { useFonts } from "expo-font";
 import { Slot, SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme } from "react-native";
+import { View, useColorScheme } from "react-native";
 import "../modules/common/theme/MCMTheme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FlashMessage from "react-native-flash-message";
+import { Colors } from "react-native-ui-lib";
 
 export const queryClient = new QueryClient();
 
@@ -56,7 +57,9 @@ function RootLayoutNav() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Slot />
+      <View style={{ flex: 1, backgroundColor: Colors.graySoft }}>
+        <Slot />
+      </View>
       {/* <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />

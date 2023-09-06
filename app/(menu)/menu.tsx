@@ -11,10 +11,11 @@ import CartCharges from "../../modules/menu/components/CartCharges";
 import PaymentMethodSelector from "../../modules/menu/components/PaymentMethodSelector";
 import OrderCardItem from "../../modules/orders/components/OrderCardItem";
 import { useCart } from "../../stores/cart";
+import { useGlobal } from "../../stores/global";
 
 const Menu = () => {
-  const { categoryName = "" } = useLocalSearchParams();
   const { cartProducts } = useCart();
+  const { selectedCategory } = useGlobal();
 
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
@@ -22,7 +23,7 @@ const Menu = () => {
         <View flex>
           <CategoriesCarousel />
           <Text marginT-23 marginB-15 text50L>
-            {`${categoryName} Menu`.trim()}
+            {selectedCategory?.name || "All"}
           </Text>
           <ProductsList />
         </View>
@@ -76,7 +77,7 @@ const Menu = () => {
             {cartProducts.length ? (
               <>
                 <Text text60 marginT-10>
-                  Bills
+                  Cart
                 </Text>
 
                 <View style={{}}>

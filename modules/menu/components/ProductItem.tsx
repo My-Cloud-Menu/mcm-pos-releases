@@ -118,7 +118,7 @@ const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
           marginT-20
           marginH-5
           size="medium"
-          label="Add to Billing"
+          label="Add to Cart"
           fullWidth
         />
       )}

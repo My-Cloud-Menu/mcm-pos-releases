@@ -55,7 +55,10 @@ const DefaultNavBar = () => {
 
   const onLogoutPress = async () => {
     try {
-      await authStore.logout();
+      if (authStore?.employeeLogged) {
+        await authStore.logout();
+      }
+
       navigation.dispatch({ type: "POP_TO_TOP" });
     } catch (error: any) {
       console.log(error);
