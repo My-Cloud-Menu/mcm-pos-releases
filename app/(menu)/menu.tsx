@@ -1,6 +1,11 @@
-import { ScrollView, StyleSheet } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import React from "react";
-import { Button, Colors, Text, View } from "react-native-ui-lib";
+import { Button, Colors, Text, TextField, View } from "react-native-ui-lib";
 import CategoriesCarousel from "../../modules/menu/components/CategoriesCarousel";
 import { useLocalSearchParams } from "expo-router";
 import ProductsList from "../../modules/menu/components/ProductsList";
@@ -10,16 +15,32 @@ import CartItem from "../../modules/menu/components/CartItem";
 import CartCharges from "../../modules/menu/components/CartCharges";
 import PaymentMethodSelector from "../../modules/menu/components/PaymentMethodSelector";
 import OrderCardItem from "../../modules/orders/components/OrderCardItem";
-import { useCart } from "../../stores/cart";
+import { useCartStore } from "../../stores/cartStore";
 import { useGlobal } from "../../stores/global";
+import useOrderStore from "../../modules/orders/OrdersStore";
+import { useQuery } from "@tanstack/react-query";
+import { OrdersResponse } from "../../types";
+import { makeMcmRequest } from "../../modules/common/PetitionsHelper";
 
 const Menu = () => {
-  const { cartProducts } = useCart();
+  const { cartProducts } = useCartStore();
   const { selectedCategory } = useGlobal();
+  const orderStore = useOrderStore();
+
+  const { data: ordersResponse, isLoading: isOrdersLoading } =
+    useQuery<OrdersResponse>({
+      queryKey: ["/orders"],
+      queryFn: () => makeMcmRequest("admin/orders?withoutPaginate=true"),
+      initialData: {
+        orders: [],
+        count: 0,
+        lastEvaluatedKey: null,
+      },
+    });
 
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
-      <View flex paddingT-25 paddingB-15 paddingL-20 paddingR-15>
+      <View flex paddingT-25 paddingB-0 paddingL-20 paddingR-15>
         <View flex>
           <CategoriesCarousel />
           <Text marginT-23 marginB-15 text50L>
@@ -35,8 +56,9 @@ const Menu = () => {
             marginBottom: 15,
           }}
         />
-        <FlashList
+        {/* <FlashList
           style={{ maxHeight: 100 }}
+          keyExtractor={(item) => item.id}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           ItemSeparatorComponent={() => (
@@ -48,12 +70,30 @@ const Menu = () => {
               }}
             />
           )}
-          data={[
-            { name: "Leslie K." },
-            { name: "Jacob J." },
-            { name: "Cameron W." },
-            { name: "Leslie K." },
-          ]}
+          refreshing={isOrdersLoading}
+          data={ordersResponse.orders}
+          renderItem={({ item }) => {
+            return <OrderCardItem order={item} />;
+          }}
+        /> */}
+
+        <FlatList
+          style={{ maxHeight: 100 }}
+          keyExtractor={(item) => item.id}
+          horizontal={true}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                width: 0.5,
+                marginHorizontal: 23,
+                backgroundColor: "#E0E0E0",
+              }}
+            />
+          )}
+          refreshing={isOrdersLoading}
+          data={ordersResponse.orders.sort(
+            (a, b) => Number(b.id) - Number(a.id)
+          )}
           renderItem={({ item }) => {
             return <OrderCardItem order={item} />;
           }}
@@ -104,8 +144,31 @@ const Menu = () => {
         </View>
 
         <View paddingB-10>
+          <TextField
+            marginV-30
+            label="Customer Name"
+            placeholder="Enter the Customer Name"
+            color={Colors.primary}
+            labelColor={"#000"}
+            placeholderTextColor={Colors.gray}
+            value={orderStore.inputValues.first_name}
+            onChange={({ target }) =>
+              orderStore.changeInputValue("first_name", target.value)
+            }
+          />
           <PaymentMethodSelector />
-          <Button marginT-35 label="Send Order" />
+          <Button
+            disabled={orderStore.isLoading}
+            onPress={orderStore.createOrder}
+            marginT-35
+            label={
+              orderStore.isLoading ? (
+                <ActivityIndicator color={"white"} />
+              ) : (
+                "Send Order"
+              )
+            }
+          />
         </View>
       </View>
     </View>

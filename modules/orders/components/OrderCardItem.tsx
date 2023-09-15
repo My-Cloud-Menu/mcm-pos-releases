@@ -2,40 +2,66 @@ import { StyleSheet } from "react-native";
 import React from "react";
 import { Chip, Colors, Text, View } from "react-native-ui-lib";
 import { MaterialIcons } from "@expo/vector-icons";
-import { ProductCart } from "../../../types";
+import { Order, ProductCart } from "../../../types";
+
+const getTitleLabel = (order: Order) => {
+  return order.id.slice(order.id.length - 2, order.id.length);
+};
+
+const getOrderNameLabel = (order: Order) => {
+  return (
+    `${order.cart.customer.first_name} ${order.cart.customer.last_name}`.trim() ||
+    order.id
+  );
+};
+
+const orderStatusLabel: any = {
+  "new-order": "New Order",
+  "in-kitchen": "In Kitchen",
+  "ready-for-pickup": "Ready For Pickup",
+  "delivery-in-progress": "Delivery In Progress",
+  "check-closed": "Closed",
+  cancelled: "Cancelled",
+};
 
 type Props = {
-  order: any
-}
+  order: any;
+};
 
 const OrderCardItem = ({ order }: Props) => {
   return (
     <View style={styles.container}>
       <View row centerV>
         <View style={styles.titleContainer}>
-          <Text text60L>T4</Text>
+          <Text text60L>{getTitleLabel(order)}</Text>
         </View>
 
         <View marginL-15>
           <View row spread>
-            <Text text70>{order.name}</Text>
+            <Text text70>{getOrderNameLabel(order)}</Text>
             <Chip
               containerStyle={{ borderWidth: 0 }}
               backgroundColor={Colors.secondary}
-              label="In Process"
+              label={orderStatusLabel[order.status]}
               marginL-15
               padding-0
             />
           </View>
           <View row centerV marginT-6>
-            <Text text85>6 items</Text>
+            <Text text85>
+              {order.cart.line_items.reduce(
+                (acc, cal) => acc + cal.quantity,
+                0
+              )}{" "}
+              items
+            </Text>
             <MaterialIcons
               name="arrow-right-alt"
               size={22}
               color="black"
               style={{ marginHorizontal: 3 }}
             />
-            <Text text85>Kitchen</Text>
+            <Text text85>{orderStatusLabel[order.status] || "New Order"}</Text>
           </View>
         </View>
       </View>

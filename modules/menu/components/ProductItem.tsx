@@ -1,32 +1,100 @@
 import { Pressable, StyleSheet } from "react-native";
 import React from "react";
-import { Button, Colors, Image, Text, View } from "react-native-ui-lib";
+import {
+  Badge,
+  Button,
+  Chip,
+  Colors,
+  Image,
+  Text,
+  View,
+} from "react-native-ui-lib";
 import { FlashList } from "@shopify/flash-list";
 import IngredientGroupItem from "./IngredientGroupItem";
 import { shadowProps } from "../../common/theme/shadows";
-import { useCart } from "../../../stores/cart";
+import { useCartStore } from "../../../stores/cartStore";
 import { AntDesign } from "@expo/vector-icons";
+import { Ingredient } from "../../../types";
+import { formatCurrency } from "../../common/UtilsHelper";
 
-const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
+const ProductChip = ({
+  label = "",
+  backgroundColor = "#e0e0e0",
+}: {
+  label: string;
+  backgroundColor?: string;
+}) => {
+  return (
+    <View
+      style={{
+        marginRight: 10,
+        marginTop: 5,
+        backgroundColor: backgroundColor,
+        paddingVertical: 2,
+        paddingHorizontal: 7,
+        borderRadius: 8,
+      }}
+    >
+      <Text text100L style={{ color: "#000" }}>
+        {label}
+      </Text>
+    </View>
+  );
+};
+
+const ProductItem = ({
+  product,
+  isActive = false,
+  onPress = null,
+  ingredients = [],
+}: any) => {
   const {
     addProduct,
     updateProduct,
     cartProducts,
     increaseProduct,
     decrementProduct,
-  } = useCart();
+  } = useCartStore();
+
   const quantity =
     cartProducts.find((cartProduct) => cartProduct.product.id === product.id)
       ?.quantity || 0;
+
+  const getIngredientsIncludedInProduct = () => {
+    let ingredientsIncluded = [];
+
+    if (Array.isArray(product?.ingredients)) {
+      let ingredientsIncludedIds = product.ingredients.map(
+        (ingredient: Ingredient) => ingredient.id
+      );
+
+      ingredientsIncluded = ingredients.filter((ingredient: Ingredient) =>
+        ingredientsIncludedIds.includes(ingredient.id)
+      );
+    }
+
+    return ingredientsIncluded;
+  };
 
   return (
     <Pressable onPress={() => onPress && onPress()} style={styles.container}>
       <View row>
         <Image source={{ uri: product.image.normal }} style={styles.image} />
         <View marginL-20 style={{ width: "100%" }}>
-          <Text text60L black style={{ maxWidth: "40%" }}>
+          <Text text60 black style={{ maxWidth: "40%" }}>
             {product.name}
           </Text>
+          <View row style={{ maxWidth: "50%", flexWrap: "wrap" }}>
+            {getIngredientsIncludedInProduct().map((ingredient: Ingredient) => (
+              <ProductChip
+                key={`product-${product.id}-ingredientincluded-${ingredient.id}`}
+                label={ingredient.name}
+                backgroundColor={
+                  ingredient.stock_status == "instock" ? "#e0e0e0" : "#E57373"
+                }
+              />
+            ))}
+          </View>
           <Text
             marginT-10
             text90L
@@ -39,12 +107,12 @@ const ProductItem = ({ product, isActive = false, onPress = null }: any) => {
             <Text text100 black $textNeutralLight text65BL>
               ${" "}
             </Text>
-            {product.price}
+            {formatCurrency(product.price, true)}
           </Text>
         </View>
       </View>
 
-      {isActive && (
+      {isActive && false && (
         <FlashList
           contentContainerStyle={{ paddingTop: 15, paddingHorizontal: 10 }}
           numColumns={2}

@@ -12,7 +12,6 @@ export const shadowProps = {
 
 export const shadowPropsSoft = {
   shadowColor: "#f7f7f7",
-  shadowColor: "#000",
   shadowOffset: {
     width: 0,
     height: 1,

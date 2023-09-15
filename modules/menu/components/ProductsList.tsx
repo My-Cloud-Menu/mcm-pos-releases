@@ -4,8 +4,7 @@ import { FlashList } from "@shopify/flash-list";
 import ProductItem from "./ProductItem";
 import metrics from "../../common/theme/metrics";
 import { useQuery } from "@tanstack/react-query";
-import { Product, ProductResponse } from "../../../types";
-import axios from "../../common/axios";
+import { IngredientResponse, Product, ProductResponse } from "../../../types";
 import { useGlobal } from "../../../stores/global";
 import { makeMcmRequest } from "../../common/PetitionsHelper";
 
@@ -21,6 +20,16 @@ const ProductsList = () => {
     queryFn: () => makeMcmRequest("front/products?withoutPaginate=true"),
     initialData: {
       products: [],
+      count: 0,
+      lastEvaluatedKey: null,
+    },
+  });
+
+  const { data: ingredientResponse } = useQuery<IngredientResponse>({
+    queryKey: ["/ingredients"],
+    queryFn: () => makeMcmRequest("front/ingredients?withoutPaginate=true"),
+    initialData: {
+      ingredients: [],
       count: 0,
       lastEvaluatedKey: null,
     },
@@ -59,6 +68,7 @@ const ProductsList = () => {
         let isActive = productIdsSelected.includes(item.id);
         return (
           <ProductItem
+            ingredients={ingredientResponse.ingredients}
             product={item}
             isActive={isActive}
             onPress={() => onPressProduct(item)}

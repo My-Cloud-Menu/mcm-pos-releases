@@ -1,11 +1,32 @@
 import { create } from "zustand";
 import * as authApi from "./AuthApi";
 
-const useAuthStore = create((set, get) => ({
+interface AuthStore {
+  isLoading: boolean;
+  isLogged: boolean;
+  error: any;
+  employeeLogged?: {
+    id: string;
+    birthday?: string;
+    check_name: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    login: string;
+    middle_name?: string;
+    payroll_id?: string;
+    phone?: string;
+    pos_id?: string;
+    start_date?: string;
+    role: "admin" | "waiter";
+  };
+}
+
+const useAuthStore = create<AuthStore>((set, get) => ({
   isLoading: false,
   isLogged: false,
   error: null,
-  employeeLogged: null,
+  employeeLogged: undefined,
   login: async (pin: string) => {
     set(() => ({ isLoading: true, error: null }));
 
@@ -35,11 +56,11 @@ const useAuthStore = create((set, get) => ({
   logout: async () => {
     set(() => ({ isLoading: true, error: null }));
 
-    const employeeId = get()?.employeeLogged?.id;
+    const employeeId = get()?.employeeLogged?.id || "";
 
     try {
       const logoutResponse = await authApi.logout(employeeId);
-      set(() => ({ isLoading: false, employeeLogged: null }));
+      set(() => ({ isLoading: false, employeeLogged: undefined }));
 
       return logoutResponse;
     } catch (error: any) {
