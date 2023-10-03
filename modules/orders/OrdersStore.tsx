@@ -11,6 +11,12 @@ const useOrderStore = create<OrderStore>((set, get) => ({
   inputValues: {
     first_name: "",
   },
+  isCreateOrderAvailable: () => {
+    const cartStore = useCartStore.getState();
+    const isLoading = get().isLoading;
+
+    return cartStore.cartProducts.length > 0 && !isLoading;
+  },
   changeInputValue: (propertyName: string, value: string) => {
     set((state) => ({
       inputValues: { ...state.inputValues, [propertyName]: value },

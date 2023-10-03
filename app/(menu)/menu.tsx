@@ -158,9 +158,10 @@ const Menu = () => {
           />
           <PaymentMethodSelector />
           <Button
-            disabled={orderStore.isLoading}
+            disabled={!orderStore.isCreateOrderAvailable()}
             onPress={orderStore.createOrder}
             marginT-35
+            labelStyle={{ color: "#fff" }}
             label={
               orderStore.isLoading ? (
                 <ActivityIndicator color={"white"} />

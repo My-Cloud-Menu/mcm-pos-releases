@@ -13,7 +13,7 @@ Colors.loadColors({
   green: "#27ae60",
   red: "#c0392b",
   danger: "#c0392b",
-  disable: "#f5f5f5",
+  disabled: "#00000042",
   titleBackground: "#e0e0e0",
   subtitleBackground: "#abe690",
   graySoft: "#f9f8fb",
@@ -63,6 +63,11 @@ ThemeManager.setComponentForcedTheme("Button", (props, context) => {
     };
   }
 
+  if (props.disabled) {
+    themeStyles = { ...themeStyles, ...styles.buttonDisabled };
+    props;
+  }
+
   return { style: { ...themeStyles, ...props.style } };
 });
 
@@ -104,5 +109,8 @@ const styles = StyleSheet.create({
   useMinSize: {
     paddingVertical: 4,
     paddingHorizontal: 5,
+  },
+  buttonDisabled: {
+    backgroundColor: Colors.disabled,
   },
 });

@@ -141,6 +141,7 @@ export interface OrderStore {
     first_name: string;
   };
   changeInputValue: (propertyName: string, value: string) => void;
+  isCreateOrderAvailable: () => boolean;
 }
 
 export interface GlobalStore {

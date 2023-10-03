@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IngredientResponse, Product, ProductResponse } from "../../../types";
 import { useGlobal } from "../../../stores/global";
 import { makeMcmRequest } from "../../common/PetitionsHelper";
+import { FlatList } from "react-native-gesture-handler";
 
 const getColumsNumbers = () => {
   if (metrics.screenWidth > 900) return 4;
@@ -58,8 +59,9 @@ const ProductsList = () => {
   }, [productResponse, selectedCategory]);
 
   return (
-    <FlashList
+    <FlatList
       showsHorizontalScrollIndicator={false}
+      style={{ height: 122 }}
       numColumns={getColumsNumbers()}
       data={products.map((item) => ({ ...item, image: item.images[0] }))}
       ItemSeparatorComponent={() => <View style={{ height: 25 }} />}
@@ -75,7 +77,7 @@ const ProductsList = () => {
           />
         );
       }}
-      estimatedItemSize={20}
+      estimatedItemSize={products.length || 10}
     />
   );
 };

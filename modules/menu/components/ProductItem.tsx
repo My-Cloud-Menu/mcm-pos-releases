@@ -78,57 +78,64 @@ const ProductItem = ({
 
   return (
     <Pressable onPress={() => onPress && onPress()} style={styles.container}>
-      <View row>
-        <Image source={{ uri: product.image.normal }} style={styles.image} />
-        <View marginL-20 style={{ width: "100%" }}>
-          <Text text60 black style={{ maxWidth: "40%" }}>
-            {product.name}
-          </Text>
-          <View row style={{ maxWidth: "50%", flexWrap: "wrap" }}>
-            {getIngredientsIncludedInProduct().map((ingredient: Ingredient) => (
-              <ProductChip
-                key={`product-${product.id}-ingredientincluded-${ingredient.id}`}
-                label={ingredient.name}
-                backgroundColor={
-                  ingredient.stock_status == "instock" ? "#e0e0e0" : "#E57373"
-                }
-              />
-            ))}
-          </View>
-          <Text
-            marginT-10
-            text90L
-            color={Colors.gray}
-            style={{ maxWidth: "55%", padding: 5 }}
-          >
-            {product.description}
-          </Text>
-          <Text text65BL black marginT-12 style={{ padding: 5 }}>
-            <Text text100 black $textNeutralLight text65BL>
-              ${" "}
+      <View flex>
+        <View row>
+          <Image source={{ uri: product.image.normal }} style={styles.image} />
+          <View marginL-20 style={{ width: "100%" }}>
+            <Text text60 black style={{ maxWidth: "40%" }}>
+              {product.name.slice(0, 26)}
+              {product.name.length > 26 ? "..." : ""}
             </Text>
-            {formatCurrency(product.price, true)}
-          </Text>
+            <View row style={{ maxWidth: "50%", flexWrap: "wrap" }}>
+              {getIngredientsIncludedInProduct().map(
+                (ingredient: Ingredient) => (
+                  <ProductChip
+                    key={`product-${product.id}-ingredientincluded-${ingredient.id}`}
+                    label={ingredient.name}
+                    backgroundColor={
+                      ingredient.stock_status == "instock"
+                        ? "#e0e0e0"
+                        : "#E57373"
+                    }
+                  />
+                )
+              )}
+            </View>
+            <Text
+              marginT-10
+              text90L
+              color={Colors.gray}
+              style={{ maxWidth: "55%", padding: 5 }}
+            >
+              {product.description}
+            </Text>
+            <Text text65BL black marginT-12 style={{ padding: 5 }}>
+              <Text text100 black $textNeutralLight text65BL>
+                ${" "}
+              </Text>
+              {formatCurrency(product.price, true)}
+            </Text>
+          </View>
         </View>
-      </View>
 
-      {isActive && false && (
-        <FlashList
-          contentContainerStyle={{ paddingTop: 15, paddingHorizontal: 10 }}
-          numColumns={2}
-          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-          data={[
-            { name: "Size" },
-            { name: "Sugar" },
-            { name: "Ice" },
-            { name: "Mood" },
-          ]}
-          renderItem={({ item }) => {
-            return <IngredientGroupItem ingredient={item} />;
-          }}
-          estimatedItemSize={4}
-        />
-      )}
+        {isActive && false && (
+          <FlashList
+            contentContainerStyle={{ paddingTop: 15, paddingHorizontal: 10 }}
+            numColumns={2}
+            ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+            data={[
+              { name: "Size" },
+              { name: "Sugar" },
+              { name: "Ice" },
+              { name: "Mood" },
+            ]}
+            renderItem={({ item }) => {
+              return <IngredientGroupItem ingredient={item} />;
+            }}
+            estimatedItemSize={4}
+          />
+        )}
+      </View>
       {quantity ? (
         <View centerH>
           <View
