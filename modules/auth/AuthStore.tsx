@@ -20,6 +20,7 @@ interface AuthStore {
     start_date?: string;
     role: "admin" | "waiter";
   };
+  login: (pin: string) => Promise<any>;
 }
 
 const useAuthStore = create<AuthStore>((set, get) => ({

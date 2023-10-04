@@ -6,6 +6,7 @@ import fonts from "../modules/common/theme/fonts";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import Counter from "../modules/auth/components/Counter";
 import useAuthStore from "../modules/auth/AuthStore";
+import useEcrStore from "../modules/ecr/EcrStore";
 
 const LoginScreen = () => {
   const { title = "Mozo", subTitle = "Los Especiales del dia" } =
@@ -18,10 +19,13 @@ const LoginScreen = () => {
   const [passwordMaxLength, setPasswordMaxLength] = useState(4);
   const [error, setError] = useState(null);
   const authStore = useAuthStore((state) => state);
+  const ecrStore = useEcrStore((state) => state);
 
   const goBack = () => router.back();
   const onSubmit = async () => {
     await authStore.login(userInput);
+    ecrStore.login().then();
+
     router.push("/welcome");
     // navigation.navigate("(menu)", { screen: "menu" })
   };

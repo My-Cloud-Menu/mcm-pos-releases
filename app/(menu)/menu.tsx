@@ -7,7 +7,7 @@ import {
 import React from "react";
 import { Button, Colors, Text, TextField, View } from "react-native-ui-lib";
 import CategoriesCarousel from "../../modules/menu/components/CategoriesCarousel";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import ProductsList from "../../modules/menu/components/ProductsList";
 import UserProfileCard from "../../modules/auth/components/UserProfileCard";
 import { FlashList } from "@shopify/flash-list";
@@ -21,6 +21,7 @@ import useOrderStore from "../../modules/orders/OrdersStore";
 import { useQuery } from "@tanstack/react-query";
 import { OrdersResponse } from "../../types";
 import { makeMcmRequest } from "../../modules/common/PetitionsHelper";
+import { queryClient } from "../_layout";
 
 const Menu = () => {
   const { cartProducts } = useCartStore();
@@ -37,6 +38,14 @@ const Menu = () => {
         lastEvaluatedKey: null,
       },
     });
+
+  const onPressSendOrder = async () => {
+    const orderCreated = await orderStore.createOrder();
+
+    queryClient.setQueryData(["orders", orderCreated.id], orderCreated);
+    console.log(orderCreated.id);
+    router.push({ pathname: "/payment", params: { orderId: orderCreated.id } });
+  };
 
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
@@ -159,7 +168,7 @@ const Menu = () => {
           <PaymentMethodSelector />
           <Button
             disabled={!orderStore.isCreateOrderAvailable()}
-            onPress={orderStore.createOrder}
+            onPress={onPressSendOrder}
             marginT-35
             labelStyle={{ color: "#fff" }}
             label={

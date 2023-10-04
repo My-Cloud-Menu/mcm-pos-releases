@@ -136,10 +136,10 @@ export interface CartStore {
 export interface OrderStore {
   isLoading: boolean;
   error: any;
-  createOrder: () => void;
   inputValues: {
     first_name: string;
   };
+  createOrder: () => Promise<Order>;
   changeInputValue: (propertyName: string, value: string) => void;
   isCreateOrderAvailable: () => boolean;
 }

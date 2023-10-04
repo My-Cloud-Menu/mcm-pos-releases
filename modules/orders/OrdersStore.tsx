@@ -56,7 +56,7 @@ const useOrderStore = create<OrderStore>((set, get) => ({
         }),
       };
 
-      const orderCreated = await createOrderInBackend(orderStructure);
+      const result = await createOrderInBackend(orderStructure);
 
       cartStore.clearCart();
       queryClient.invalidateQueries({ queryKey: ["/orders"] });
@@ -66,7 +66,7 @@ const useOrderStore = create<OrderStore>((set, get) => ({
         inputValues: { ...state.inputValues, first_name: "" },
       }));
 
-      return orderCreated;
+      return result.order;
     } catch (error: any) {
       let errorMessage = "Something went wrong";
 

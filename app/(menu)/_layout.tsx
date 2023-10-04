@@ -16,12 +16,12 @@ const MenuLayout = () => {
               headerShown: false,
             }}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="home"
             options={{
               headerShown: false,
             }}
-          />
+          /> */}
         </Stack>
       </View>
     </View>
