@@ -33,7 +33,7 @@ const useOrderStore = create<OrderStore>((set, get) => ({
       const inputValues = get().inputValues;
 
       let orderStructure = {
-        payment_method: "cod",
+        payment_method: "ecr",
         customer: {
           id: "",
           first_name: inputValues.first_name,

@@ -7,7 +7,6 @@ import {
 import React from "react";
 import { Button, Colors, Text, TextField, View } from "react-native-ui-lib";
 import CategoriesCarousel from "../../modules/menu/components/CategoriesCarousel";
-import { router, useLocalSearchParams } from "expo-router";
 import ProductsList from "../../modules/menu/components/ProductsList";
 import UserProfileCard from "../../modules/auth/components/UserProfileCard";
 import { FlashList } from "@shopify/flash-list";

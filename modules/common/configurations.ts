@@ -1,6 +1,6 @@
 export const ECR_LOCAL_STORAGE_KEY = "ECR_LOCAL_STORAGE";
 export const GLOBAL_LOCAL_STORAGE_KEY = "GLOBAL_LOCAL_STORAGE";
-
+export const AUTH_LOCAL_STORAGE_KEY = "AUTH_LOCAL_STORAGE";
 export interface EcrSetup {
   session_id?: string;
   reference: number;
@@ -12,6 +12,11 @@ export interface EcrSetup {
   ip: string;
   port: string;
   ipDev: string;
+  force_duplicate: string;
+  receipt_output: string;
+  manual_entry_indicator: string;
+  receipt_email: string;
+  process_cashback: string;
 }
 
 export interface GlobalSetup {
@@ -38,6 +43,11 @@ export const initialECRSetupConfiguration: EcrSetup = {
   ip: "127.0.0.1",
   port: "2030",
   api_key: "f6196298e20d41ada45de8dc4d1963c5",
+  force_duplicate: "no",
+  receipt_output: "HTML",
+  manual_entry_indicator: "no",
+  receipt_email: "no",
+  process_cashback: "no",
 };
 
 export const initialGlobalSetupConfiguration: GlobalSetup = {

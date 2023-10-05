@@ -44,7 +44,7 @@ const PaymentMethodSelector = () => {
   return (
     <View style={styles.container}>
       <Text text70>Payment Method</Text>
-      <View row marginT-20 spread>
+      <View row marginT-20>
         {paymentMethods.map((paymentMethodItem, idx) => {
           let isPaymentMethodActive =
             paymentMethodSelected == paymentMethodItem.value;
@@ -60,6 +60,7 @@ const PaymentMethodSelector = () => {
               style={{
                 backgroundColor: isPaymentMethodActive ? "" : Colors.graySoft,
                 paddingHorizontal: 15,
+                marginRight: 20,
               }}
             >
               {paymentMethodItem.icon({

@@ -5,13 +5,14 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Slot, SplashScreen, Stack } from "expo-router";
+import { Slot, SplashScreen, useNavigation, usePathname } from "expo-router";
 import { useEffect } from "react";
 import { View, useColorScheme } from "react-native";
 import "../modules/common/theme/MCMTheme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FlashMessage from "react-native-flash-message";
 import { Colors } from "react-native-ui-lib";
+import useAuthStore from "../modules/auth/AuthStore";
 
 export const queryClient = new QueryClient();
 
@@ -54,6 +55,15 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const employeeLogged = useAuthStore((state) => state.employeeLogged);
+  const pathname = usePathname();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (["/", "/login"].includes(pathname) && Boolean(employeeLogged)) {
+      navigation.navigate("(menu)", { screen: "menu" });
+    }
+  }, [pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>

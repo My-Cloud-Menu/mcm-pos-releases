@@ -8,6 +8,7 @@ axios.interceptors.response.use(
     // * Comente esto porque ToastAndroid no esta disponible en Expo Web
     //  ToastAndroid.show('Something went wrong!', 1000);
     console.error(err);
+    throw err;
   }
 );
 
@@ -40,12 +41,16 @@ export const makeMcmRequest = async (
   } catch (error: any) {
     error =
       error?.response?.data || error?.request?.data || error?.request || error;
-
+    console.log("este es", error);
     throw error;
   }
 };
 
-export const makeEcrRequest = async (path: string, body?: object) => {
+export const makeEcrRequest = async (
+  path: string,
+  body?: object,
+  timeout = 30000
+) => {
   try {
     const initialBody = getEcrRequestInitialBody();
     const headers = getEcrRequestHeaders();
@@ -57,6 +62,7 @@ export const makeEcrRequest = async (path: string, body?: object) => {
       data: bodyParameters,
       headers: headers,
       url: url,
+      timeout: timeout,
     });
 
     if (data?.approval_code == "00") {
@@ -74,15 +80,16 @@ export const makeEcrRequest = async (path: string, body?: object) => {
 };
 
 export const onSuccessfulECRResponse = (data: any, path: string) => {
-  if (path == "logon") {
-    let { setup, saveSetup } = useEcrStore.getState();
+  let { setup, saveSetup } = useEcrStore.getState();
 
+  if (path == "logon") {
     setup.session_id = data.session_id;
     setup.reference = data.reference;
-
-    saveSetup(setup);
   }
 
+  setup.last_reference = data.reference;
+
+  saveSetup(setup);
   return true;
 };
 

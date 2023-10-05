@@ -54,7 +54,7 @@ const useEcrStore = create<EcrStore>()(
     {
       name: ECR_LOCAL_STORAGE_KEY, // name of the item in the storage (must be unique)
       storage: createJSONStorage(() => AsyncStorage),
-      version: 4,
+      version: 5,
       // THOSE PROPERTIES LISTED HERE WILL KEEP SAVED IN LOCAL_STORAGE
       partialize: (state) => ({ setup: state.setup }),
     }

@@ -38,7 +38,7 @@ const TipSelector = ({ paymentTotal }: props) => {
 
   return (
     <View style={styles.container}>
-      <View row marginT-20 spread>
+      <View row marginT-20 centerH style={{ flexWrap: "wrap", maxWidth: 800 }}>
         {options.map((option, idx) => {
           let isOptionActive =
             paymentStore.inputValues.selectedTip == option.value;
@@ -48,8 +48,9 @@ const TipSelector = ({ paymentTotal }: props) => {
               onPress={() => onPressTip(option)}
               variant="iconButtonWithLabelCenterOutline"
               active={isOptionActive}
-              marginV-2
+              marginV-15
               marginH-25
+              style={{ borderColor: Colors.primary, width: 150 }}
             >
               <Text
                 center

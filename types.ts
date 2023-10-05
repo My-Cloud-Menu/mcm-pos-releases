@@ -168,3 +168,61 @@ export interface OrdersResponse {
   count: number;
   lastEvaluatedKey: null;
 }
+
+export type ecrSaleResponse = {
+  trace_number: string;
+  card_acceptor_id: string;
+  batch_number: string;
+  special_account: string;
+  pan_card_number: string;
+  merchant_id: string;
+  reference: string;
+  amounts: {
+    total: string;
+    base_state_tax: string;
+    tip: string;
+    reduced_tax: string;
+    base_reduced_tax: string;
+    state_tax: string;
+    city_tax: string;
+  };
+  receipt_output: {
+    customer: string;
+    merchant: string;
+  };
+  authorization_code: string;
+  signature_indicator: string;
+  emv_data: {
+    "84": string;
+    "95": string;
+    "9F12": string;
+    "9B": string;
+    "9F26": string;
+    "9F37": string;
+  };
+  transaction_time: string;
+  payment_host: string;
+  receipt_selected: string;
+  invoice_number: string;
+  terminal_id: string;
+  transaction_date: string;
+  approval_code: string;
+  cashier_id: string;
+  manual_entry_indicator: string;
+  session_id: string;
+  ivu: {
+    control_line1: string;
+    info_line6: string;
+    control_line2: string;
+    info_line4: string;
+    info_line2: string;
+  };
+  process_cashback: string;
+  card_bin_type: string;
+  station_number: string;
+  response_message: string;
+  receipt_email: string;
+  transaction_type_indicator: string;
+  entry_type: string;
+  fallback: string;
+};

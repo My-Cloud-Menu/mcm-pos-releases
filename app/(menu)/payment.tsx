@@ -1,22 +1,15 @@
 import { StyleSheet } from "react-native";
 import React from "react";
-import {
-  Button,
-  Colors,
-  LoaderScreen,
-  StateScreen,
-  Text,
-  View,
-} from "react-native-ui-lib";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Colors, LoaderScreen, StateScreen } from "react-native-ui-lib";
+import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { Order } from "../../types";
 import { getOrderById } from "../../modules/orders/OrdersApi";
-import TipSelector from "../../modules/payment/components/TipSelector";
+import PaymentScreen from "../../modules/payment/components/PaymentScreen";
 
 const payment = () => {
   let params = useLocalSearchParams<{ orderId: string }>();
-  params.orderId = "10028"; // !! BORRAR AL TERMINAR
+
   if (!params.orderId)
     return (
       <StateScreen
@@ -46,21 +39,10 @@ const payment = () => {
       />
     );
 
-  return (
-    <View flex>
-      <View flex centerH>
-        <Stack.Screen options={{ title: `Payment - Order ${order.id}` }} />
-        <Text marginT-15 text70>
-          Total a Pagar
-        </Text>
-        <Text text30L>$ {order.total} </Text>
-        <TipSelector paymentTotal={Number(order.total)} />
-      </View>
-      <View paddingB-20>
-        <Button label="Complete Payment" fullWidth marginH-20 />
-      </View>
-    </View>
-  );
+  if (order.payment_status == "fulfilled")
+    return <StateScreen title={"Order is Already Paid"} subtitle="Thank You" />;
+
+  return <PaymentScreen order={order} />;
 };
 
 export default payment;
