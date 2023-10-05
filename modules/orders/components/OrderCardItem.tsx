@@ -1,8 +1,9 @@
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import React from "react";
 import { Chip, Colors, Text, View } from "react-native-ui-lib";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Order, ProductCart } from "../../../types";
+import { shadowProps } from "../../common/theme/shadows";
 
 const getTitleLabel = (order: Order) => {
   return order.id.slice(order.id.length - 2, order.id.length);
@@ -26,13 +27,38 @@ const orderStatusLabel: any = {
 
 type Props = {
   order: any;
+  isActive?: boolean;
+  onPress?: (order: Order) => void;
 };
 
-const OrderCardItem = ({ order }: Props) => {
+const OrderCardItem = ({
+  order,
+  isActive = false,
+  onPress = undefined,
+}: Props) => {
   return (
-    <View style={styles.container}>
+    <Pressable
+      onPress={() => onPress && onPress(order)}
+      style={{
+        backgroundColor: isActive ? "#E0E0E0" : Colors.white,
+        paddingRight: 12,
+        paddingLeft: 6,
+        paddingVertical: 10,
+        borderRadius: 8,
+        ...shadowProps,
+      }}
+    >
       <View row centerV>
-        <View style={styles.titleContainer}>
+        <View
+          style={{
+            width: 55,
+            height: 55,
+            borderRadius: 10,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: isActive ? Colors.white : "#E0E0E0",
+          }}
+        >
           <Text text60L>{getTitleLabel(order)}</Text>
         </View>
 
@@ -65,20 +91,10 @@ const OrderCardItem = ({ order }: Props) => {
           </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
 export default OrderCardItem;
 
-const styles = StyleSheet.create({
-  container: {},
-  titleContainer: {
-    width: 55,
-    height: 55,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#E0E0E0",
-  },
-});
+const styles = StyleSheet.create({});

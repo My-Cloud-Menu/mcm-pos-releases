@@ -2,16 +2,33 @@ import { create } from "zustand";
 import { createOrderInBackend } from "./OrdersApi";
 import useAuthStore from "../auth/AuthStore";
 import { useCartStore } from "../../stores/cartStore";
-import { OrderStore } from "../../types";
-import { queryClient } from "../../app/_layout";
+import { payment_method_available } from "../../types";
+import { Order } from "mcm-types/src/order";
+
+interface OrderStore {
+  isLoading: boolean;
+  error: any;
+  inputValues: {
+    first_name: string;
+    payment_method: payment_method_available;
+  };
+  // selectedOrderId?: string;
+  // changeSelectedOrderId: () => void;
+  createOrder: () => Promise<Order>;
+  changeInputValue: (propertyName: string, value: any) => void;
+  isCreateOrderAvailable: () => boolean;
+}
 
 const useOrderStore = create<OrderStore>((set, get) => ({
   isLoading: false,
   error: null,
+  // selectedOrderId: undefined,
   inputValues: {
     first_name: "",
     payment_method: "ecr-card",
   },
+  // changeSelectedOrderId: (orderId?: string) =>
+  //   set(() => ({ selectedOrderId: orderId })),
   isCreateOrderAvailable: () => {
     const cartStore = useCartStore.getState();
     const isLoading = get().isLoading;
@@ -60,7 +77,6 @@ const useOrderStore = create<OrderStore>((set, get) => ({
       const result = await createOrderInBackend(orderStructure);
 
       cartStore.clearCart();
-      queryClient.invalidateQueries({ queryKey: ["/orders"] });
 
       set((state) => ({
         isLoading: false,

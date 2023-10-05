@@ -26,7 +26,7 @@ const navItems = [
   },
   {
     name: "History",
-    pathname: "/history",
+    pathname: "/orders",
     icon: (props = {}) => (
       <AntDesign size={21} name="clockcircleo" {...props} />
     ),

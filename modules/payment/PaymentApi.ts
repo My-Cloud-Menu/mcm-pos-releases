@@ -117,3 +117,7 @@ export const updatePaymentPaidSuccessfullyInBackend = async (
 export const getPaymentById = async (paymentId: string) => {
   return await makeMcmRequest(`front/payments/${paymentId}`);
 };
+
+export const getQrCodeReceiptUrl = async (paymentId: string) => {
+  return await makeMcmRequest(`front/payments/${paymentId}/receipturl`);
+};

@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Order } from "../../types";
 import ReceiptScreen from "../../modules/receipt/components/ReceiptScreen";
 import { getPaymentById } from "../../modules/payment/PaymentApi";
+import { Payment } from "mcm-types/src/payment";
 
 const receipt = () => {
   let params = useLocalSearchParams<{ paymentId: string }>();
@@ -18,15 +19,15 @@ const receipt = () => {
       />
     );
 
-  const { data: order, isLoading: isOrderLoading } = useQuery<Order>({
+  const { data: payment, isLoading: isPaymentLoading } = useQuery<Payment>({
     queryKey: ["payments", params.paymentId],
     queryFn: () => getPaymentById(params.paymentId),
   });
 
-  if (isOrderLoading && !order)
-    return <LoaderScreen message={"Loading Order"} color={Colors.grey40} />;
+  if (isPaymentLoading && !payment)
+    return <LoaderScreen message={"Loading Payment"} color={Colors.grey40} />;
 
-  if (!order)
+  if (!payment)
     return (
       <StateScreen
         title={"Payment Not Founded"}
@@ -34,7 +35,7 @@ const receipt = () => {
       />
     );
 
-  return <ReceiptScreen order={order} />;
+  return <ReceiptScreen payment={payment} />;
 };
 
 export default receipt;

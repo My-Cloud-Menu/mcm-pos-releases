@@ -12,3 +12,8 @@ export const goToReceiptScreen = (paymentId: string, payment?: Payment) => {
   if (payment) queryClient.setQueryData(["payments", paymentId], payment);
   router.push({ pathname: "/receipt", params: { paymentId: paymentId } });
 };
+
+export const goToOrderDetailsScreen = (orderId: string, order?: Order) => {
+  if (order) queryClient.setQueryData(["orders", orderId], order);
+  router.push({ pathname: "/orders", params: { orderId: orderId } });
+};

@@ -16,3 +16,7 @@ export const formatCurrency = (
 
   return numberFormatted;
 };
+
+export const decodeName = (text: string) => {
+  return text.replace("&amp;", "&");
+};
