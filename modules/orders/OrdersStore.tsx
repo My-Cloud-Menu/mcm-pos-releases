@@ -10,6 +10,7 @@ const useOrderStore = create<OrderStore>((set, get) => ({
   error: null,
   inputValues: {
     first_name: "",
+    payment_method: "ecr-card",
   },
   isCreateOrderAvailable: () => {
     const cartStore = useCartStore.getState();
@@ -17,7 +18,7 @@ const useOrderStore = create<OrderStore>((set, get) => ({
 
     return cartStore.cartProducts.length > 0 && !isLoading;
   },
-  changeInputValue: (propertyName: string, value: string) => {
+  changeInputValue: (propertyName, value) => {
     set((state) => ({
       inputValues: { ...state.inputValues, [propertyName]: value },
     }));

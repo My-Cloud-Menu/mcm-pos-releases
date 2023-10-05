@@ -21,7 +21,7 @@ import useOrderStore from "../../modules/orders/OrdersStore";
 import { useQuery } from "@tanstack/react-query";
 import { OrdersResponse } from "../../types";
 import { makeMcmRequest } from "../../modules/common/PetitionsHelper";
-import { queryClient } from "../_layout";
+import { goToPaymentScreen } from "../../modules/common/NavigationHelper";
 
 const Menu = () => {
   const { cartProducts } = useCartStore();
@@ -42,9 +42,7 @@ const Menu = () => {
   const onPressSendOrder = async () => {
     const orderCreated = await orderStore.createOrder();
 
-    queryClient.setQueryData(["orders", orderCreated.id], orderCreated);
-    console.log(orderCreated.id);
-    router.push({ pathname: "/payment", params: { orderId: orderCreated.id } });
+    goToPaymentScreen(orderCreated.id, orderCreated);
   };
 
   return (

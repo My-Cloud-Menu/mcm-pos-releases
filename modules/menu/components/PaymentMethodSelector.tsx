@@ -1,20 +1,18 @@
 import { StyleSheet } from "react-native";
 import React, { useState } from "react";
-import { Badge, Button, Colors, Image, Text, View } from "react-native-ui-lib";
-import { FlashList } from "@shopify/flash-list";
+import { Button, Colors, Text, View } from "react-native-ui-lib";
 import {
   Feather,
   FontAwesome,
   FontAwesome5,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-
-const imageUrl =
-  "https://comeperuano.b-cdn.net/wp-content/uploads/2020/10/receta-frappuccino.jpg";
+import useOrderStore from "../../orders/OrdersStore";
 
 const paymentMethods = [
   {
     name: "Cash",
+    value: "ecr-cash",
     icon: (props = {}) => (
       <MaterialCommunityIcons
         name="cash"
@@ -26,6 +24,7 @@ const paymentMethods = [
   },
   {
     name: "Credit Card",
+    value: "ecr-card",
     icon: (props = {}) => (
       <FontAwesome
         name="credit-card-alt"
@@ -35,16 +34,12 @@ const paymentMethods = [
       />
     ),
   },
-  {
-    name: "Wallet",
-    icon: (props = {}) => (
-      <FontAwesome5 name="wallet" size={23} color={Colors.gray} {...props} />
-    ),
-  },
 ];
 const PaymentMethodSelector = () => {
-  const [paymentMethodSelected, setPaymentMethodSelected] =
-    useState("Credit Card");
+  const paymentMethodSelected = useOrderStore(
+    (state) => state.inputValues.payment_method
+  );
+  const changeInputValue = useOrderStore((state) => state.changeInputValue);
 
   return (
     <View style={styles.container}>
@@ -52,11 +47,13 @@ const PaymentMethodSelector = () => {
       <View row marginT-20 spread>
         {paymentMethods.map((paymentMethodItem, idx) => {
           let isPaymentMethodActive =
-            paymentMethodSelected == paymentMethodItem.name;
+            paymentMethodSelected == paymentMethodItem.value;
 
           return (
             <Button
-              onPress={() => setPaymentMethodSelected(paymentMethodItem.name)}
+              onPress={() =>
+                changeInputValue("payment_method", paymentMethodItem.value)
+              }
               useMinSize
               variant="iconButtonWithLabelCenterOutline"
               active={isPaymentMethodActive}

@@ -133,14 +133,16 @@ export interface CartStore {
   clearCart: () => void;
 }
 
+export type payment_method_available = "ecr-card" | "ecr-cash";
 export interface OrderStore {
   isLoading: boolean;
   error: any;
   inputValues: {
     first_name: string;
+    payment_method: payment_method_available;
   };
   createOrder: () => Promise<Order>;
-  changeInputValue: (propertyName: string, value: string) => void;
+  changeInputValue: (propertyName: string, value: any) => void;
   isCreateOrderAvailable: () => boolean;
 }
 
