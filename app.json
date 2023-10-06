@@ -2,7 +2,7 @@
   "expo": {
     "name": "MCM POS",
     "slug": "mcm-pos",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "icon": "./assets/images/icon.png",
     "scheme": "mcmpos",
     "orientation": "landscape",
@@ -12,21 +12,23 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mycloudmenu.mcm.pos",
       "requireFullScreen": true
     },
     "android": {
+      "icon": "./assets/images/icon.png",
+      "name": "MCM POS",
+      "orientation": "landscape",
+
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.mycloudmenu.mcm.pos",
-      "versionCode": 3
+      "versionCode": 4
     },
     "web": {
       "bundler": "metro",
