@@ -70,7 +70,7 @@ const OrderDetailsScreen = ({ orderId }: props) => {
                 <View row centerV>
                   <Text white marginR-3>
                     Next Status
-                  </Text>{" "}
+                  </Text>
                   <Entypo name="chevron-right" size={16} color="white" />
                 </View>
               }
@@ -97,7 +97,7 @@ const OrderDetailsScreen = ({ orderId }: props) => {
           <LabelValue
             horizontal={false}
             label="Payment Status"
-            value={formatOrderPaymentStatus[order.payment_status]}
+            value={formatOrderPaymentStatus[order.payment_status] || ""}
           />
         </View>
         <Text marginT-20 text70>

@@ -1,17 +1,20 @@
 {
   "expo": {
-    "name": "mcm.pos",
+    "name": "MCM POS",
     "slug": "mcm-pos",
     "version": "1.0.0",
     "icon": "./assets/images/icon.png",
     "scheme": "mcmpos",
+    "orientation": "landscape",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mycloudmenu.mcm.pos",
@@ -22,7 +25,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.mycloudmenu.mcm.pos"
+      "package": "com.mycloudmenu.mcm.pos",
+      "versionCode": 3
     },
     "web": {
       "bundler": "metro",
@@ -44,6 +48,9 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "93a3d6c1-28f8-4bcc-a5cd-e49c997322d7"
       }
     },
     "owner": "mycloudmenu"
