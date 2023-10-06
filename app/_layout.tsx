@@ -58,10 +58,16 @@ function RootLayoutNav() {
   const employeeLogged = useAuthStore((state) => state.employeeLogged);
   const pathname = usePathname();
   const navigation = useNavigation();
+  console.log(employeeLogged);
 
   useEffect(() => {
     if (["/", "/login"].includes(pathname) && Boolean(employeeLogged)) {
       navigation.navigate("(menu)", { screen: "menu" });
+    }
+
+    if (!["/", "/login"].includes(pathname) && !Boolean(employeeLogged)) {
+      console.log("dale pa atras");
+      navigation.dispatch({ type: "POP_TO_TOP" });
     }
   }, [pathname]);
 

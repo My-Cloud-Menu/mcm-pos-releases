@@ -49,7 +49,7 @@ const LineItemsList = ({
                   }
                 />
                 <View>
-                  <Text>
+                  <Text marginR-30>
                     {decodeName(item.name)}{" "}
                     {!isEditMode && `x ${item.quantity}`}
                   </Text>

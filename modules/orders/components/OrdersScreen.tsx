@@ -25,7 +25,7 @@ const OrdersScreen = ({ orders }: props) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <Stack.Screen options={{ title: `Orders (${orders.length})` }} />
       <View
         style={{

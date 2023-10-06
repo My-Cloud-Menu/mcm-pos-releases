@@ -68,7 +68,7 @@ ThemeManager.setComponentForcedTheme("Button", (props, context) => {
     props;
   }
 
-  return { style: { ...themeStyles, ...props.style } };
+  return { style: { ...themeStyles, ...props.style }, white: true };
 });
 
 const styles = StyleSheet.create({

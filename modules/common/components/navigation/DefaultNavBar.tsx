@@ -62,7 +62,9 @@ const DefaultNavBar = () => {
       navigation.dispatch({ type: "POP_TO_TOP" });
     } catch (error: any) {
       console.log(error);
-      showWarningAlert("Error in Logout, please try again");
+      showWarningAlert(
+        "Error in Logout, please try again or contact the administrator"
+      );
     }
   };
 

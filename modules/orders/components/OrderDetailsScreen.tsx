@@ -17,7 +17,8 @@ import { getOrderById } from "../OrdersApi";
 import { useQuery } from "@tanstack/react-query";
 import { formatCurrency } from "../../common/UtilsHelper";
 import { goToPaymentScreen } from "../../common/NavigationHelper";
-
+import dayjs from "dayjs";
+import { formatOrderPaymentStatus, formatOrderStatus } from "../OrderUtils";
 type props = {
   orderId: string;
 };
@@ -52,26 +53,31 @@ const OrderDetailsScreen = ({ orderId }: props) => {
         {/* <Text>OrderDetailsScreen</Text> */}
         <View row>
           <LabelValue label="Order ID" value={`#${order.id}`} />
-          <LabelValue label="Hour" value="10:02PM" />
+          <LabelValue
+            label="Hour"
+            value={dayjs(order.date_created).format("hh:mm A - DD/MM/YYYY")}
+          />
           <Chip
-            label={order.status}
+            label={formatOrderStatus[order.status]}
             backgroundColor="yellow"
             containerStyle={{ borderWidth: 0 }}
             marginR-10
             labelStyle={{ fontWeight: "bold" }}
           />
-          <Chip
-            label={
-              <View row centerV>
-                <Text white marginR-3>
-                  Ready
-                </Text>{" "}
-                <Entypo name="chevron-right" size={16} color="white" />
-              </View>
-            }
-            backgroundColor="#000"
-            containerStyle={{ borderWidth: 0, borderRadius: 8 }}
-          />
+          {order.status != "check-closed" && (
+            <Chip
+              label={
+                <View row centerV>
+                  <Text white marginR-3>
+                    Next Status
+                  </Text>{" "}
+                  <Entypo name="chevron-right" size={16} color="white" />
+                </View>
+              }
+              backgroundColor="#000"
+              containerStyle={{ borderWidth: 0, borderRadius: 8 }}
+            />
+          )}
         </View>
         <View row spread marginT-14>
           <LabelValue
@@ -80,8 +86,19 @@ const OrderDetailsScreen = ({ orderId }: props) => {
             value={formatCurrency(order.total)}
           />
           <LabelValue horizontal={false} label="Experience" value="Pickup" />
-          <LabelValue horizontal={false} label="Name" value="Carlos Santos" />
-          <LabelValue horizontal={false} label="Phone" value="+17078212312" />
+          <LabelValue
+            horizontal={false}
+            label="Name"
+            value={
+              `${order.cart.customer.first_name} ${order.cart.customer.last_name}`.trim() ||
+              "Sin Especificar"
+            }
+          />
+          <LabelValue
+            horizontal={false}
+            label="Payment Status"
+            value={formatOrderPaymentStatus[order.payment_status]}
+          />
         </View>
         <Text marginT-20 text70>
           Items
@@ -92,12 +109,13 @@ const OrderDetailsScreen = ({ orderId }: props) => {
       </View>
       <View marginB-10>
         <Button
+          disabled={order.payment_status == "fulfilled"}
           marginV-4
           label="Complete Payment"
           useMinSize
           onPress={onPressCompletePayment}
         />
-        <Button marginV-4 label="Cancel Order" useMinSize />
+        <Button disabled marginV-4 label="Cancel Order" useMinSize />
       </View>
     </View>
   );
