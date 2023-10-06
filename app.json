@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mycloudmenu.mcm.pos",
@@ -22,13 +24,12 @@
       "icon": "./assets/images/icon.png",
       "name": "MCM POS",
       "orientation": "landscape",
-
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.mycloudmenu.mcm.pos",
-      "versionCode": 4
+      "versionCode": 5
     },
     "web": {
       "bundler": "metro",
