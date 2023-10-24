@@ -1,6 +1,7 @@
 import axios from "axios";
 import useEcrStore from "../ecr/EcrStore";
 import useGlobalStore from "./GlobalStore";
+import { showAlert } from "./AlertHelper";
 
 axios.interceptors.response.use(
   (response) => response,
@@ -11,6 +12,34 @@ axios.interceptors.response.use(
     throw err;
   }
 );
+
+export const onRequestError = (
+  error: any,
+  title: string = "",
+  description: string = ""
+) => {
+  if (
+    [
+      "InvalidParameterException",
+      "ValidationException",
+      "UsernameExistsException",
+    ].includes(error?.code) &&
+    error?.message
+  ) {
+    showAlert({
+      type: "danger",
+      title: `Something went wrong loading ${title}`,
+      description: JSON.stringify(error.message),
+    });
+  } else {
+    showAlert({
+      type: "danger",
+      title: `Something went wrong loading ${title}`,
+      description:
+        description || "Please try again, if error persist contact to admin",
+    });
+  }
+};
 
 export const makeMcmRequest = async (
   path: string = "",

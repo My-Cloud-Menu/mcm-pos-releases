@@ -20,6 +20,7 @@ interface PaymentStore {
   handlePaymentInEcr: () => Promise<any>;
   changeShowCustomTipModal: (show: boolean) => void;
   changeInputValue: (propertyName: string, value: any) => void;
+  resetPayment: () => void;
 }
 
 const usePaymentStore = create<PaymentStore>((set, get) => ({
@@ -31,6 +32,9 @@ const usePaymentStore = create<PaymentStore>((set, get) => ({
   showCustomTipModal: false,
   paymentCreated: undefined,
   ecrResult: undefined,
+  resetPayment: () => {
+    set(() => ({ paymentCreated: undefined, ecrResult: undefined }));
+  },
   updatePaymentPaidSuccessfully: async () => {
     set(() => ({ isLoading: true }));
 

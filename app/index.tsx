@@ -5,7 +5,7 @@ import metrics from "../modules/common/theme/metrics";
 import { Ionicons } from "@expo/vector-icons";
 import fonts from "../modules/common/theme/fonts";
 import { router } from "expo-router";
-import { showWarningAlert } from "../modules/common/AlertHelper";
+import { showAlert } from "../modules/common/AlertHelper";
 
 const version = "1.0.2";
 
@@ -18,7 +18,9 @@ const HomeScreen = () => {
     router.push(`/login?title=ADMIN&subTitle=Linda Linda`);
   };
 
-  const onPressConfig = () => showWarningAlert("We are working on it");
+  const onPressConfig = () => {
+    showAlert({ title: "We are working on it", type: "warning" });
+  };
 
   return (
     <View style={styles.container}>

@@ -20,7 +20,19 @@ const CartItem = ({ product }: Props) => {
 
         <View marginL-13>
           <Text text65>{product.product.name}</Text>
+          {product.attributes.map((attrib) => {
+            let extraPrice = Array.isArray(attrib.price)
+              ? attrib.price.reduce((a, b) => a + Number(b), 0).toFixed(2)
+              : attrib.price;
 
+            return (
+              <View>
+                <Text>{attrib.label} </Text>
+                {attrib.value}
+                {extraPrice > 0 && <Text>(${extraPrice})</Text>}
+              </View>
+            );
+          })}
           <View row bottom marginT-10>
             <Text text90 marginL-1>
               x{product.quantity}

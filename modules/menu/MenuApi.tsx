@@ -1,15 +1,54 @@
+import {
+  GetIngredientGroupRequestResponse,
+  GetIngredientRequestResponse,
+  GetProductRequestResponse,
+} from "mcm-types";
 import { makeMcmRequest } from "../common/PetitionsHelper";
 
-export const getProducts = async () => {
+export const ingredientsQueryKey = "ingredients";
+export const ingredientsGroupsQueryKey = "ingredients_groups";
+export const productsQueryKey = "products";
+export const getIngredients =
+  async (): Promise<GetIngredientRequestResponse> => {
+    let response = await makeMcmRequest(
+      "front/ingredients",
+      "GET",
+      {},
+      { withoutPaginate: true }
+    );
+
+    response.ingredients = response.ingredients.map((ingredient) => {
+      ingredient.measurement_type = ingredient?.measurement_type || "unit";
+      ingredient.tags = ingredient?.tags || [];
+
+      return ingredient;
+    });
+
+    return response;
+  };
+
+export const getIngredientsGroups =
+  async (): Promise<GetIngredientGroupRequestResponse> => {
+    let response = await makeMcmRequest(
+      "front/ingredients/groups",
+      "GET",
+      {},
+      { withoutPaginate: true }
+    );
+
+    return response;
+  };
+
+export const getProducts = async (): Promise<GetProductRequestResponse> => {
   const response = await makeMcmRequest(
     "front/products",
     "GET",
     {},
     { withoutPaginate: true }
   );
-  return { products: response.products.filter((product) => product.id != 0) };
-};
 
+  return response;
+};
 export const getCategoriesWithProducts = async () => {
   const response = await makeMcmRequest(
     "front/products",
@@ -60,24 +99,4 @@ export const getProductsByCategory = async (categoryId) => {
   );
 
   return { products: productsFounded };
-};
-
-export const getIngredientsGroups = async () => {
-  const response = await makeMcmRequest(
-    "front/ingredients/groups",
-    "GET",
-    {},
-    { withoutPaginate: true }
-  );
-  return { ingredients_groups: response.ingredients_groups };
-};
-
-export const getIngredients = async () => {
-  const response = await makeMcmRequest(
-    "front/ingredients",
-    "GET",
-    {},
-    { withoutPaginate: true }
-  );
-  return { ingredients: response.ingredients };
 };

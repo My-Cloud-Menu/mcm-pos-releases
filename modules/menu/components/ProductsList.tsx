@@ -1,13 +1,19 @@
 import { StyleSheet, View } from "react-native";
 import React, { useMemo, useState } from "react";
-import { FlashList } from "@shopify/flash-list";
 import ProductItem from "./ProductItem";
 import metrics from "../../common/theme/metrics";
 import { useQuery } from "@tanstack/react-query";
-import { IngredientResponse, Product, ProductResponse } from "../../../types";
 import { useGlobal } from "../../../stores/global";
-import { makeMcmRequest } from "../../common/PetitionsHelper";
+import { onRequestError } from "../../common/PetitionsHelper";
 import { FlatList } from "react-native-gesture-handler";
+import {
+  getIngredients,
+  getIngredientsGroups,
+  getProducts,
+  ingredientsGroupsQueryKey,
+  productsQueryKey,
+} from "../MenuApi";
+import { Product } from "mcm-types";
 
 const getColumsNumbers = () => {
   if (metrics.screenWidth > 900) return 4;
@@ -16,24 +22,33 @@ const getColumsNumbers = () => {
 };
 
 const ProductsList = () => {
-  const { data: productResponse } = useQuery<ProductResponse>({
-    queryKey: ["/products"],
-    queryFn: () => makeMcmRequest("front/products?withoutPaginate=true"),
+  const { data: productResponse } = useQuery({
+    queryKey: [productsQueryKey],
+    queryFn: () => getProducts(),
     initialData: {
       products: [],
-      count: 0,
-      lastEvaluatedKey: null,
     },
   });
 
-  const { data: ingredientResponse } = useQuery<IngredientResponse>({
-    queryKey: ["/ingredients"],
-    queryFn: () => makeMcmRequest("front/ingredients?withoutPaginate=true"),
+  const ingredientsGroupsQuery = useQuery({
+    queryKey: [ingredientsGroupsQueryKey],
+    queryFn: () => getIngredientsGroups(),
+    // refetchOnMount: false,
+    initialData: {
+      ingredients_groups: [],
+    },
+    onError: (error) => onRequestError(error, "Ingredients Groups"),
+  });
+
+  // Get Ingredients Query
+  const ingredientsQuery = useQuery({
+    queryKey: [`ingredients`],
+    queryFn: () => getIngredients(),
+    // refetchOnMount: false,
     initialData: {
       ingredients: [],
-      count: 0,
-      lastEvaluatedKey: null,
     },
+    onError: (error) => onRequestError(error, "Ingredients"),
   });
 
   const [productIdsSelected, setProductIdsSelected] = useState<number[]>([]);
@@ -70,7 +85,8 @@ const ProductsList = () => {
         let isActive = productIdsSelected.includes(item.id);
         return (
           <ProductItem
-            ingredients={ingredientResponse.ingredients}
+            ingredients={ingredientsQuery.data.ingredients}
+            ingredientsGroups={ingredientsGroupsQuery.data.ingredients_groups}
             product={item}
             isActive={isActive}
             onPress={() => onPressProduct(item)}

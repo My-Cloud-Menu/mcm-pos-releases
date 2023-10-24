@@ -19,7 +19,10 @@ import { useGlobal } from "../../stores/global";
 import useOrderStore from "../../modules/orders/OrdersStore";
 import { useQuery } from "@tanstack/react-query";
 import { OrdersResponse } from "../../types";
-import { makeMcmRequest } from "../../modules/common/PetitionsHelper";
+import {
+  makeMcmRequest,
+  onRequestError,
+} from "../../modules/common/PetitionsHelper";
 import { goToPaymentScreen } from "../../modules/common/NavigationHelper";
 
 const Menu = () => {
@@ -36,6 +39,7 @@ const Menu = () => {
         count: 0,
         lastEvaluatedKey: null,
       },
+      onError: (error) => onRequestError(error, "Products"),
     });
 
   const onPressSendOrder = async () => {
@@ -123,7 +127,10 @@ const Menu = () => {
             {cartProducts.length ? (
               <>
                 <Text text60 marginT-10>
-                  Cart
+                  Cart{" "}
+                  <Text text70>
+                    ({cartProducts.reduce((acc, cal) => acc + cal.quantity, 0)})
+                  </Text>
                 </Text>
 
                 <View style={{}}>

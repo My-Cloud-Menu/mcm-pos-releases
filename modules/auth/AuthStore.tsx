@@ -24,6 +24,7 @@ interface AuthStore {
     role: "admin" | "waiter";
   };
   login: (pin: string) => Promise<any>;
+  logout: () => Promise<any>;
 }
 
 const useAuthStore = create<AuthStore>()(
@@ -72,6 +73,10 @@ const useAuthStore = create<AuthStore>()(
         } catch (error: any) {
           const errorMessage = error?.message;
 
+          if (error?.message == "No Time Sheet Available for Logout") {
+            set(() => ({ isLoading: false, employeeLogged: undefined }));
+            return;
+          }
           set(() => ({ isLoading: false, error: errorMessage }));
 
           throw error;

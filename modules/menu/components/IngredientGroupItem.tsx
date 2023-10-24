@@ -2,11 +2,19 @@ import { StyleSheet } from "react-native";
 import React from "react";
 import { Button, Text, View } from "react-native-ui-lib";
 
-const IngredientGroupItem = ({ ingredient }: any) => {
+type props = {
+  ingredient: {
+    name: string;
+    price: string;
+    selected: boolean;
+  };
+};
+
+const IngredientGroupItem = (props: props) => {
   return (
     <View style={styles.container}>
       <Text marginL-5 text80BO>
-        {ingredient.name}
+        {props.ingredient.name}
       </Text>
       <View row>
         <Button variant="iconButtonWithLabelCenterOutline" useMinSize marginR-4>

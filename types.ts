@@ -114,23 +114,9 @@ export interface Order {
   total: string;
 }
 
-export interface ProductCart {
-  product: Product;
-  quantity: number;
-}
 export interface UpdateProductCart {
   product?: Product;
   quantity?: number;
-}
-
-export interface CartStore {
-  cartProducts: Array<ProductCart>;
-  addProduct: (cartProduct: ProductCart) => void;
-  increaseProduct: (cartProductId: number) => void;
-  decrementProduct: (cartProductId: number) => void;
-  removeProduct: (cartProductId: number) => void;
-  updateProduct: (cartProductId: number, product: UpdateProductCart) => void;
-  clearCart: () => void;
 }
 
 export type payment_method_available = "ecr-card" | "ecr-cash";

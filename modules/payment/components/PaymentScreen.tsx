@@ -1,5 +1,5 @@
 import { StyleSheet, ActivityIndicator } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Colors, Text, View } from "react-native-ui-lib";
 import { Stack } from "expo-router";
 import { Order } from "../../../types";
@@ -29,6 +29,10 @@ const PaymentScreen = ({ order }: props) => {
 
     goToReceiptScreen(paymentUpdated.id, paymentUpdated);
   };
+
+  useEffect(() => {
+    paymentStore.resetPayment();
+  }, []);
 
   return (
     <View flex backgroundColor={Colors.graySoft}>
