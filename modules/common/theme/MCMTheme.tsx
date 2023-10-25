@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { Assets, Colors, ThemeManager } from "react-native-ui-lib";
+import { Assets, Colors, ThemeManager, Typography } from "react-native-ui-lib";
 
 Colors.loadColors({
   primary: "#002C51",

@@ -28,13 +28,13 @@ export const onRequestError = (
   ) {
     showAlert({
       type: "danger",
-      title: `Something went wrong loading ${title}`,
+      title: title,
       description: JSON.stringify(error.message),
     });
   } else {
     showAlert({
       type: "danger",
-      title: `Something went wrong loading ${title}`,
+      title: title,
       description:
         description || "Please try again, if error persist contact to admin",
     });

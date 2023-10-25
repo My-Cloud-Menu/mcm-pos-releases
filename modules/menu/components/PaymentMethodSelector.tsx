@@ -1,34 +1,29 @@
 import { StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { Button, Colors, Text, View } from "react-native-ui-lib";
-import {
-  Feather,
-  FontAwesome,
-  FontAwesome5,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import useOrderStore from "../../orders/OrdersStore";
 
 const paymentMethods = [
-  {
-    name: "Cash",
-    value: "ecr-cash",
-    icon: (props = {}) => (
-      <MaterialCommunityIcons
-        name="cash"
-        size={35}
-        color={Colors.gray}
-        {...props}
-      />
-    ),
-  },
   {
     name: "Credit Card",
     value: "ecr-card",
     icon: (props = {}) => (
       <FontAwesome
         name="credit-card-alt"
-        size={21}
+        size={40}
+        color={Colors.gray}
+        {...props}
+      />
+    ),
+  },
+  {
+    name: "Cash",
+    value: "ecr-cash",
+    icon: (props = {}) => (
+      <MaterialCommunityIcons
+        name="cash"
+        size={60}
         color={Colors.gray}
         {...props}
       />
@@ -43,8 +38,8 @@ const PaymentMethodSelector = () => {
 
   return (
     <View style={styles.container}>
-      <Text text70>Payment Method</Text>
-      <View row marginT-20>
+      {/* <Text text70>Payment Method</Text> */}
+      <View row marginT-10 style={{ gap: 20 }}>
         {paymentMethods.map((paymentMethodItem, idx) => {
           let isPaymentMethodActive =
             paymentMethodSelected == paymentMethodItem.value;
@@ -54,13 +49,11 @@ const PaymentMethodSelector = () => {
               onPress={() =>
                 changeInputValue("payment_method", paymentMethodItem.value)
               }
-              useMinSize
               variant="iconButtonWithLabelCenterOutline"
               active={isPaymentMethodActive}
               style={{
                 backgroundColor: isPaymentMethodActive ? "" : Colors.graySoft,
-                paddingHorizontal: 15,
-                marginRight: 20,
+                paddingHorizontal: 30,
               }}
             >
               {paymentMethodItem.icon({

@@ -1,5 +1,5 @@
 import { FlatList, ScrollView, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Order } from "mcm-types/src/order";
 import OrderCardItem from "./OrderCardItem";
@@ -23,6 +23,12 @@ const OrdersScreen = ({ orders }: props) => {
   const onPressOrder = (order: Order) => {
     goToOrderDetailsScreen(order.id, order);
   };
+
+  useEffect(() => {
+    if (orders.length > 0 && !orderId) {
+      onPressOrder(orders[0]);
+    }
+  });
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>

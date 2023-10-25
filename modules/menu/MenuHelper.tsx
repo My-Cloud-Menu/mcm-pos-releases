@@ -49,14 +49,14 @@ export const getIngredientsSelectedFormattedForCart = (
   let omnivoreParams: any[] = [];
 
   ingredientsSelected.forEach((group1, groupIdx) => {
-    let Option = "";
+    let Option: string[] = [];
     let Price = 0;
 
     group1.ingredients
       .filter((ingredient) => ingredient.selected)
       .forEach((ingredient) => {
-        Option += ingredient?.variationSelected?.name || ingredient.name;
-        Option += ", ";
+        Option.push(ingredient?.variationSelected?.name || ingredient.name);
+        // Option += ", ";
         Price += ingredient.price;
 
         let omnivoreParam = {
@@ -73,14 +73,16 @@ export const getIngredientsSelectedFormattedForCart = (
         };
 
         ingredient.ingredients_groups.forEach((group2) => {
-          let Option = "";
+          let Option: string[] = [];
           let Price = 0;
 
           group2.ingredients
             .filter((ingredient) => ingredient.selected)
             .forEach((ingredient) => {
-              Option += ingredient?.variationSelected?.name || ingredient.name;
-              Option += ", ";
+              Option.push(
+                ingredient?.variationSelected?.name || ingredient.name
+              );
+              //   Option += ", ";
               Price += ingredient.price;
 
               let omnivoreParam2 = {
@@ -98,15 +100,16 @@ export const getIngredientsSelectedFormattedForCart = (
               };
 
               ingredient.ingredients_groups.forEach((group3) => {
-                let Option = "";
+                let Option: string[] = [];
                 let Price = 0;
 
                 group3.ingredients
                   .filter((ingredient) => ingredient.selected)
                   .forEach((ingredient) => {
-                    Option +=
-                      ingredient?.variationSelected?.name || ingredient.name;
-                    Option += ", ";
+                    Option.push(
+                      ingredient?.variationSelected?.name || ingredient.name
+                    );
+                    // Option += ", ";
                     Price += ingredient.price;
 
                     let omnivoreParam3 = {
@@ -129,7 +132,7 @@ export const getIngredientsSelectedFormattedForCart = (
                 attributesFormatted.push({
                   label:
                     group1.label + " - " + group2.label + " - " + group3.label,
-                  value: Option,
+                  value: Option.join(", "),
                   price: Price.toString(),
                   id: "",
                   additional_properties: {},
@@ -141,7 +144,7 @@ export const getIngredientsSelectedFormattedForCart = (
 
           attributesFormatted.push({
             label: group1.label + " - " + group2.label,
-            value: Option,
+            value: Option.join(", "),
             price: Price.toString(),
             id: "",
             additional_properties: {},
@@ -153,7 +156,7 @@ export const getIngredientsSelectedFormattedForCart = (
 
     attributesFormatted.push({
       label: group1.label,
-      value: Option,
+      value: Option.join(", "),
       price: Price.toString(),
       id: "",
       additional_properties: {},

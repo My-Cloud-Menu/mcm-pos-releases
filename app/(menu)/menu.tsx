@@ -12,21 +12,27 @@ import UserProfileCard from "../../modules/auth/components/UserProfileCard";
 import { FlashList } from "@shopify/flash-list";
 import CartItem from "../../modules/menu/components/CartItem";
 import CartCharges from "../../modules/menu/components/CartCharges";
-import PaymentMethodSelector from "../../modules/menu/components/PaymentMethodSelector";
 import OrderCardItem from "../../modules/orders/components/OrderCardItem";
 import { useCartStore } from "../../stores/cartStore";
 import { useGlobal } from "../../stores/global";
 import useOrderStore from "../../modules/orders/OrdersStore";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { OrdersResponse } from "../../types";
 import {
   makeMcmRequest,
   onRequestError,
 } from "../../modules/common/PetitionsHelper";
 import { goToPaymentScreen } from "../../modules/common/NavigationHelper";
+import {
+  createOrderInBackend,
+  getOrderSummary,
+  orderSummaryQueryKey,
+} from "../../modules/orders/OrdersApi";
+import ExperienceSelector from "../../modules/menu/components/ExperienceSelector";
+import { Order } from "mcm-types";
 
 const Menu = () => {
-  const { cartProducts } = useCartStore();
+  const { cartProducts, clearCart } = useCartStore();
   const { selectedCategory } = useGlobal();
   const orderStore = useOrderStore();
 
@@ -39,14 +45,27 @@ const Menu = () => {
         count: 0,
         lastEvaluatedKey: null,
       },
-      onError: (error) => onRequestError(error, "Products"),
+      onError: (error) =>
+        onRequestError(error, "Something went wrong loading Orders"),
     });
 
-  const onPressSendOrder = async () => {
-    const orderCreated = await orderStore.createOrder();
+  const orderSummaryQuery = useQuery({
+    queryKey: [orderSummaryQueryKey],
+    keepPreviousData: false,
+    queryFn: () => getOrderSummary(),
+    enabled: cartProducts.length > 0,
+  });
 
-    goToPaymentScreen(orderCreated.id, orderCreated);
-  };
+  const createOrderQuery = useMutation<{ order: Order }>({
+    mutationFn: createOrderInBackend,
+    onError: (error) =>
+      onRequestError(error, "Something went wrong Creating Order"),
+    onSuccess: ({ order }) => {
+      goToPaymentScreen(order.id, order);
+      clearCart();
+      orderStore.resetInputValues();
+    },
+  });
 
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
@@ -111,7 +130,7 @@ const Menu = () => {
       </View>
       <View
         flex
-        paddingT-30
+        paddingT-10
         paddingR-10
         paddingL-15
         style={{
@@ -123,7 +142,7 @@ const Menu = () => {
       >
         <View flex>
           <UserProfileCard />
-          <ScrollView style={{}}>
+          <ScrollView style={{ paddingRight: 3 }}>
             {cartProducts.length ? (
               <>
                 <Text text60 marginT-10>
@@ -133,7 +152,7 @@ const Menu = () => {
                   </Text>
                 </Text>
 
-                <View style={{}}>
+                <View style={{ backgroundColor: "" }}>
                   <FlashList
                     contentContainerStyle={{
                       paddingTop: 20,
@@ -143,12 +162,19 @@ const Menu = () => {
                       <View style={{ height: 25 }} />
                     )}
                     data={cartProducts}
-                    renderItem={({ item }) => {
-                      return <CartItem product={item} />;
+                    renderItem={({ item, index }) => {
+                      return <CartItem product={item} productIdx={index} />;
                     }}
                   />
                 </View>
-                <CartCharges />
+
+                <CartCharges
+                  cartSummary={orderSummaryQuery.data}
+                  isLoading={
+                    orderSummaryQuery.isLoading ||
+                    orderSummaryQuery.isRefetching
+                  }
+                />
               </>
             ) : (
               <Text>No products Added</Text>
@@ -169,14 +195,14 @@ const Menu = () => {
               orderStore.changeInputValue("first_name", target.value)
             }
           />
-          <PaymentMethodSelector />
+          <ExperienceSelector />
           <Button
-            disabled={!orderStore.isCreateOrderAvailable()}
-            onPress={onPressSendOrder}
+            disabled={cartProducts.length == 0 || createOrderQuery.isLoading}
+            onPress={() => createOrderQuery.mutate()}
             marginT-35
             labelStyle={{ color: "#fff" }}
             label={
-              orderStore.isLoading ? (
+              createOrderQuery.isLoading ? (
                 <ActivityIndicator color={"white"} />
               ) : (
                 "Send Order"

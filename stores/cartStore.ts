@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { UpdateProductCart } from "../types";
 import { Item_attibute, Product } from "mcm-types";
+import { queryClient } from "../app/_layout";
+import { orderSummaryQueryKey } from "../modules/orders/OrdersApi";
 
 export interface ProductCart {
   product: Product;
@@ -10,8 +12,8 @@ export interface ProductCart {
 export interface CartStore {
   cartProducts: Array<ProductCart>;
   addProduct: (cartProduct: ProductCart) => void;
-  increaseProduct: (cartProductId: number) => void;
-  decrementProduct: (cartProductId: number) => void;
+  increaseProduct: (productIdx: number) => void;
+  decrementProduct: (productIdx: number) => void;
   removeProduct: (cartProductId: number) => void;
   updateProduct: (cartProductId: number, product: UpdateProductCart) => void;
   clearCart: () => void;
@@ -51,7 +53,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
     return idxFounded;
   },
   addProduct: (newCartProduct) => {
-    const { getSimilarProductIndex, cartProducts } = get();
+    let { getSimilarProductIndex, cartProducts } = get();
 
     const similarProductIdx = getSimilarProductIndex(newCartProduct);
 
@@ -64,43 +66,36 @@ export const useCartStore = create<CartStore>((set, get) => ({
     set(() => ({
       cartProducts: [...cartProducts],
     }));
-  },
-  increaseProduct: (cartProductId) => {
-    set(({ cartProducts }) => ({
-      cartProducts: cartProducts.map((cardProduct) =>
-        cardProduct.product.id === cartProductId
-          ? {
-              ...cardProduct,
-              quantity: cardProduct.quantity + 1,
-            }
-          : cardProduct
-      ),
-    }));
-  },
-  decrementProduct: (cartProductId) => {
-    set(({ cartProducts }) => {
-      const d: ProductCart[] = cartProducts
-        .map((cardProduct) => {
-          if (
-            cardProduct.quantity === 1 &&
-            cardProduct.product.id === cartProductId
-          ) {
-            return null;
-          }
-          if (cardProduct.product.id === cartProductId) {
-            return {
-              ...cardProduct,
-              quantity: cardProduct.quantity - 1,
-            };
-          }
-          return cardProduct;
-        })
-        .filter((x) => x !== null) as ProductCart[];
 
-      return {
-        cartProducts: d,
-      };
-    });
+    queryClient.invalidateQueries([orderSummaryQueryKey]);
+  },
+  increaseProduct: (productIdx) => {
+    let { cartProducts } = get();
+
+    cartProducts[productIdx].quantity++;
+
+    set(() => ({
+      cartProducts: [...cartProducts],
+    }));
+    queryClient.invalidateQueries([orderSummaryQueryKey]);
+  },
+  decrementProduct: (productIdx) => {
+    let { cartProducts } = get();
+
+    const newQuantity = cartProducts[productIdx].quantity - 1;
+
+    if (newQuantity >= 1) {
+      cartProducts[productIdx].quantity = newQuantity;
+    } else {
+      cartProducts = cartProducts.filter(
+        (cartProduct, idx) => idx != productIdx
+      );
+    }
+
+    set(() => ({
+      cartProducts: [...cartProducts],
+    }));
+    queryClient.invalidateQueries([orderSummaryQueryKey]);
   },
   updateProduct: (cartProductId: number, product: UpdateProductCart) => {
     set(({ cartProducts }) => ({

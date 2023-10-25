@@ -7,6 +7,7 @@ import TipSelector from "../../../modules/payment/components/TipSelector";
 import OrderChargesCard from "../../../modules/payment/components/OrderChargesCard";
 import usePaymentStore from "../PaymentStore";
 import { goToReceiptScreen } from "../../common/NavigationHelper";
+import PaymentMethodSelector from "../../menu/components/PaymentMethodSelector";
 
 interface props {
   order: Order;
@@ -43,6 +44,14 @@ const PaymentScreen = ({ order }: props) => {
         </Text>
         <Text text20 marginT-5 marginB-20>
           $ {totalToPay.toFixed(2)}{" "}
+        </Text>
+
+        <Text center text65 marginT-10>
+          Method
+        </Text>
+        <PaymentMethodSelector />
+        <Text center text65 marginT-40>
+          Tip
         </Text>
         <TipSelector paymentTotal={Number(order.cart.subtotal)} />
         <View marginT-40>

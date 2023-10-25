@@ -1,34 +1,54 @@
 import React from "react";
-import { StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet } from "react-native";
 import { Colors, Text, View } from "react-native-ui-lib";
-import { useCartStore } from "../../../stores/cartStore";
 import { formatCurrency } from "../../common/UtilsHelper";
+import { Cart } from "mcm-types";
+import Decimal from "decimal.js";
 
-const CartCharges = () => {
-  const { cartProducts } = useCartStore();
-  const subTotal = cartProducts.reduce(
-    (acc, curr) => acc + curr.product.price * curr.quantity,
-    0
-  );
-  const tax = parseFloat((subTotal * 0.1).toFixed(2));
+type props = {
+  cartSummary: Cart;
+  isLoading: boolean;
+};
+
+const CartCharges = ({ cartSummary, isLoading }: props) => {
+  if (isLoading || !Boolean(cartSummary)) return <ActivityIndicator />;
 
   return (
-    <View paddingT-10 style={{}}>
+    <View paddingT-10 flex style={{}}>
       <View row spread>
         <Text text80>Subtotal</Text>
         <Text text80>
           <Text text100L>$ </Text>
-          {formatCurrency(subTotal)}
+          {cartSummary.subtotal}
         </Text>
       </View>
-      {/* <View row spread marginT-13>
-        <Text text80 $textNeutral>
-          Tax (10%)
-        </Text>
-        <Text text80>
-          <Text text100L>$ </Text>{tax}
-        </Text>
-      </View> */}
+
+      {cartSummary.tax_lines.map((taxLine) => (
+        <View row spread marginT-13>
+          <Text text80 $textNeutral>
+            {taxLine.label} ({taxLine.rate}%)
+          </Text>
+          <Text text80>
+            <Text text100L>$ </Text>
+            {taxLine.tax_total}
+          </Text>
+        </View>
+      ))}
+
+      {cartSummary.fee_lines
+        .filter((fee_line) => new Decimal(fee_line.total).greaterThan("0.00"))
+        .map((fee_lines) => (
+          <View row spread marginT-13>
+            <Text text80 $textNeutral>
+              {fee_lines.name}
+            </Text>
+            <Text text80>
+              <Text text100L>$ </Text>
+              {fee_lines.total}
+            </Text>
+          </View>
+        ))}
+
       <View
         style={{
           marginTop: 15,
@@ -37,13 +57,13 @@ const CartCharges = () => {
           borderStyle: "dashed",
         }}
       />
-      <View row spread marginT-16 style={{}}>
+      <View row spread centerV marginT-16>
         <Text text60>Total</Text>
         <Text text60 style={{ padding: 10 }}>
           <Text text100L style={{}}>
             ${" "}
           </Text>
-          {formatCurrency(subTotal)}
+          {cartSummary.total}
         </Text>
       </View>
     </View>

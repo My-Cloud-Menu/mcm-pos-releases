@@ -1,6 +1,13 @@
 import { Pressable, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Button, Colors, Image, Text, View } from "react-native-ui-lib";
+import {
+  Button,
+  Colors,
+  Image,
+  Text,
+  TextField,
+  View,
+} from "react-native-ui-lib";
 import { shadowProps } from "../../common/theme/shadows";
 import { useCartStore } from "../../../stores/cartStore";
 import { formatCurrency } from "../../common/UtilsHelper";
@@ -14,6 +21,7 @@ import {
 } from "../MenuHelper";
 import { showAlert } from "../../common/AlertHelper";
 import Counter from "./Counter";
+import AllergiesChipSelector from "./AllergiesChipSelector";
 
 const ProductChip = ({
   label = "",
@@ -60,16 +68,12 @@ const ProductItem = ({
   const [ingredientsSelected, setIngredientsSelected] = useState<any[]>([]);
   const [additionalPrice, setAdditionalPrice] = useState(0);
   const [quantitySelected, setQuantitySelected] = useState(1);
+  const [notes, setNotes] = useState("");
+  const [allergiesSelected, setAllergiesSelected] = useState<string[]>([]);
 
   useEffect(() => {
     setAdditionalPrice(calculateIngredientsPriceTotal(ingredientsSelected));
   }, [ingredientsSelected]);
-
-  console.log("Extra price ", additionalPrice);
-  console.log(
-    "ingredientsFOrmatted",
-    getIngredientsSelectedFormattedForCart(ingredientsSelected)
-  );
 
   const onIncrementProductQuantity = () =>
     setQuantitySelected(quantitySelected + 1);
@@ -86,11 +90,15 @@ const ProductItem = ({
     cartStore.addProduct({
       product: product,
       quantity: quantitySelected,
-      attributes:
-        getIngredientsSelectedFormattedForCart(ingredientsSelected)
-          .attributesFormatted,
+      attributes: getIngredientsSelectedFormattedForCart(
+        ingredientsSelected,
+        notes,
+        allergiesSelected
+      ).attributesFormatted,
     });
     setQuantitySelected(1);
+    setNotes("");
+    setAllergiesSelected([]);
     showAlert({
       type: "success",
       title: `(${quantitySelected}) ${product.name} added successfully`,
@@ -100,6 +108,8 @@ const ProductItem = ({
   useEffect(() => {
     if (!isActive) {
       setQuantitySelected(1);
+      setNotes("");
+      setAllergiesSelected([]);
       // setIngredientsSelected([]);
     }
   }, [isActive]);
@@ -161,6 +171,32 @@ const ProductItem = ({
             setGroupsForSelection={setIngredientsSelected}
           />
         </View>
+
+        {isActive && (
+          <View marginT-20 paddingH-10>
+            <TextField
+              value={notes}
+              onChangeText={(value) => {
+                setNotes(value);
+              }}
+              maxLength={150}
+              placeholder="Comments"
+              floatingPlaceholder
+              fieldStyle={{
+                borderBottomWidth: 1,
+                borderColor: Colors.black,
+                paddingBottom: 4,
+              }}
+            />
+            <View style={{ marginTop: 30 }}>
+              <Text style={{ marginBottom: 10 }}>Allergies</Text>
+              <AllergiesChipSelector
+                allergiesSelected={allergiesSelected}
+                onChangeAllergiesSelected={setAllergiesSelected}
+              />
+            </View>
+          </View>
+        )}
       </View>
       <View marginV-20 />
       {isActive && (
