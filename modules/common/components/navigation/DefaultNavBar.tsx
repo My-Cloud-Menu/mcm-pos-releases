@@ -3,6 +3,7 @@ import React from "react";
 import { Button, Colors, Image, Text, View } from "react-native-ui-lib";
 import {
   AntDesign,
+  Feather,
   FontAwesome,
   FontAwesome5,
   MaterialIcons,
@@ -25,22 +26,18 @@ const navItems = [
     ),
   },
   {
-    name: "History",
+    name: "Orders",
     pathname: "/orders",
+    icon: (props = {}) => <Feather size={25} name="shopping-bag" {...props} />,
+  },
+  {
+    name: "Employees",
+    pathname: "/clocksinout",
     icon: (props = {}) => (
-      <AntDesign size={21} name="clockcircleo" {...props} />
+      <FontAwesome5 size={21} name="user-clock" {...props} />
     ),
   },
-  {
-    name: "Wallet",
-    pathname: "/wallet",
-    icon: (props = {}) => <FontAwesome5 size={19} name="wallet" {...props} />,
-  },
-  {
-    name: "Promos",
-    pathname: "/promos",
-    icon: (props = {}) => <FontAwesome5 size={19} name="percent" {...props} />,
-  },
+
   {
     name: "Settings",
     pathname: "/Settings",

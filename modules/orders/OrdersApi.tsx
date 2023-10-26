@@ -6,13 +6,17 @@ import { getOrderStructure } from "./OrderHelper";
 export const orderSummaryQueryKey = "order_summary";
 export const ordersQueryKey = "/orders";
 
-export const createOrderInBackend = async () => {
+export const createOrderInBackend = async (): Promise<{ order: Order }> => {
   const orderToCreate = getOrderStructure();
 
-  const response = await makeMcmRequest("front/carts", "POST", orderToCreate);
+  const response = await makeMcmRequest(
+    "admin/orders/table/items/add",
+    "POST",
+    orderToCreate
+  );
 
   queryClient.invalidateQueries({ queryKey: [ordersQueryKey] });
-
+  console.log(" la orden creada", response);
   return response;
 };
 

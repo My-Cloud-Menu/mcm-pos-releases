@@ -201,3 +201,71 @@ export type ecrSaleResponse = {
   entry_type: string;
   fallback: string;
 };
+
+export type TimeSheet = Array<{
+  tags: Array<any>;
+  id: number;
+  begin: string;
+  end: any;
+  duration: number;
+  user: {
+    initials: string;
+    id: number;
+    alias: string;
+    title: string;
+    username: string;
+    accountNumber: string;
+    enabled: boolean;
+    color: string;
+  };
+  activity: {
+    id: number;
+    project: {
+      id: number;
+      customer: {
+        id: number;
+        name: string;
+        number: string;
+        comment: any;
+        visible: boolean;
+        billable: boolean;
+        color: string;
+      };
+      name: string;
+      comment: any;
+      visible: boolean;
+      billable: boolean;
+      globalActivities: boolean;
+      color: any;
+    };
+    name: string;
+    comment: any;
+    visible: boolean;
+    billable: boolean;
+    color: string;
+  };
+  project: {
+    id: number;
+    customer: {
+      id: number;
+      name: string;
+      number: string;
+      comment: any;
+      visible: boolean;
+      billable: boolean;
+      color: string;
+    };
+    name: string;
+    comment: any;
+    visible: boolean;
+    billable: boolean;
+    globalActivities: boolean;
+    color: any;
+  };
+  description: any;
+  rate: number;
+  internalRate: number;
+  exported: boolean;
+  billable: boolean;
+  metaFields: Array<any>;
+}>;

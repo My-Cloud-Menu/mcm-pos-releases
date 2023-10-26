@@ -1,4 +1,4 @@
-import { StyleSheet, ActivityIndicator } from "react-native";
+import { StyleSheet, ActivityIndicator, ScrollView } from "react-native";
 import React, { useEffect } from "react";
 import { Button, Colors, Text, View } from "react-native-ui-lib";
 import { Stack } from "expo-router";
@@ -37,27 +37,28 @@ const PaymentScreen = ({ order }: props) => {
 
   return (
     <View flex backgroundColor={Colors.graySoft}>
-      <View flex centerH>
-        <Stack.Screen options={{ title: `Payment - Order #${order.id}` }} />
-        <Text marginT-15 text50L>
-          Total a Pagar
-        </Text>
-        <Text text20 marginT-5 marginB-20>
-          $ {totalToPay.toFixed(2)}{" "}
-        </Text>
-
-        <Text center text65 marginT-10>
-          Method
-        </Text>
-        <PaymentMethodSelector />
-        <Text center text65 marginT-40>
-          Tip
-        </Text>
-        <TipSelector paymentTotal={Number(order.cart.subtotal)} />
-        <View marginT-40>
-          <OrderChargesCard order={order} />
+      <ScrollView>
+        <View flex centerH>
+          <Stack.Screen options={{ title: `Payment - Order #${order.id}` }} />
+          <Text marginT-15 text50L>
+            Total a Pagar
+          </Text>
+          <Text text20 marginT-5 marginB-20>
+            $ {totalToPay.toFixed(2)}{" "}
+          </Text>
+          <Text center text65 marginT-10>
+            Method
+          </Text>
+          <PaymentMethodSelector />
+          <Text center text65 marginT-40>
+            Tip
+          </Text>
+          <TipSelector paymentTotal={Number(order.cart.subtotal)} />
+          <View marginT-40>
+            <OrderChargesCard order={order} />
+          </View>
         </View>
-      </View>
+      </ScrollView>
       <View paddingB-20>
         <Button
           disabled={paymentStore.isLoading}

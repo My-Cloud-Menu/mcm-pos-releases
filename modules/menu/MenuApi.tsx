@@ -2,12 +2,19 @@ import {
   GetIngredientGroupRequestResponse,
   GetIngredientRequestResponse,
   GetProductRequestResponse,
+  GetTablesRequestResponse,
 } from "mcm-types";
 import { makeMcmRequest } from "../common/PetitionsHelper";
 
 export const ingredientsQueryKey = "ingredients";
 export const ingredientsGroupsQueryKey = "ingredients_groups";
 export const productsQueryKey = "products";
+export const tablesQueryKey = "tables";
+
+export const getTables = async (): Promise<GetTablesRequestResponse> => {
+  return await makeMcmRequest("admin/tables");
+};
+
 export const getIngredients =
   async (): Promise<GetIngredientRequestResponse> => {
     let response = await makeMcmRequest(

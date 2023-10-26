@@ -3,10 +3,9 @@ import React from "react";
 import { Colors, LoaderScreen, StateScreen } from "react-native-ui-lib";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import { Order } from "../../types";
 import ReceiptScreen from "../../modules/receipt/components/ReceiptScreen";
 import { getPaymentById } from "../../modules/payment/PaymentApi";
-import { Payment } from "mcm-types/src/payment";
+import { Payment } from "mcm-types";
 
 const receipt = () => {
   let params = useLocalSearchParams<{ paymentId: string }>();

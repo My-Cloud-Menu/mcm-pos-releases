@@ -30,6 +30,7 @@ export interface GlobalSetup {
   devPassword: string;
   apiKey: string;
   timeout: number;
+  timeOffSet: number;
 }
 
 export const initialECRSetupConfiguration: EcrSetup = {
@@ -54,7 +55,7 @@ export const initialGlobalSetupConfiguration: GlobalSetup = {
   password_length: 4,
   showErrors: false,
   siteId: "11902122",
-  url: "https://boripizza.api.mycloudmenu.com",
+  url: "http://localhost:3000",
   showTableSelector: true,
   employeesShouldSeeJustTheirTables: true,
   masterPassword: "0000",
@@ -62,4 +63,5 @@ export const initialGlobalSetupConfiguration: GlobalSetup = {
   apiKey:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXRoIjpbIkFMTF9BQ0NFU1MiXSwiaWF0IjoxNjc0ODI5MDIzfQ.x1b5y2-Jy6jJSgVY0fce5aVWMHa2PbSpvpHrUSerpEU",
   timeout: 20000,
+  timeOffSet: -240,
 };

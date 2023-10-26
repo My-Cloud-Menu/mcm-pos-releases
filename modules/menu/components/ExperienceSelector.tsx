@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import { Button, Colors, Text, View } from "react-native-ui-lib";
 import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import useOrderStore from "../../orders/OrdersStore";
-
+import { router } from "expo-router";
+import { Table } from "mcm-types";
+import { shadowProps } from "../../common/theme/shadows";
 const paymentMethods = [
   {
     name: "Takeout",
@@ -32,11 +34,63 @@ const paymentMethods = [
     ),
   },
 ];
-const ExperienceSelector = () => {
-  const experienceSelected = useOrderStore(
-    (state) => state.inputValues.experience
+
+const TableCard = ({ table }: { table?: Table }) => {
+  const onPressChangeTable = () => {
+    router.push("/(menu)/table-selector");
+  };
+
+  if (!table)
+    return (
+      <Button
+        variant="iconButtonWithLabelCenterOutline"
+        marginT-15
+        onPress={onPressChangeTable}
+      >
+        <Text black style={{ fontWeight: "bold" }}>
+          Select Table
+        </Text>
+      </Button>
+    );
+
+  return (
+    <View
+      row
+      centerV
+      spread
+      padding-10
+      marginT-10
+      marginH-5
+      br20
+      style={{
+        backgroundColor: "#f9f8fb",
+        ...shadowProps,
+      }}
+    >
+      <View>
+        <Text style={{ fontWeight: "bold" }}>Table {table.name}</Text>
+      </View>
+      <Button
+        variant="iconButtonWithLabelCenterOutline"
+        onPress={onPressChangeTable}
+      >
+        <Text black>Change</Text>
+      </Button>
+    </View>
   );
+};
+
+const ExperienceSelector = () => {
+  const inputValues = useOrderStore((state) => state.inputValues);
   const changeInputValue = useOrderStore((state) => state.changeInputValue);
+
+  const onPressExperience = (experience: any) => {
+    changeInputValue("experience", experience.value);
+
+    if (experience.value == "qe") {
+      router.push("/(menu)/table-selector");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -45,11 +99,11 @@ const ExperienceSelector = () => {
       </Text>
       <View row centerH marginT-10 style={{ gap: 20 }}>
         {paymentMethods.map((item, idx) => {
-          let isPaymentMethodActive = experienceSelected == item.value;
+          let isPaymentMethodActive = inputValues.experience == item.value;
 
           return (
             <Button
-              onPress={() => changeInputValue("experience", item.value)}
+              onPress={() => onPressExperience(item)}
               useMinSize
               variant="iconButtonWithLabelCenterOutline"
               active={isPaymentMethodActive}
@@ -73,6 +127,9 @@ const ExperienceSelector = () => {
           );
         })}
       </View>
+      {inputValues.experience == "qe" && (
+        <TableCard table={inputValues.table} />
+      )}
     </View>
   );
 };

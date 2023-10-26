@@ -45,5 +45,16 @@ export const getOrderStructure = () => {
     };
   }
 
+  if (inputValues.experience == "qe" && inputValues.table != undefined) {
+    orderStructure = {
+      ...orderStructure,
+      table: {
+        id: inputValues.table.id,
+        label: inputValues.table?.name,
+        revenue_center_id: inputValues.table?.revenueCenter.id,
+      },
+    };
+  }
+
   return orderStructure;
 };

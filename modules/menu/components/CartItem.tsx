@@ -4,6 +4,7 @@ import { Image, Text, View } from "react-native-ui-lib";
 import { formatCurrency } from "../../common/UtilsHelper";
 import { ProductCart, useCartStore } from "../../../stores/cartStore";
 import Counter from "./Counter";
+import { getTotalProductInCart } from "../MenuHelper";
 
 type Props = { product: ProductCart; productIdx: number };
 
@@ -42,7 +43,9 @@ const CartItem = ({ product, productIdx }: Props) => {
                   </Text>
                   <Text text90L grey20>
                     {attrib.value}
-                    {extraPrice > 0.0 && <Text>(${extraPrice})</Text>}
+                    {extraPrice > 0.0 && (
+                      <Text> ({formatCurrency(extraPrice)})</Text>
+                    )}
                   </Text>
                 </View>
               );
@@ -51,10 +54,7 @@ const CartItem = ({ product, productIdx }: Props) => {
           <View flex row bottom spread marginT-10 paddingR-8>
             <Text $textNeutralHeavy>
               <Text text100L>$</Text>{" "}
-              {formatCurrency(
-                Number(product.product.price * product.quantity),
-                true
-              )}
+              {formatCurrency(getTotalProductInCart(product), true)}
             </Text>
 
             <Counter

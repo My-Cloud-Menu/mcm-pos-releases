@@ -56,7 +56,7 @@ const Menu = () => {
     enabled: cartProducts.length > 0,
   });
 
-  const createOrderQuery = useMutation<{ order: Order }>({
+  const createOrderQuery = useMutation({
     mutationFn: createOrderInBackend,
     onError: (error) =>
       onRequestError(error, "Something went wrong Creating Order"),
@@ -66,6 +66,20 @@ const Menu = () => {
       orderStore.resetInputValues();
     },
   });
+
+  const isCreateOrderAvailable = () => {
+    if (createOrderQuery.isLoading) return false;
+    if (cartProducts.length == 0) return false;
+
+    if (
+      orderStore.inputValues.experience == "qe" &&
+      !Boolean(orderStore.inputValues.table)
+    ) {
+      return false;
+    }
+
+    return true;
+  };
 
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
@@ -197,7 +211,7 @@ const Menu = () => {
           />
           <ExperienceSelector />
           <Button
-            disabled={cartProducts.length == 0 || createOrderQuery.isLoading}
+            disabled={!isCreateOrderAvailable()}
             onPress={() => createOrderQuery.mutate()}
             marginT-35
             labelStyle={{ color: "#fff" }}

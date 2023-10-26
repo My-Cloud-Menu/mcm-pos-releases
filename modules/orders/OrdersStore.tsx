@@ -1,10 +1,12 @@
 import { create } from "zustand";
 import { payment_method_available } from "../../types";
+import { Table } from "mcm-types";
 
 interface InputValues {
   first_name: string;
   payment_method: payment_method_available;
   experience: "pu" | "dl" | "qe";
+  table?: Table;
 }
 
 interface OrderStore {
@@ -19,6 +21,7 @@ const initialInputValues: InputValues = {
   first_name: "",
   payment_method: "ecr-card",
   experience: "pu",
+  table: undefined,
 };
 
 const useOrderStore = create<OrderStore>((set, get) => ({

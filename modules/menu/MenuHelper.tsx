@@ -1,6 +1,7 @@
 import Decimal from "decimal.js";
 import { Ingredient, Item_attibute, Product } from "mcm-types";
 import { showAlert } from "../common/AlertHelper";
+import { ProductCart } from "../../stores/cartStore";
 
 export const calculateIngredientsPriceTotal = (
   ingredientsSelected: any[]
@@ -252,4 +253,20 @@ export const getIngredientsIncludedInProduct = (
   }
 
   return ingredientsIncluded;
+};
+
+export const getTotalProductInCart = (productCart: ProductCart) => {
+  let price = new Decimal(productCart.product.price);
+
+  productCart.attributes.map((attrib) => {
+    let extraPrice = Array.isArray(attrib.price)
+      ? attrib.price.reduce((a, b) => a + Number(b), 0).toFixed(2)
+      : attrib.price;
+
+    price = price.plus(extraPrice);
+  });
+
+  price = price.mul(productCart.quantity);
+
+  return price.toNumber();
 };
