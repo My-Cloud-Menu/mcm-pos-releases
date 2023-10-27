@@ -17,6 +17,7 @@ import {
   calculateIngredientsPriceTotal,
   getIngredientsIncludedInProduct,
   getIngredientsSelectedFormattedForCart,
+  getProductImage,
   validateIngredientsSelection,
 } from "../MenuHelper";
 import { showAlert } from "../../common/AlertHelper";
@@ -120,7 +121,7 @@ const ProductItem = ({
         <Pressable onPress={() => onPress && onPress()}>
           <View row marginB-12>
             <Image
-              source={{ uri: product.image.normal }}
+              source={{ uri: getProductImage(product) }}
               style={styles.image}
             />
             <View marginL-20 style={{ width: "100%" }}>

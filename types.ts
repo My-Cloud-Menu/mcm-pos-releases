@@ -1,3 +1,5 @@
+import { Employee } from "mcm-types";
+
 export type stock_status = "instock" | "outofstock";
 
 export type ingredient_measurement_type =
@@ -202,22 +204,13 @@ export type ecrSaleResponse = {
   fallback: string;
 };
 
-export type TimeSheet = Array<{
+export type TimeSheet = {
   tags: Array<any>;
   id: number;
   begin: string;
   end: any;
   duration: number;
-  user: {
-    initials: string;
-    id: number;
-    alias: string;
-    title: string;
-    username: string;
-    accountNumber: string;
-    enabled: boolean;
-    color: string;
-  };
+  user: Employee;
   activity: {
     id: number;
     project: {
@@ -268,4 +261,4 @@ export type TimeSheet = Array<{
   exported: boolean;
   billable: boolean;
   metaFields: Array<any>;
-}>;
+};

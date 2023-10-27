@@ -23,7 +23,6 @@ const MenuLayout = () => {
               headerShown: false,
             }}
           /> */}
-
           <Stack.Screen
             name="table-selector"
             options={{ title: "Table Selector" }}
@@ -32,6 +31,7 @@ const MenuLayout = () => {
             name="clocksinout"
             options={{ title: "Clock In/Out" }}
           />
+          <Stack.Screen name="clockin" options={{ title: "Clock In" }} />
         </Stack>
       </View>
     </View>

@@ -9,6 +9,7 @@ import useAuthStore from "../AuthStore";
 
 const UserProfileCard = () => {
   const employeeLogged = useAuthStore((state) => state.employeeLogged);
+  const name = employeeLogged?.first_name || employeeLogged?.middle_name;
 
   return (
     <View style={styles.container}>
@@ -31,7 +32,7 @@ const UserProfileCard = () => {
           <Text text80L $textNeutralLight>
             I'm a Waiter
           </Text>
-          <Text text65>{employeeLogged?.first_name || "Guest"}</Text>
+          <Text text65>{name || "Guest"}</Text>
         </View>
         <Feather name="bell" size={24} color={Colors.grayActive} />
       </View>

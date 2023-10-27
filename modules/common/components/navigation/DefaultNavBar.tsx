@@ -99,7 +99,7 @@ const DefaultNavBar = () => {
         })}
       </View>
 
-      <Button
+      {/* <Button
         variant="iconButtonWithLabelCenter"
         marginV-5
         onPress={onLogoutPress}
@@ -115,7 +115,7 @@ const DefaultNavBar = () => {
             </Text>
           </>
         )}
-      </Button>
+      </Button> */}
     </View>
   );
 };

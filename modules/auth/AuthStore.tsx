@@ -3,28 +3,17 @@ import * as authApi from "./AuthApi";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { AUTH_LOCAL_STORAGE_KEY } from "../common/configurations";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Employee } from "mcm-types";
 
 interface AuthStore {
   isLoading: boolean;
   isLogged: boolean;
   error: any;
-  employeeLogged?: {
-    id: string;
-    birthday?: string;
-    check_name: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-    login: string;
-    middle_name?: string;
-    payroll_id?: string;
-    phone?: string;
-    pos_id?: string;
-    start_date?: string;
-    role: "admin" | "waiter";
-  };
+  employeeLogged?: Employee;
   login: (pin: string) => Promise<any>;
   logout: () => Promise<any>;
+  changeCurrentEmployeeLogged: (newEmployee: Employee) => void;
+  removeCurrentEmployeeLogged: () => void;
 }
 
 const useAuthStore = create<AuthStore>()(
@@ -34,6 +23,12 @@ const useAuthStore = create<AuthStore>()(
       isLogged: false,
       error: null,
       employeeLogged: undefined,
+      removeCurrentEmployeeLogged: () => {
+        set(() => ({ employeeLogged: undefined }));
+      },
+      changeCurrentEmployeeLogged: (newEmployee) => {
+        set(() => ({ employeeLogged: newEmployee }));
+      },
       login: async (pin: string) => {
         set(() => ({ isLoading: true, error: null }));
 

@@ -3,6 +3,19 @@ import { Ingredient, Item_attibute, Product } from "mcm-types";
 import { showAlert } from "../common/AlertHelper";
 import { ProductCart } from "../../stores/cartStore";
 
+const defaultProductImg = "/assets/images/image-notfound.png";
+
+export const getProductImage = (product: Product) => {
+  if (product.images.length == 0 || product.images == null)
+    return defaultProductImg;
+
+  const productImage = product.images[0].thumbnail || product.images[0].normal;
+
+  if (!Boolean(productImage)) return defaultProductImg;
+
+  return productImage;
+};
+
 export const calculateIngredientsPriceTotal = (
   ingredientsSelected: any[]
 ): number => {
