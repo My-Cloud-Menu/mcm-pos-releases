@@ -49,8 +49,6 @@ const usePaymentStore = create<PaymentStore>((set, get) => ({
         ecrResult
       );
 
-      console.log("Payment Updated in Backend :3");
-      console.log(result);
       return result;
     } catch (error) {
       throw error;
@@ -85,7 +83,6 @@ const usePaymentStore = create<PaymentStore>((set, get) => ({
         tip: inputValues?.tip?.toString(),
       });
 
-      console.log("pago creado en backend mcm");
       set(() => ({ paymentCreated: payment }));
       return payment;
     } catch (error) {
@@ -120,9 +117,7 @@ const usePaymentStore = create<PaymentStore>((set, get) => ({
         );
       }
 
-      console.log("ECR Handled");
       set(() => ({ ecrResult: ecrResult }));
-      console.log(ecrResult);
       return ecrResult;
     } catch (error) {
       throw error;

@@ -70,7 +70,7 @@ export const makeMcmRequest = async (
   } catch (error: any) {
     error =
       error?.response?.data || error?.request?.data || error?.request || error;
-    console.log("este es", error);
+    console.log(error);
     throw error;
   }
 };

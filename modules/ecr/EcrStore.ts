@@ -38,7 +38,6 @@ const useEcrStore = create<EcrStore>()(
             isLoading: false,
           }));
 
-          console.log(loginResponse);
           return loginResponse;
         } catch (error: any) {
           let errorMessage = "Something went wrong";

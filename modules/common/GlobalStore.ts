@@ -23,7 +23,7 @@ const useGlobalStore = create<GlobalStore>()(
     {
       name: GLOBAL_LOCAL_STORAGE_KEY, // name of the item in the storage (must be unique)
       storage: createJSONStorage(() => AsyncStorage),
-      version: 5,
+      version: 6,
       // ESTAS SON LAS PROPIEDADES QUE SE VAN A QUEDAR GUARDADA EN EL LOCALSTORAGE
       partialize: (state) => ({ setup: state.setup }),
     }

@@ -16,7 +16,6 @@ export const createOrderInBackend = async (): Promise<{ order: Order }> => {
   );
 
   queryClient.invalidateQueries({ queryKey: [ordersQueryKey] });
-  console.log(" la orden creada", response);
   return response;
 };
 
@@ -28,7 +27,6 @@ export const getOrderById = async (orderId: string): Promise<Order> => {
 
 export const getOrderSummary = async () => {
   const orderToCreate = getOrderStructure();
-  console.log(orderToCreate);
   const response = await makeMcmRequest(
     `front/carts/summary`,
     "POST",
