@@ -97,42 +97,44 @@ const CategoriesCarousel = () => {
             </Text>
           </View>
         </Button>
-        {categories.map((item) => {
-          let isNavItemActive = selectedCategory?.id == item.id;
-          // let isNavItemActive = false;
-          return (
-            <Button
-              onPress={() => onPressCategory(item)}
-              variant="iconButtonWithLabelCenterOutline"
-              active={isNavItemActive}
-              marginV-2
-              marginH-5
-            >
-              {item?.image?.normal ? (
-                <Image
-                  source={{ uri: item.image.normal }}
-                  style={styles.image}
-                />
-              ) : (
-                <Ionicons
-                  name="md-restaurant-outline"
-                  size={27}
-                  color={Colors.primary}
-                />
-              )}
-              <View style={{ maxWidth: 150 }}>
-                <Text
-                  center
-                  color={isNavItemActive ? Colors.primary : Colors.primary}
-                  marginT-14
-                  text80BL
-                >
-                  {item.name}
-                </Text>
-              </View>
-            </Button>
-          );
-        })}
+        {categories
+          .filter((category) => category.status == "published")
+          .map((item) => {
+            let isNavItemActive = selectedCategory?.id == item.id;
+            // let isNavItemActive = false;
+            return (
+              <Button
+                onPress={() => onPressCategory(item)}
+                variant="iconButtonWithLabelCenterOutline"
+                active={isNavItemActive}
+                marginV-2
+                marginH-5
+              >
+                {item?.image?.normal ? (
+                  <Image
+                    source={{ uri: item.image.normal }}
+                    style={styles.image}
+                  />
+                ) : (
+                  <Ionicons
+                    name="md-restaurant-outline"
+                    size={27}
+                    color={Colors.primary}
+                  />
+                )}
+                <View style={{ maxWidth: 150 }}>
+                  <Text
+                    center
+                    color={isNavItemActive ? Colors.primary : Colors.primary}
+                    marginT-14
+                    text80BL
+                  >
+                    {item.name}
+                  </Text>
+                </View>
+              </Button>
+            );
+          })}
       </View>
     </View>
   );

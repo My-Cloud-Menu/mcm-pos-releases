@@ -283,3 +283,17 @@ export const getTotalProductInCart = (productCart: ProductCart) => {
 
   return price.toNumber();
 };
+
+export const isProductInStock = (product: Product) => {
+  let isInStock = product.stock_status == "instock";
+
+  if (
+    product.variations.length > 0 &&
+    product.variations.every(
+      (variation) => variation.stock_status == "outofstock"
+    )
+  )
+    isInStock = false;
+
+  return isInStock;
+};

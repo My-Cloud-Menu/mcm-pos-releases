@@ -47,13 +47,18 @@ export const getIngredientsGroups =
   };
 
 export const getProducts = async (): Promise<GetProductRequestResponse> => {
-  const response = await makeMcmRequest(
+  let response = await makeMcmRequest(
     "front/products",
     "GET",
     {},
     { withoutPaginate: true }
   );
 
+  response.products = response.products.map((product: any) => {
+    product.variations = product?.variations || [];
+
+    return product;
+  });
   return response;
 };
 export const getCategoriesWithProducts = async () => {

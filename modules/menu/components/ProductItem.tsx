@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native-ui-lib";
 import { shadowProps } from "../../common/theme/shadows";
-import { useCartStore } from "../../../stores/cartStore";
+import { ProductCartVariation, useCartStore } from "../../../stores/cartStore";
 import { formatCurrency } from "../../common/UtilsHelper";
 import IngredientAccordion from "./IngredientAccordion";
 import { Ingredient, IngredientGroup, Product } from "mcm-types";
@@ -18,11 +18,18 @@ import {
   getIngredientsIncludedInProduct,
   getIngredientsSelectedFormattedForCart,
   getProductImage,
+  isProductInStock,
   validateIngredientsSelection,
 } from "../MenuHelper";
 import { showAlert } from "../../common/AlertHelper";
 import Counter from "./Counter";
 import AllergiesChipSelector from "./AllergiesChipSelector";
+
+const getProductVariationsAvailable = (product: Product) => {
+  return product.variations.filter(
+    (variation) => variation.stock_status == "instock"
+  );
+};
 
 const ProductChip = ({
   label = "",
@@ -58,7 +65,7 @@ type props = {
 };
 
 const ProductItem = ({
-  product,
+  product: initialProduct,
   isActive = false,
   onPress = undefined,
   ingredients = [],
@@ -66,11 +73,33 @@ const ProductItem = ({
 }: props) => {
   const cartStore = useCartStore();
 
+  const [product, setProduct] = useState(initialProduct);
   const [ingredientsSelected, setIngredientsSelected] = useState<any[]>([]);
   const [additionalPrice, setAdditionalPrice] = useState(0);
   const [quantitySelected, setQuantitySelected] = useState(1);
   const [notes, setNotes] = useState("");
   const [allergiesSelected, setAllergiesSelected] = useState<string[]>([]);
+  const [variationSelected, setVariationSelected] = useState<
+    ProductCartVariation | undefined
+  >(undefined);
+
+  const variationsAvailable = getProductVariationsAvailable(initialProduct);
+  const isInStock = isProductInStock(initialProduct);
+
+  useEffect(() => {
+    if (variationsAvailable.length > 0 && !variationSelected) {
+      onChangeVariation(variationsAvailable[0]);
+    }
+  }, [initialProduct]);
+
+  const onChangeVariation = (variation: any) => {
+    setVariationSelected(variation);
+    setProduct({
+      ...product,
+      price: variation.price,
+      ingredients: variation.ingredients,
+    });
+  };
 
   useEffect(() => {
     setAdditionalPrice(calculateIngredientsPriceTotal(ingredientsSelected));
@@ -90,6 +119,7 @@ const ProductItem = ({
     }
     cartStore.addProduct({
       product: product,
+      variation: variationSelected,
       quantity: quantitySelected,
       attributes: getIngredientsSelectedFormattedForCart(
         ingredientsSelected,
@@ -162,6 +192,34 @@ const ProductItem = ({
           </View>
         </Pressable>
 
+        {variationsAvailable.length > 0 && (
+          <View paddingH-10 marginB-30>
+            <Text text80 marginB-3 style={{ fontWeight: "bold" }}>
+              Variation
+            </Text>
+            <View row style={{ gap: 8 }}>
+              {variationsAvailable.map((variation: any) => (
+                <Button
+                  flex
+                  variant="iconButtonWithLabelCenterOutline"
+                  active={variationSelected?.id == variation.id}
+                  size="small"
+                  useMinSize
+                  onPress={() => {
+                    onChangeVariation(variation);
+                  }}
+                >
+                  <Text text80>
+                    {variation.name}{" "}
+                    {variation.price != 0 &&
+                      `(${formatCurrency(variation.price)})`}
+                  </Text>
+                </Button>
+              ))}
+            </View>
+          </View>
+        )}
+
         <View paddingH-5>
           <IngredientAccordion
             isActive={isActive}
@@ -200,7 +258,7 @@ const ProductItem = ({
         )}
       </View>
       <View marginV-20 />
-      {isActive && (
+      {isInStock && isActive && (
         <Counter
           min={1}
           quantity={quantitySelected}
@@ -208,18 +266,24 @@ const ProductItem = ({
           onIncrement={onIncrementProductQuantity}
         />
       )}
-      <Button
-        onPress={onPressAddToCart}
-        marginT-20
-        marginH-5
-        size="medium"
-        label={
-          quantitySelected != 1
-            ? `Add ${quantitySelected} Item to Cart`
-            : "Add to Cart"
-        }
-        fullWidth
-      />
+      {isInStock ? (
+        <Button
+          onPress={onPressAddToCart}
+          marginT-20
+          marginH-5
+          size="medium"
+          label={
+            quantitySelected != 1
+              ? `Add ${quantitySelected} Item to Cart`
+              : "Add to Cart"
+          }
+          fullWidth
+        />
+      ) : (
+        <Text center text60L style={{ color: "#FFA000" }}>
+          Not Available
+        </Text>
+      )}
     </View>
   );
 };

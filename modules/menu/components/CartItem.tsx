@@ -4,7 +4,7 @@ import { Image, Text, View } from "react-native-ui-lib";
 import { formatCurrency } from "../../common/UtilsHelper";
 import { ProductCart, useCartStore } from "../../../stores/cartStore";
 import Counter from "./Counter";
-import { getTotalProductInCart } from "../MenuHelper";
+import { getProductImage, getTotalProductInCart } from "../MenuHelper";
 
 type Props = { product: ProductCart; productIdx: number };
 
@@ -22,7 +22,7 @@ const CartItem = ({ product, productIdx }: Props) => {
     >
       <View row>
         <Image
-          source={{ uri: product.product.images[0].normal }}
+          source={{ uri: getProductImage(product.product) }}
           style={styles.image}
         />
 
@@ -30,6 +30,11 @@ const CartItem = ({ product, productIdx }: Props) => {
           <Text style={{ fontWeight: "bold", fontSize: 16 }} black>
             {product.product.name}
           </Text>
+          {product.variation && (
+            <Text text90 marginV-2>
+              {product.variation.name}
+            </Text>
+          )}
           <View>
             {product.attributes.map((attrib) => {
               let extraPrice = Array.isArray(attrib.price)

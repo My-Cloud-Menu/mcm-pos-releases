@@ -19,13 +19,16 @@ export const getOrderStructure = () => {
     },
     employee: {
       id: (authStore.employeeLogged?.id || "").toString(),
-      first_name: authStore.employeeLogged?.first_name,
-      last_name: authStore.employeeLogged?.last_name,
+      first_name:
+        authStore.employeeLogged?.first_name ||
+        authStore.employeeLogged?.middle_name ||
+        "",
+      last_name: authStore.employeeLogged?.last_name || "",
     },
     line_items: cartStore.cartProducts.map((cartProduct) => {
       return {
         product_id: cartProduct.product.id,
-        variation_id: 0,
+        variation_id: cartProduct.variation?.id || 0,
         quantity: cartProduct.quantity,
         notes: "",
         attributes: cartProduct.attributes,

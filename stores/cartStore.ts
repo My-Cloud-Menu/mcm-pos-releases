@@ -4,10 +4,16 @@ import { Item_attibute, Product } from "mcm-types";
 import { queryClient } from "../app/_layout";
 import { orderSummaryQueryKey } from "../modules/orders/OrdersApi";
 
+export interface ProductCartVariation {
+  id: string;
+  name: string;
+  price: string;
+}
 export interface ProductCart {
   product: Product;
   quantity: number;
   attributes: Item_attibute[];
+  variation?: ProductCartVariation;
 }
 export interface CartStore {
   cartProducts: Array<ProductCart>;
@@ -31,6 +37,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
 
       if (
         item.product.id == product.product.id &&
+        item.variation?.id == product.variation?.id &&
         item.attributes.length == product.attributes.length
       ) {
         for (let i = 0; i < item.attributes.length; i++) {
