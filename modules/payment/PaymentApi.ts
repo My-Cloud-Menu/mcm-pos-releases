@@ -1,8 +1,12 @@
 import { ecrSaleResponse, payment_method_available } from "../../types";
 import { makeEcrRequest, makeMcmRequest } from "../common/PetitionsHelper";
 import useEcrStore from "../ecr/EcrStore";
-import { Payment } from "mcm-types";
+import { GetPaymentsRequestResponse, Payment } from "mcm-types";
 import * as Linking from "expo-linking";
+import dayjs from "dayjs";
+
+export const paymentsQueryKey = "payments";
+export const paymentQueryKey = "payment";
 
 export const createPayment = async (params: {
   method: payment_method_available;
@@ -118,25 +122,26 @@ export const getPaymentById = async (paymentId: string) => {
   return await makeMcmRequest(`front/payments/${paymentId}`);
 };
 
-export const getQrCodeReceiptUrl = async (paymentId: string) => {
-  return await makeMcmRequest(`front/payments/${paymentId}/receipturl`);
-};
+export const getPayments = async (
+  orderId = "",
+  excludePending = false
+): Promise<GetPaymentsRequestResponse> => {
+  let response = await makeMcmRequest(
+    `admin/payments`,
+    "GET",
+    {},
+    {
+      order_id: orderId,
+      after: dayjs().utc().subtract(24, "hours").toISOString(),
+      withoutPaginate: true,
+    }
+  );
 
-export const printECRCustomReceipt = async (htmlReceipt: string) => {
-  try {
-    const data = {
-      receipt_output: htmlReceipt,
-    };
-
-    const response = await makeEcrRequest("customPrint", data);
-    try {
-      !__DEV__ && Linking.openURL("mcmpos://");
-    } catch (err) {}
-    return response;
-  } catch (error) {
-    try {
-      !__DEV__ && Linking.openURL("mcmpos://");
-    } catch (err) {}
-    throw error;
+  if (excludePending) {
+    response.payments = response.payments.filter(
+      (payment: Payment) => payment.status != "pending"
+    );
   }
+
+  return response;
 };

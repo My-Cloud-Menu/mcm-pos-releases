@@ -3,6 +3,7 @@ import useEcrStore from "../ecr/EcrStore";
 import useOrderStore from "../orders/OrdersStore";
 import usePaymentStore from "./PaymentStore";
 import * as paymentApi from "./PaymentApi";
+import { Colors } from "react-native-ui-lib";
 
 export const getCreatePaymentStructureForBackend = ({
   orderId,
@@ -58,4 +59,34 @@ export const handlePaymentInEcr = async (paymentCreatedInBackend: any) => {
   }
 
   return ecrResult;
+};
+
+export const getColorForStatusLabel = (status: string) => {
+  switch (status) {
+    case "completed":
+      return Colors.green;
+    case "partially_refunded":
+      return Colors.primaryLight;
+    case "refunded":
+      return Colors.yellow;
+    case "pending":
+      return Colors.grayActive;
+    default:
+      return Colors.primaryLight;
+  }
+};
+
+export const getStatusLabel = (paymentStatus: string) => {
+  let label = paymentStatus;
+
+  if (paymentStatus == "partially_refunded") label = "Partially Refunded";
+
+  return label;
+};
+
+export const getMethodLabel = (paymentMethod: string) => {
+  if (paymentMethod == "ecr-cash") paymentMethod = "Cash";
+  if (paymentMethod == "ecr-card") paymentMethod = "Card";
+
+  return paymentMethod;
 };

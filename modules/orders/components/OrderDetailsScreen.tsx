@@ -19,14 +19,25 @@ import { formatCurrency } from "../../common/UtilsHelper";
 import { goToPaymentScreen } from "../../common/NavigationHelper";
 import dayjs from "dayjs";
 import { formatOrderPaymentStatus, formatOrderStatus } from "../OrderUtils";
+import { getPayments, paymentsQueryKey } from "../../payment/PaymentApi";
+import TransactionsList from "../../payment/components/TransactionList";
 type props = {
   orderId: string;
 };
 
 const OrderDetailsScreen = ({ orderId }: props) => {
-  const { data: order, isLoading: isOrderLoading } = useQuery<Order>({
+  const {
+    data: order,
+    isLoading: isOrderLoading,
+    isSuccess: isOrderSuccess,
+  } = useQuery<Order>({
     queryKey: ["orders", orderId],
     queryFn: () => getOrderById(orderId),
+  });
+
+  const paymentsQuery = useQuery({
+    queryKey: [paymentsQueryKey, orderId],
+    queryFn: () => getPayments(orderId, true),
   });
 
   if (isOrderLoading && !order)
@@ -79,26 +90,21 @@ const OrderDetailsScreen = ({ orderId }: props) => {
             />
           )}
         </View>
-        <View row spread marginT-14>
+        <View row marginT-14 style={{ columnGap: 5 }}>
+          <LabelValue label="Total" value={formatCurrency(order.total)} />
+          <LabelValue label="Experience" value="Pickup" />
           <LabelValue
-            horizontal={false}
-            label="Total"
-            value={formatCurrency(order.total)}
-          />
-          <LabelValue horizontal={false} label="Experience" value="Pickup" />
-          <LabelValue
-            horizontal={false}
             label="Name"
             value={
               `${order.cart.customer.first_name} ${order.cart.customer.last_name}`.trim() ||
               "Sin Especificar"
             }
           />
-          <LabelValue
-            horizontal={false}
+          {/* <LabelValue
+            
             label="Payment Status"
             value={formatOrderPaymentStatus[order.payment_status] || ""}
-          />
+          /> */}
         </View>
         <Text marginT-20 text70>
           Items
@@ -106,6 +112,13 @@ const OrderDetailsScreen = ({ orderId }: props) => {
         <View paddingR-30>
           <LineItemsList order={order} />
         </View>
+        <Text marginT-20 text70 marginB-8>
+          Payments
+        </Text>
+        <TransactionsList
+          isLoading={paymentsQuery.isLoading}
+          payments={paymentsQuery.data?.payments || []}
+        />
       </View>
       <View marginB-10>
         <Button

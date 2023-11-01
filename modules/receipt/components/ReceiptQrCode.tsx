@@ -1,8 +1,8 @@
 import React from "react";
 import QRCode from "react-native-qrcode-svg";
 import { useQuery } from "@tanstack/react-query";
-import { getQrCodeReceiptUrl } from "../../payment/PaymentApi";
 import { Colors } from "react-native-ui-lib";
+import { getQrCodeReceiptUrl } from "../ReceiptApi";
 
 type props = {
   paymentId: string;

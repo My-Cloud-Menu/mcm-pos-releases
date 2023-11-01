@@ -1,17 +1,17 @@
 import { StyleSheet } from "react-native";
 import React from "react";
-import { Colors, LoaderScreen, StateScreen } from "react-native-ui-lib";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Colors, LoaderScreen, StateScreen, Text } from "react-native-ui-lib";
+import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
-import ReceiptScreen from "../../modules/receipt/components/ReceiptScreen";
 import {
   getPaymentById,
   paymentQueryKey,
 } from "../../modules/payment/PaymentApi";
 import { Payment } from "mcm-types";
+import PaymentDetailsScreen from "../../modules/payment/components/PaymentDetailsScreen";
 
-const receipt = () => {
-  let params = useLocalSearchParams<{ paymentId: string; canGoBack: string }>();
+const PaymentDetails = () => {
+  let params = useLocalSearchParams<{ paymentId: string }>();
 
   if (!params.paymentId)
     return (
@@ -37,19 +37,9 @@ const receipt = () => {
       />
     );
 
-  return (
-    <>
-      <Stack.Screen
-        options={{
-          title: `Receipt - Payment #${payment.id}`,
-          headerLeft: params.canGoBack ? undefined : () => undefined,
-        }}
-      />
-      <ReceiptScreen payment={payment} />
-    </>
-  );
+  return <PaymentDetailsScreen payment={payment} />;
 };
 
-export default receipt;
+export default PaymentDetails;
 
 const styles = StyleSheet.create({});

@@ -1,22 +1,36 @@
 import { StyleSheet } from "react-native";
-import React from "react";
+import React, { ReactNode } from "react";
 import { Colors, Text, View } from "react-native-ui-lib";
 
 type props = {
   label: string;
-  value: string;
-  horizontal?: boolean;
+  value: string | ReactNode;
+  vertical?: boolean;
+  fontSize?: number;
 };
 
-const LabelValue = ({ label, value, horizontal = true }: props) => {
+const LabelValue = ({
+  label,
+  value,
+  vertical = false,
+  fontSize = 16,
+}: props) => {
   return (
-    <View row={horizontal} marginR-15 centerV>
-      <Text text80 style={{ color: Colors.black, fontWeight: "500" }}>
-        {label}
-      </Text>
-      <Text text80 style={{ color: "#757575", marginLeft: horizontal ? 4 : 0 }}>
-        {value}
-      </Text>
+    <View row={!vertical} marginR-15 centerV>
+      <Text style={{ fontWeight: "600", fontSize: fontSize }}>{label}</Text>
+      {typeof value == "string" ? (
+        <Text
+          style={{
+            color: "#000",
+            marginLeft: vertical ? 0 : 4,
+            fontSize: fontSize,
+          }}
+        >
+          {value}
+        </Text>
+      ) : (
+        <View row>{value}</View>
+      )}
     </View>
   );
 };

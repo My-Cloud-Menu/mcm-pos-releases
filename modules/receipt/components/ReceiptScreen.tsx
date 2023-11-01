@@ -6,10 +6,10 @@ import ReceiptQrCode from "./ReceiptQrCode";
 import { Payment } from "mcm-types";
 import HtmlContent from "../../common/components/HtmlContent";
 import { useMutation } from "@tanstack/react-query";
-import { printECRCustomReceipt } from "../../payment/PaymentApi";
 import { handlePetitionError, showAlert } from "../../common/AlertHelper";
-import LabelValue from "../../common/components/LabelValue";
 import { formatCurrency } from "../../common/UtilsHelper";
+import { printECRCustomReceipt } from "../ReceiptApi";
+import SendReceiptBySmsForm from "./SendReceiptBySmsForm";
 
 const receiptOptions = ["SHOW", "SMS"];
 
@@ -40,7 +40,10 @@ const ReceiptScreen = ({ payment }: props) => {
   };
 
   const paymentDetailsLabelValues = [
-    { label: "Status", value: "Approved." },
+    {
+      label: "Status",
+      value: payment.status == "completed" ? "Approved." : "Pending.",
+    },
     { label: "Invoice", value: payment.invoice },
     { label: "Reference", value: payment.reference },
     { label: "Total", value: formatCurrency(payment.total) },
@@ -48,18 +51,12 @@ const ReceiptScreen = ({ payment }: props) => {
 
   return (
     <ScrollView>
-      <Stack.Screen
-        options={{
-          title: `Receipt - Payment #${payment.id}`,
-          headerLeft: () => undefined,
-        }}
-      />
       <View row>
         <View
           paddingT-20
           paddingL-30
           br40
-          style={{ backgroundColor: "#fff", minHeight: 1200 }}
+          style={{ backgroundColor: "#fff", minHeight: 1000 }}
         >
           <View flex centerH>
             <Text text20L marginT-10 marginB-20>
@@ -131,6 +128,10 @@ const ReceiptScreen = ({ payment }: props) => {
               />
               <HtmlContent htmlContent={payment.receipt_html} />
             </View>
+          )}
+
+          {selectedReceipt == "SMS" && (
+            <SendReceiptBySmsForm paymentId={payment.id} />
           )}
         </View>
       </View>
