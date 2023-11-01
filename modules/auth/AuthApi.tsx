@@ -1,7 +1,15 @@
 import { TimeSheet } from "../../types";
-import { makeMcmRequest } from "../common/PetitionsHelper";
+import { makeEcrRequest, makeMcmRequest } from "../common/PetitionsHelper";
 
 export const timesSheetQueryKey = "timesheet";
+
+export const getEcrStatus = async () => {
+  return makeEcrRequest("getStatus");
+};
+
+export const makeEcrLogon = async () => {
+  return makeEcrRequest("logon");
+};
 
 export const login = async (pin: string) => {
   const response = await makeMcmRequest("front/employees/login", "POST", {

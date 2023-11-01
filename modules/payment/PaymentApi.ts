@@ -1,7 +1,7 @@
 import { ecrSaleResponse, payment_method_available } from "../../types";
 import { makeEcrRequest, makeMcmRequest } from "../common/PetitionsHelper";
 import useEcrStore from "../ecr/EcrStore";
-import { Payment } from "mcm-types/src/payment";
+import { Payment } from "mcm-types";
 import * as Linking from "expo-linking";
 
 export const createPayment = async (params: {
@@ -120,4 +120,23 @@ export const getPaymentById = async (paymentId: string) => {
 
 export const getQrCodeReceiptUrl = async (paymentId: string) => {
   return await makeMcmRequest(`front/payments/${paymentId}/receipturl`);
+};
+
+export const printECRCustomReceipt = async (htmlReceipt: string) => {
+  try {
+    const data = {
+      receipt_output: htmlReceipt,
+    };
+
+    const response = await makeEcrRequest("customPrint", data);
+    try {
+      !__DEV__ && Linking.openURL("mcmpos://");
+    } catch (err) {}
+    return response;
+  } catch (error) {
+    try {
+      !__DEV__ && Linking.openURL("mcmpos://");
+    } catch (err) {}
+    throw error;
+  }
 };

@@ -84,7 +84,11 @@ export const makeEcrRequest = async (
     const initialBody = getEcrRequestInitialBody();
     const headers = getEcrRequestHeaders();
     const url = getEcrRequestUrl(path);
-    const bodyParameters = { ...initialBody, ...body };
+    let bodyParameters = { ...initialBody, ...body };
+
+    if (path == "logon") {
+      bodyParameters.session_id = undefined;
+    }
 
     const { data } = await axios.request({
       method: "POST",
@@ -125,7 +129,7 @@ export const onSuccessfulECRResponse = (data: any, path: string) => {
 export const getEcrRequestUrl = (pathName: string = "") => {
   let { setup } = useEcrStore.getState();
 
-  let url: string = __DEV__
+  let url: string = !__DEV__
     ? `${setup.ipDev}/${pathName}`
     : `http://${setup.ip}:${setup.port}/${pathName}`;
 

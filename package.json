@@ -37,6 +37,7 @@
     "react-dom": "18.2.0",
     "react-i18next": "^13.1.2",
     "react-native": "0.72.3",
+    "react-native-currency-input": "^1.1.1",
     "react-native-flash-message": "^0.4.2",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-mmkv": "^2.10.1",
@@ -46,7 +47,8 @@
     "react-native-screens": "~3.22.0",
     "react-native-ui-lib": "^7.7.0",
     "react-native-web": "~0.19.6",
-    "zustand": "^4.4.1"
+    "zustand": "^4.4.1",
+    "react-native-webview": "13.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

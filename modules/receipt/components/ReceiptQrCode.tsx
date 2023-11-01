@@ -17,7 +17,7 @@ const ReceiptQrCode = ({ paymentId }: props) => {
 
   if (!Boolean(data?.url)) return <></>;
 
-  return <QRCode color={Colors.primary} size={130} value={data.url} />;
+  return <QRCode color={Colors.primary} size={150} value={data.url} />;
 };
 
 export default ReceiptQrCode;

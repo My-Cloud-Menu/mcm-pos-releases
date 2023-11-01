@@ -3,6 +3,7 @@ import {
   GetIngredientRequestResponse,
   GetProductRequestResponse,
   GetTablesRequestResponse,
+  Product,
 } from "mcm-types";
 import { makeMcmRequest } from "../common/PetitionsHelper";
 
@@ -59,6 +60,11 @@ export const getProducts = async (): Promise<GetProductRequestResponse> => {
 
     return product;
   });
+
+  response.products = response.products.sort((a: Product, b: Product) =>
+    a.name[0].localeCompare(b.name[0])
+  );
+
   return response;
 };
 export const getCategoriesWithProducts = async () => {
