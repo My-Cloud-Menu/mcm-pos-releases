@@ -1,7 +1,7 @@
 import { ecrSaleResponse, payment_method_available } from "../../types";
 import { makeEcrRequest, makeMcmRequest } from "../common/PetitionsHelper";
 import useEcrStore from "../ecr/EcrStore";
-import { GetPaymentsRequestResponse, Payment } from "mcm-types";
+import { GetPaymentsRequestResponse, Payment, TipAdjustment } from "mcm-types";
 import * as Linking from "expo-linking";
 import dayjs from "dayjs";
 
@@ -118,7 +118,9 @@ export const updatePaymentPaidSuccessfullyInBackend = async (
   );
 };
 
-export const getPaymentById = async (paymentId: string) => {
+export const getPaymentById = async (
+  paymentId: string
+): Promise<Payment | undefined> => {
   return await makeMcmRequest(`front/payments/${paymentId}`);
 };
 
@@ -132,7 +134,7 @@ export const getPayments = async (
     {},
     {
       order_id: orderId,
-      after: dayjs().utc().subtract(24, "hours").toISOString(),
+      //after: dayjs().utc().subtract(24, "hours").toISOString(),
       withoutPaginate: true,
     }
   );
@@ -142,6 +144,73 @@ export const getPayments = async (
       (payment: Payment) => payment.status != "pending"
     );
   }
+
+  return response;
+};
+
+export const createTipAdjustment = async (
+  paymentId: string,
+  params: {
+    amount: string;
+    reference: string;
+    employee: {
+      id: string;
+      first_name: string;
+      last_name: string;
+    };
+  }
+): Promise<TipAdjustment> => {
+  const response = await makeMcmRequest(
+    `admin/payments/${paymentId}/tipadjustments`,
+    "POST",
+    {
+      amount: params.amount,
+      reference: params.reference,
+      employee: {
+        id: params.employee.id,
+        first_name: params.employee.first_name,
+        last_name: params.employee.last_name,
+      },
+    }
+  );
+
+  return response;
+};
+
+export const makeEcrTipAdjust = async (
+  target_reference: string,
+  tip: string
+) => {
+  try {
+    const data = {
+      target_reference: target_reference,
+      tip: tip,
+    };
+
+    const response = await makeEcrRequest("tipAdjust", data, 120000);
+
+    try {
+      !__DEV__ && Linking.openURL("mcmpos://");
+    } catch (err) {}
+
+    return response;
+  } catch (error) {
+    try {
+      !__DEV__ && Linking.openURL("mcmpos://");
+    } catch (err) {}
+    throw error;
+  }
+};
+
+export const handleEcrTipAdjustmentSuccessful = async (params: {
+  tipAdjustment: TipAdjustment;
+  payment_receipt_html_updated: string | null;
+}) => {
+  const response = await makeMcmRequest(
+    `admin/payments/${params.tipAdjustment.payment_id}/tipadjustments/${params.tipAdjustment.id}/ecr/successful`,
+    "POST",
+    { payment_receipt_html_updated: params.payment_receipt_html_updated }
+  );
 
   return response;
 };

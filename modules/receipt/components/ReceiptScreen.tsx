@@ -10,6 +10,7 @@ import { handlePetitionError, showAlert } from "../../common/AlertHelper";
 import { formatCurrency } from "../../common/UtilsHelper";
 import { printECRCustomReceipt } from "../ReceiptApi";
 import SendReceiptBySmsForm from "./SendReceiptBySmsForm";
+import { getPaymentStatusForReceipt } from "../ReceiptHelper";
 
 const receiptOptions = ["SHOW", "SMS"];
 
@@ -42,7 +43,7 @@ const ReceiptScreen = ({ payment }: props) => {
   const paymentDetailsLabelValues = [
     {
       label: "Status",
-      value: payment.status == "completed" ? "Approved." : "Pending.",
+      value: getPaymentStatusForReceipt(payment.status),
     },
     { label: "Invoice", value: payment.invoice },
     { label: "Reference", value: payment.reference },

@@ -7,6 +7,7 @@ type props = {
   value: string | ReactNode;
   vertical?: boolean;
   fontSize?: number;
+  horizontalMargin?: number;
 };
 
 const LabelValue = ({
@@ -14,6 +15,7 @@ const LabelValue = ({
   value,
   vertical = false,
   fontSize = 16,
+  horizontalMargin = 4,
 }: props) => {
   return (
     <View row={!vertical} marginR-15 centerV>
@@ -22,7 +24,7 @@ const LabelValue = ({
         <Text
           style={{
             color: "#000",
-            marginLeft: vertical ? 0 : 4,
+            marginLeft: vertical ? 0 : horizontalMargin,
             fontSize: fontSize,
           }}
         >

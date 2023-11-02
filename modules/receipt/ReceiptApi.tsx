@@ -33,3 +33,24 @@ export const sendSMSNotification = async (
     payment_id: payment_id,
   });
 };
+
+export const reprintEcrReceipt = async (
+  receipt_output: "pos" | "html" = "pos"
+) => {
+  try {
+    const data = {
+      receipt_output: receipt_output,
+    };
+
+    const response = await makeEcrRequest("reprint", data);
+    try {
+      !__DEV__ && Linking.openURL("mcmpos://");
+    } catch (err) {}
+    return response;
+  } catch (error) {
+    try {
+      !__DEV__ && Linking.openURL("mcmpos://");
+    } catch (err) {}
+    throw error;
+  }
+};

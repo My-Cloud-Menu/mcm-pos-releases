@@ -124,6 +124,8 @@ const ClocksInOutScreen = (props: props) => {
           minutes
         ).padStart(2, "0")}`;
 
+        const isTimeExceeded = timeLogged > 962;
+
         const isCurrent =
           authStore.employeeLogged?.id.toString() == item.user.id.toString();
 
@@ -144,7 +146,15 @@ const ClocksInOutScreen = (props: props) => {
                 .utcOffset(initialGlobalSetupConfiguration.timeOffSet)
                 .format("hh:mm a")}
             </Text>
-            <Text style={styles.cell}>{timeLoggedFormatted}</Text>
+            <Text
+              style={{
+                ...styles.cell,
+                fontWeight: "bold",
+                color: isTimeExceeded ? "#E57373" : undefined,
+              }}
+            >
+              {timeLoggedFormatted}
+            </Text>
             <Text style={styles.cell}>{item.activity.name}</Text>
             <View style={styles.cell}>
               {!isCurrent && (

@@ -32,3 +32,11 @@ export const formatPhoneNumberForBackend = (value: string) => {
     PhoneNumberFormat.E164
   );
 };
+
+export const getPaymentStatusForReceipt = (paymentStatus: string) => {
+  if (paymentStatus == "completed") return "Approved.";
+  if (paymentStatus == "refunded") return "Refunded.";
+  if (paymentStatus == "partially_refunded") return "Partially Refunded.";
+
+  return "Pending.";
+};

@@ -15,12 +15,14 @@ import {
   goToOrderDetailsScreen,
   goToReceiptScreen,
 } from "../../common/NavigationHelper";
+import CreateRefundForm from "../../refund/components/CreateRefundForm";
+import AdjustTipForm from "./AdjustTipForm";
 dayjs.extend(utc);
 
 const paymentOptions = [
   { label: "Recibo", value: "receipt" },
   { label: "Reembolso", value: "refund" },
-  { label: "Ajuste de Tip", value: "adjust tip" },
+  { label: "Ajuste de Tip", value: "adjust_tip" },
   { label: "Transferir a otro cheque", value: "transfer" },
 ];
 
@@ -171,7 +173,15 @@ const PaymentDetailsScreen = ({ payment }: props) => {
             {/* <ReceiptQrCode paymentId={payment.id} /> */}
           </View>
         </View>
-        <View centerH flex></View>
+        <View centerH flex>
+          {selectedOption == "refund" && (
+            <CreateRefundForm paymentId={payment.id} />
+          )}
+
+          {selectedOption == "adjust_tip" && (
+            <AdjustTipForm paymentId={payment.id} />
+          )}
+        </View>
       </View>
     </ScrollView>
   );

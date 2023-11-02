@@ -55,7 +55,7 @@ export const initialGlobalSetupConfiguration: GlobalSetup = {
   password_length: 4,
   showErrors: false,
   siteId: "11902122",
-  url: "https://boripizza.api.mycloudmenu.com",
+  url: "http://localhost:3000",
   showTableSelector: true,
   employeesShouldSeeJustTheirTables: true,
   masterPassword: "0000",
