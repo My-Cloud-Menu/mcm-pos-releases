@@ -7,16 +7,18 @@ import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import Counter from "../modules/auth/components/Counter";
 import useAuthStore from "../modules/auth/AuthStore";
 import useEcrStore from "../modules/ecr/EcrStore";
+import useGlobalStore from "../modules/common/GlobalStore";
 
 const LoginScreen = () => {
   const { title = "Mozo", subTitle = "Los Especiales del dia" } =
     useLocalSearchParams<{ title: string; subTitle: string }>();
 
+  const setup = useGlobalStore((state) => state.setup);
+
   const navigation = useNavigation();
 
   const [isLoading, setIsLoading] = useState(false);
   const [userInput, setUserInput] = useState("");
-  const [passwordMaxLength, setPasswordMaxLength] = useState(4);
   const [error, setError] = useState(null);
   const authStore = useAuthStore((state) => state);
   const ecrStore = useEcrStore((state) => state);
@@ -44,7 +46,7 @@ const LoginScreen = () => {
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>{subTitle}</Text>
       </View>
-      <Counter item={userInput} length={passwordMaxLength} />
+      <Counter item={userInput} length={setup.password_length} />
       <View>
         {authStore.isLoading && (
           <>
@@ -64,7 +66,7 @@ const LoginScreen = () => {
             setUserInput(value);
             setError(null);
           }}
-          textMaxLength={passwordMaxLength}
+          textMaxLength={setup.password_length}
           userInput={userInput}
           onSubmit={onSubmit}
         />

@@ -21,6 +21,7 @@ import { Payment } from "mcm-types";
 import { handlePetitionError } from "../../common/AlertHelper";
 import { useBackHandler } from "../../common/hooks/UseBackHandler";
 import TerminalConnectionChecker from "../../auth/components/TerminalConnectionChecker";
+import useEcrStore from "../../ecr/EcrStore";
 
 interface props {
   order: Order;
@@ -28,7 +29,9 @@ interface props {
 
 const PaymentScreen = ({ order }: props) => {
   const paymentStore = usePaymentStore();
-
+  const setCurrentBachNumber = useEcrStore(
+    (state) => state.setCurrentBachNumber
+  );
   const totalToPay = Number(order.total) + (paymentStore.inputValues.tip || 0);
   const [paymentCreatedInBackend, setPaymentCreatedInBackend] = useState<
     Payment | undefined
@@ -61,6 +64,10 @@ const PaymentScreen = ({ order }: props) => {
       if (!Boolean(ecrResultToSend)) {
         ecrResultToSend = await handlePaymentInEcr(paymentToSend);
         setEcrResultCreated(ecrResultToSend);
+
+        if (ecrResultToSend?.batch_number) {
+          setCurrentBachNumber(ecrResultToSend?.batch_number);
+        }
       }
 
       if (ecrResultToSend == undefined || paymentToSend == undefined)

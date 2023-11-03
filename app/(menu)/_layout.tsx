@@ -32,6 +32,7 @@ const MenuLayout = () => {
             options={{ title: "Clock In/Out" }}
           />
           <Stack.Screen name="clockin" options={{ title: "Clock In" }} />
+          <Stack.Screen name="settings" options={{ title: "Settings" }} />
         </Stack>
       </View>
     </View>

@@ -8,6 +8,7 @@ import fonts from "../../common/theme/fonts";
 import { useMutation } from "@tanstack/react-query";
 import { login, timesSheetQueryKey } from "../AuthApi";
 import { queryClient } from "../../../app/_layout";
+import useGlobalStore from "../../common/GlobalStore";
 
 const ClockInScreen = () => {
   const { title = "Mozo", subTitle = "Los Especiales del dia" } =
@@ -21,8 +22,9 @@ const ClockInScreen = () => {
     },
   });
 
+  const setup = useGlobalStore((state) => state.setup);
+
   const [userInput, setUserInput] = useState("");
-  const [passwordMaxLength, setPasswordMaxLength] = useState(4);
 
   const onPressLogin = async () => {
     if (loginQuery.isLoading) return;
@@ -47,7 +49,7 @@ const ClockInScreen = () => {
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>{subTitle}</Text>
       </View>
-      <Counter item={userInput} length={passwordMaxLength} />
+      <Counter item={userInput} length={setup.password_length} />
       <View>
         {loginQuery.isLoading && (
           <>
@@ -66,7 +68,7 @@ const ClockInScreen = () => {
           onChangeText={(value: string) => {
             setUserInput(value);
           }}
-          textMaxLength={passwordMaxLength}
+          textMaxLength={setup.password_length}
           userInput={userInput}
           onSubmit={onPressLogin}
         />

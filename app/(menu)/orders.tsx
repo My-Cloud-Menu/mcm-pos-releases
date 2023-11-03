@@ -1,26 +1,23 @@
 import { StyleSheet } from "react-native";
 import React from "react";
 import OrdersScreen from "../../modules/orders/components/OrdersScreen";
-import { OrdersResponse } from "../../types";
 import { useQuery } from "@tanstack/react-query";
-import { makeMcmRequest } from "../../modules/common/PetitionsHelper";
 import { Colors, View } from "react-native-ui-lib";
 import OrderDetailsScreen from "../../modules/orders/components/OrderDetailsScreen";
 import { useLocalSearchParams } from "expo-router";
+import { getOrders, ordersQueryKey } from "../../modules/orders/OrdersApi";
 
 const orders = () => {
   const { orderId } = useLocalSearchParams<{ orderId?: string }>();
 
-  const { data: ordersResponse, isLoading: isOrdersLoading } =
-    useQuery<OrdersResponse>({
-      queryKey: ["/orders"],
-      queryFn: () => makeMcmRequest("admin/orders?withoutPaginate=true"),
-      initialData: {
-        orders: [],
-        count: 0,
-        lastEvaluatedKey: null,
-      },
-    });
+  const ordersQuery = useQuery({
+    queryKey: [ordersQueryKey],
+    queryFn: getOrders,
+    initialData: {
+      orders: [],
+      count: 0,
+    },
+  });
 
   return (
     <View
@@ -31,7 +28,7 @@ const orders = () => {
       }}
     >
       <View style={{ flex: 1 }}>
-        <OrdersScreen orders={ordersResponse.orders} />
+        <OrdersScreen orders={ordersQuery.data.orders} />
       </View>
       {orderId && (
         <View

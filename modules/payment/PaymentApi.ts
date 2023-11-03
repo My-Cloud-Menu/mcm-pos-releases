@@ -214,3 +214,23 @@ export const handleEcrTipAdjustmentSuccessful = async (params: {
 
   return response;
 };
+
+export const makeEcrSettle = async (receipt_output = "BOTH") => {
+  try {
+    const data = {
+      receipt_output: receipt_output,
+    };
+
+    const response = await makeEcrRequest("settle", data, 120000);
+    try {
+      !__DEV__ && Linking.openURL("mcmpos://");
+    } catch (err) {}
+
+    return response;
+  } catch (error) {
+    try {
+      !__DEV__ && Linking.openURL("mcmpos://");
+    } catch (err) {}
+    throw error;
+  }
+};

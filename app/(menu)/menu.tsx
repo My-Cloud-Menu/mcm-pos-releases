@@ -17,37 +17,34 @@ import { useCartStore } from "../../stores/cartStore";
 import { useGlobal } from "../../stores/global";
 import useOrderStore from "../../modules/orders/OrdersStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { OrdersResponse } from "../../types";
+import { onRequestError } from "../../modules/common/PetitionsHelper";
 import {
-  makeMcmRequest,
-  onRequestError,
-} from "../../modules/common/PetitionsHelper";
-import { goToPaymentScreen } from "../../modules/common/NavigationHelper";
+  goToOrderDetailsScreen,
+  goToPaymentScreen,
+} from "../../modules/common/NavigationHelper";
 import {
   createOrderInBackend,
   getOrderSummary,
+  getOrders,
   orderSummaryQueryKey,
+  ordersQueryKey,
 } from "../../modules/orders/OrdersApi";
 import ExperienceSelector from "../../modules/menu/components/ExperienceSelector";
-import { Order } from "mcm-types";
+import { showAlert } from "../../modules/common/AlertHelper";
 
 const Menu = () => {
   const { cartProducts, clearCart } = useCartStore();
   const { selectedCategory } = useGlobal();
   const orderStore = useOrderStore();
 
-  const { data: ordersResponse, isLoading: isOrdersLoading } =
-    useQuery<OrdersResponse>({
-      queryKey: ["/orders"],
-      queryFn: () => makeMcmRequest("admin/orders?withoutPaginate=true"),
-      initialData: {
-        orders: [],
-        count: 0,
-        lastEvaluatedKey: null,
-      },
-      onError: (error) =>
-        onRequestError(error, "Something went wrong loading Orders"),
-    });
+  const ordersQuery = useQuery({
+    queryKey: [ordersQueryKey],
+    queryFn: getOrders,
+    initialData: {
+      orders: [],
+      count: 0,
+    },
+  });
 
   const orderSummaryQuery = useQuery({
     queryKey: [orderSummaryQueryKey],
@@ -99,26 +96,6 @@ const Menu = () => {
             marginBottom: 15,
           }}
         />
-        {/* <FlashList
-          style={{ maxHeight: 100 }}
-          keyExtractor={(item) => item.id}
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          ItemSeparatorComponent={() => (
-            <View
-              style={{
-                width: 0.5,
-                marginHorizontal: 23,
-                backgroundColor: "#E0E0E0",
-              }}
-            />
-          )}
-          refreshing={isOrdersLoading}
-          data={ordersResponse.orders}
-          renderItem={({ item }) => {
-            return <OrderCardItem order={item} />;
-          }}
-        /> */}
 
         <FlatList
           style={{ maxHeight: 100 }}
@@ -133,12 +110,17 @@ const Menu = () => {
               }}
             />
           )}
-          refreshing={isOrdersLoading}
-          data={ordersResponse.orders.sort(
+          refreshing={ordersQuery.isLoading}
+          data={ordersQuery.data.orders.sort(
             (a, b) => Number(b.id) - Number(a.id)
           )}
           renderItem={({ item }) => {
-            return <OrderCardItem order={item} />;
+            return (
+              <OrderCardItem
+                onPress={(order) => goToOrderDetailsScreen(order.id, order)}
+                order={item}
+              />
+            );
           }}
         />
       </View>

@@ -13,7 +13,7 @@ import LabelValue from "../../common/components/LabelValue";
 import { Entypo } from "@expo/vector-icons";
 import { Order } from "mcm-types/src/order";
 import LineItemsList from "./LineItemsList";
-import { getOrderById } from "../OrdersApi";
+import { getOrderById, orderQueryKey } from "../OrdersApi";
 import { useQuery } from "@tanstack/react-query";
 import { formatCurrency } from "../../common/UtilsHelper";
 import { goToPaymentScreen } from "../../common/NavigationHelper";
@@ -26,12 +26,8 @@ type props = {
 };
 
 const OrderDetailsScreen = ({ orderId }: props) => {
-  const {
-    data: order,
-    isLoading: isOrderLoading,
-    isSuccess: isOrderSuccess,
-  } = useQuery<Order>({
-    queryKey: ["orders", orderId],
+  const { data: order, isLoading: isOrderLoading } = useQuery<Order>({
+    queryKey: [orderQueryKey, orderId],
     queryFn: () => getOrderById(orderId),
   });
 

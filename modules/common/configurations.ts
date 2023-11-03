@@ -17,6 +17,7 @@ export interface EcrSetup {
   manual_entry_indicator: string;
   receipt_email: string;
   process_cashback: string;
+  batch_number?: string;
 }
 
 export interface GlobalSetup {
@@ -36,6 +37,7 @@ export interface GlobalSetup {
 export const initialECRSetupConfiguration: EcrSetup = {
   session_id: undefined,
   last_reference: undefined,
+  batch_number: undefined,
   reference: 0,
   terminal_id: "30DR3477",
   station_number: "1234",

@@ -15,6 +15,8 @@ interface EcrStore {
   setup: EcrSetup;
   login: () => Promise<any>;
   saveSetup: (newSetup: EcrSetup) => void;
+  setCurrentBachNumber: (newBatchNumber: string) => void;
+  increaseCurrentBatchNumber: () => void;
 }
 
 const useEcrStore = create<EcrStore>()(
@@ -24,6 +26,21 @@ const useEcrStore = create<EcrStore>()(
       isLogged: false,
       error: null,
       setup: initialECRSetupConfiguration,
+      setCurrentBachNumber: (newBatchNumber) =>
+        set((state) => ({
+          setup: { ...state.setup, batch_number: newBatchNumber },
+        })),
+      increaseCurrentBatchNumber: () => {
+        let { batch_number } = get().setup;
+
+        if (!isNaN(batch_number) && batch_number != null) {
+          batch_number = (Number(batch_number) + 1).toString();
+        }
+
+        set((state) => ({
+          setup: { ...state.setup, batch_number: batch_number },
+        }));
+      },
       saveSetup: (newSetup: EcrSetup) => {
         set(() => ({ setup: newSetup }));
       },

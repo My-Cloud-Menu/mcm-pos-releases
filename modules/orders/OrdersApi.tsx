@@ -1,10 +1,17 @@
+import dayjs from "dayjs";
 import { queryClient } from "../../app/_layout";
 import { Order } from "../../types";
 import { makeMcmRequest } from "../common/PetitionsHelper";
 import { getOrderStructure } from "./OrderHelper";
+import utc from "dayjs/plugin/utc";
+import { GetOrdersRequestResponse } from "mcm-types";
+import useEcrStore from "../ecr/EcrStore";
+
+dayjs.extend(utc);
 
 export const orderSummaryQueryKey = "order_summary";
 export const ordersQueryKey = "/orders";
+export const orderQueryKey = "order";
 
 export const createOrderInBackend = async (): Promise<{ order: Order }> => {
   const orderToCreate = getOrderStructure();
@@ -32,6 +39,32 @@ export const getOrderSummary = async () => {
     "POST",
     orderToCreate
   );
+
+  return response;
+};
+
+export const getOrders = async (): Promise<GetOrdersRequestResponse> => {
+  let response = await makeMcmRequest(
+    "admin/orders",
+    "GET",
+    {},
+    {
+      withoutPaginate: true,
+      // after: dayjs().utc().subtract(24, "hours").toISOString(),
+    }
+  );
+
+  const ecrSetup = useEcrStore.getState().setup;
+
+  if (ecrSetup.batch_number) {
+    response.orders = response.orders.filter(
+      (order: Order) =>
+        !(
+          order.status == "check-closed" &&
+          order.additional_properties?.batch_number != ecrSetup.batch_number
+        )
+    );
+  }
 
   return response;
 };

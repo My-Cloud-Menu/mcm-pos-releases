@@ -37,10 +37,16 @@ const navItems = [
       <FontAwesome5 size={21} name="user-clock" {...props} />
     ),
   },
-
+  {
+    name: "Payments",
+    pathname: "/payments",
+    icon: (props = {}) => (
+      <FontAwesome5 size={19} name="money-check" {...props} />
+    ),
+  },
   {
     name: "Settings",
-    pathname: "/Settings",
+    pathname: "/settings",
     icon: (props = {}) => <AntDesign size={24} name="setting" {...props} />,
   },
 ];

@@ -2,6 +2,12 @@ import { useCartStore } from "../../stores/cartStore";
 import useAuthStore from "../auth/AuthStore";
 import useOrderStore from "./OrdersStore";
 
+export const checkOpenStatuses = [
+  "new-order",
+  "in-kitchen",
+  "ready-for-pickup",
+];
+
 export const getOrderStructure = () => {
   const cartStore = useCartStore.getState();
 

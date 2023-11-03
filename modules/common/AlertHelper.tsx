@@ -27,7 +27,18 @@ const ecrErrorsAvailableToShow: any = {
   "TRANSACTION TIMED OUT.": "TRANSACTION TIMED OUT",
 };
 
-export const handlePetitionError = (error: any) => {
+export const handlePetitionError = (
+  error: any,
+  title = "Something went wrong",
+  description = "Please, try again or check console for details",
+  severity:
+    | "warning"
+    | "success"
+    | "danger"
+    | "info"
+    | "default"
+    | "none" = "danger"
+) => {
   const ecrMessageError =
     ecrErrorsAvailableToShow[(error?.response_message || "").toUpperCase()];
 
@@ -41,7 +52,7 @@ export const handlePetitionError = (error: any) => {
       title: "Network Error",
       description:
         "Please check the internet connection. If error persist contact to Admin",
-      type: "danger",
+      type: severity,
     });
     return;
   }
@@ -50,18 +61,18 @@ export const handlePetitionError = (error: any) => {
 
   if (setup.showErrors) {
     showAlert({
-      title: "Something went wrong",
+      title: title,
       description: JSON.stringify(error),
-      type: "danger",
+      type: severity,
     });
 
     return;
   }
 
   showAlert({
-    title: "Something went wrong",
-    description: "Please, try again or check console for details",
-    type: "danger",
+    title: title,
+    description: description,
+    type: severity,
   });
 
   console.log(error);
