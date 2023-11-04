@@ -1,7 +1,6 @@
 import { Image, Pressable, StyleSheet } from "react-native";
 import React, { useState, useEffect, ReactNode } from "react";
 
-import { useBackHandler } from "../../../modules/common/hooks/UseBackHandler";
 import useGlobalStore from "../GlobalStore";
 import { Colors, Text, View } from "react-native-ui-lib";
 import Counter from "../../auth/components/Counter";
@@ -20,6 +19,7 @@ const MasterPasswordRequired = (props: props) => {
   const [userInput, setUserInput] = useState("");
   const [error, setError] = useState(null);
   const setup = useGlobalStore((state) => state.setup);
+
   const onSubmit = () => {
     if (props?.useDevPassword) {
       if (setup.devPassword == userInput) {
@@ -45,10 +45,10 @@ const MasterPasswordRequired = (props: props) => {
     // else navigation.goBack();
   };
 
-  useBackHandler(() => {
-    goBack();
-    return true;
-  });
+  // useBackHandler(() => {
+  //   goBack();
+  //   return true;
+  // });
 
   useEffect(() => {
     if (userInput.length == passwordMaxLength) onSubmit();
@@ -63,7 +63,7 @@ const MasterPasswordRequired = (props: props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
+      <View>
         <Pressable style={{ alignSelf: "flex-start" }} onPress={goBack}>
           <Image
             resizeMode="contain"

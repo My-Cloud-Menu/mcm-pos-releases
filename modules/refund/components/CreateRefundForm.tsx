@@ -47,8 +47,6 @@ const CreateRefundForm = (props: props) => {
       queryClient.invalidateQueries({
         queryKey: [paymentQueryKey, props.paymentId],
       });
-
-      alert("salio bien :)");
     },
     mutationFn: async (params: {
       amountToRefund: string;

@@ -10,19 +10,21 @@ const tabOptions = [{ label: "ECR Setup" }, { label: "General Setup" }];
 const SettingsScreen = () => {
   return (
     <MasterPasswordRequired useDevPassword>
-      <ScrollView style={{ backgroundColor: "#fff" }}>
-        <TabController items={tabOptions}>
-          <TabController.TabBar enableShadow />
-          <View flex>
-            <TabController.TabPage index={0}>
+      <TabController items={tabOptions}>
+        <TabController.TabBar enableShadow />
+        <View flex>
+          <TabController.TabPage index={0}>
+            <ScrollView>
               <EcrSetupForm />
-            </TabController.TabPage>
-            <TabController.TabPage index={1} lazy>
+            </ScrollView>
+          </TabController.TabPage>
+          <TabController.TabPage index={1} lazy>
+            <ScrollView style={{ backgroundColor: "#fff" }}>
               <GeneralSetupForm />
-            </TabController.TabPage>
-          </View>
-        </TabController>
-      </ScrollView>
+            </ScrollView>
+          </TabController.TabPage>
+        </View>
+      </TabController>
     </MasterPasswordRequired>
   );
 };

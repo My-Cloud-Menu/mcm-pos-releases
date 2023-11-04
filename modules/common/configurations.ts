@@ -57,7 +57,7 @@ export const initialGlobalSetupConfiguration: GlobalSetup = {
   password_length: 4,
   showErrors: false,
   siteId: "11902122",
-  url: "http://localhost:3000",
+  url: "http://172.17.0.1:3000",
   showTableSelector: true,
   employeesShouldSeeJustTheirTables: true,
   masterPassword: "0000",

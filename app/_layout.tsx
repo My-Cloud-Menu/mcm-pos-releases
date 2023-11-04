@@ -3,12 +3,13 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Slot, SplashScreen, useNavigation, usePathname } from "expo-router";
 import { useEffect } from "react";
-import { View, useColorScheme } from "react-native";
+import { SafeAreaView, View, useColorScheme } from "react-native";
 import "../modules/common/theme/MCMTheme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FlashMessage from "react-native-flash-message";
 import { Colors } from "react-native-ui-lib";
 import useAuthStore from "../modules/auth/AuthStore";
+import { StatusBar } from "expo-status-bar";
 
 export const queryClient = new QueryClient();
 
@@ -67,20 +68,16 @@ function RootLayoutNav() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <View style={{ flex: 1, backgroundColor: Colors.graySoft }}>
-        <Slot />
-      </View>
-      {/* <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="(menu)" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-          <Stack.Screen name="welcome" options={{ headerShown: false }} />
-        </Stack>
-      </ThemeProvider> */}
-      <FlashMessage position="top" />
+      <StatusBar style="light" backgroundColor={Colors.primary} />
+      <SafeAreaView style={{ flex: 1 }}>
+        <View
+          style={{ flex: 1, backgroundColor: Colors.graySoft, paddingTop: 20 }}
+        >
+          <Slot />
+        </View>
+
+        <FlashMessage position="top" />
+      </SafeAreaView>
     </QueryClientProvider>
   );
 }

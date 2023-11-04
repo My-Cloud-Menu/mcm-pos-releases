@@ -17,6 +17,7 @@ import {
 } from "../../common/NavigationHelper";
 import CreateRefundForm from "../../refund/components/CreateRefundForm";
 import AdjustTipForm from "./AdjustTipForm";
+import TransferPaymentForm from "./TransferPaymentForm";
 dayjs.extend(utc);
 
 const paymentOptions = [
@@ -180,6 +181,10 @@ const PaymentDetailsScreen = ({ payment }: props) => {
 
           {selectedOption == "adjust_tip" && (
             <AdjustTipForm paymentId={payment.id} />
+          )}
+
+          {selectedOption == "transfer" && (
+            <TransferPaymentForm paymentId={payment.id} />
           )}
         </View>
       </View>

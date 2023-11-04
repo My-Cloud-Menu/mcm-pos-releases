@@ -57,6 +57,26 @@ export const handlePetitionError = (
     return;
   }
 
+  if (
+    error?.message ==
+    "items cannot be deleted because the Check must have at least 1 item active"
+  ) {
+    showAlert({
+      title:
+        "items cannot be deleted because the Check must have at least 1 item active",
+      type: "warning",
+    });
+    return;
+  }
+
+  if (error?.message == "items can't be deleted because cart can't be empty") {
+    showAlert({
+      title: "items can't be deleted because cart can't be empty",
+      type: "warning",
+    });
+    return;
+  }
+
   const setup = useGlobalStore.getState().setup;
 
   if (setup.showErrors) {

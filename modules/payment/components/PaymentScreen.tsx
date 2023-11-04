@@ -1,6 +1,6 @@
 import { StyleSheet, ActivityIndicator, ScrollView, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Button, Colors, Text, View } from "react-native-ui-lib";
+import { Button, Colors, StateScreen, Text, View } from "react-native-ui-lib";
 import { Stack, router } from "expo-router";
 import { Order, ecrSaleResponse } from "../../../types";
 import TipSelector from "../../../modules/payment/components/TipSelector";
@@ -143,6 +143,14 @@ const PaymentScreen = ({ order }: props) => {
     setPaymentCreatedInBackend(undefined);
     setEcrResultCreated(undefined);
   }, [paymentStore.inputValues.tip]);
+
+  if (amountBaseToPay <= 0)
+    return (
+      <StateScreen
+        title={`Orden #${order.id} sin balance por pagar`}
+        subtitle={`El pago de la orden #${order.id} ha sido completado previamente`}
+      />
+    );
 
   return (
     <View flex backgroundColor={Colors.graySoft}>

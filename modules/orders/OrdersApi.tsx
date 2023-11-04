@@ -68,3 +68,27 @@ export const getOrders = async (): Promise<GetOrdersRequestResponse> => {
 
   return response;
 };
+
+export const decreaseLineItem = async (
+  orderId: string,
+  itemsToDecrease: any[] = []
+) => {
+  const result = await makeMcmRequest("admin/orders/items/remove", "POST", {
+    id: orderId,
+    line_items: itemsToDecrease,
+  });
+
+  return result;
+};
+
+export const increaseLineItem = async (
+  orderId: string,
+  itemToIncrease: any[] = []
+) => {
+  const result = await makeMcmRequest("admin/orders/items/add", "POST", {
+    id: orderId,
+    line_items: itemToIncrease,
+  });
+
+  return result;
+};

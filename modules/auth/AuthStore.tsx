@@ -4,6 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { AUTH_LOCAL_STORAGE_KEY } from "../common/configurations";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Employee } from "mcm-types";
+import { formatErrorMessage } from "./components/ClockInScreen";
 
 interface AuthStore {
   isLoading: boolean;
@@ -45,12 +46,15 @@ const useAuthStore = create<AuthStore>()(
 
           return loginResponse;
         } catch (error: any) {
-          let errorMessage = "Something went wrong";
+          let errorMessage: string | undefined = undefined;
 
           if (error?.message == "Pin Incorrect") errorMessage = "Pin Incorrect";
           if (error?.message == "Pin Required") errorMessage = "Pin Required";
 
-          set(() => ({ isLoading: false, error: errorMessage }));
+          set(() => ({
+            isLoading: false,
+            error: errorMessage || formatErrorMessage(error),
+          }));
 
           throw error;
         }

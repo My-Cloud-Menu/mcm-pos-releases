@@ -16,38 +16,38 @@ const navItems = [
   {
     name: "Home",
     pathname: "/welcome",
-    icon: (props = {}) => <FontAwesome size={25} name="home" {...props} />,
+    icon: (props = {}) => <FontAwesome size={35} name="home" {...props} />,
   },
   {
     name: "Menu",
     pathname: "/menu",
     icon: (props = {}) => (
-      <MaterialIcons size={21} name="restaurant" {...props} />
+      <MaterialIcons size={33} name="restaurant" {...props} />
     ),
   },
   {
     name: "Orders",
     pathname: "/orders",
-    icon: (props = {}) => <Feather size={25} name="shopping-bag" {...props} />,
+    icon: (props = {}) => <Feather size={30} name="shopping-bag" {...props} />,
   },
   {
     name: "Employees",
     pathname: "/clocksinout",
     icon: (props = {}) => (
-      <FontAwesome5 size={21} name="user-clock" {...props} />
+      <FontAwesome5 size={30} name="user-clock" {...props} />
     ),
   },
   {
     name: "Payments",
     pathname: "/payments",
     icon: (props = {}) => (
-      <FontAwesome5 size={19} name="money-check" {...props} />
+      <FontAwesome5 size={30} name="money-check" {...props} />
     ),
   },
   {
     name: "Settings",
     pathname: "/settings",
-    icon: (props = {}) => <AntDesign size={24} name="setting" {...props} />,
+    icon: (props = {}) => <AntDesign size={35} name="setting" {...props} />,
   },
 ];
 
@@ -79,7 +79,7 @@ const DefaultNavBar = () => {
         assetGroup="assets"
         assetName="logoMain"
       />
-      <View flex marginT-30>
+      <View flex marginT-20>
         {navItems.map((navItem, idx) => {
           let isNavItemActive = navItem.pathname == activePathName;
           return (
@@ -88,15 +88,17 @@ const DefaultNavBar = () => {
               key={`navitem-${idx}`}
               variant="iconButtonWithLabelCenter"
               active={isNavItemActive}
-              marginV-2
+              marginV-5
+              style={{ width: 109 }}
             >
               {navItem.icon({
                 color: isNavItemActive ? Colors.white : Colors.gray,
               })}
               <Text
-                color={isNavItemActive ? Colors.white : Colors.gray}
+                color={isNavItemActive ? Colors.white : Colors.black}
                 marginT-8
-                text90BL
+                text80
+                style={{ fontWeight: "400" }}
               >
                 {navItem.name}
               </Text>
@@ -132,14 +134,14 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     alignItems: "center",
-    paddingHorizontal: 10,
+    paddingHorizontal: 5,
     paddingVertical: 10,
     backgroundColor: Colors.white,
     borderTopEndRadius: 12,
     borderBottomEndRadius: 12,
   },
   logo: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
   },
 });

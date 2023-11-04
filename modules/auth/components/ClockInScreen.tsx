@@ -10,6 +10,21 @@ import { login, timesSheetQueryKey } from "../AuthApi";
 import { queryClient } from "../../../app/_layout";
 import useGlobalStore from "../../common/GlobalStore";
 
+export const formatErrorMessage = (error: any) => {
+  if (
+    Array.isArray(error?.errors?.errors) &&
+    error?.errors?.errors?.includes(
+      "You have an active time record which cannot be stopped automatically."
+    )
+  ) {
+    return "You have an active time record with time exceeded which need be stopped. Contact to Admin";
+  }
+
+  if (error?.message == "Pin Incorrect") return "Pin Incorrect";
+
+  return "Something went wrong, please try again or contact to admin";
+};
+
 const ClockInScreen = () => {
   const { title = "Mozo", subTitle = "Los Especiales del dia" } =
     useLocalSearchParams<{ title: string; subTitle: string }>();
@@ -59,7 +74,7 @@ const ClockInScreen = () => {
         )}
         {Boolean(loginQuery.error) && (
           <Text style={{ textAlign: "center", color: Colors.danger }}>
-            {loginQuery?.error?.message.toString()}
+            {formatErrorMessage(loginQuery.error)}
           </Text>
         )}
       </View>

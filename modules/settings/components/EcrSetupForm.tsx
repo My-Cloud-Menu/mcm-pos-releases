@@ -16,12 +16,12 @@ const textFieldCustomProps = {
   labelStyle: { fontWeight: "bold", color: "#424242" },
   placeholderTextColor: Colors.gray,
   style: {
-    minWidth: 370,
-    padding: 6,
+    minWidth: 420,
+    padding: 9,
     borderRadius: 6,
-    fontSize: 15,
+    fontSize: 19,
     color: "#000",
-    borderWidth: "2px",
+    borderWidth: 2,
     borderColor: "#E0E0E0",
   },
 };

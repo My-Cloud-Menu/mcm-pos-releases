@@ -118,9 +118,7 @@ export const updatePaymentPaidSuccessfullyInBackend = async (
   );
 };
 
-export const getPaymentById = async (
-  paymentId: string
-): Promise<Payment | undefined> => {
+export const getPaymentById = async (paymentId: string): Promise<Payment> => {
   return await makeMcmRequest(`front/payments/${paymentId}`);
 };
 
@@ -233,4 +231,14 @@ export const makeEcrSettle = async (receipt_output = "BOTH") => {
     } catch (err) {}
     throw error;
   }
+};
+
+export const transferPayment = async (paymentId: string, orderId: string) => {
+  const response = await makeMcmRequest(
+    `admin/payments/${paymentId}/transfer`,
+    "POST",
+    { order_id: orderId }
+  );
+
+  return response;
 };

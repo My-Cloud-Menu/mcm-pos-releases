@@ -5,9 +5,13 @@ import { Order } from "mcm-types/src/order";
 import { Colors, Text, View } from "react-native-ui-lib";
 import { decodeName } from "../../common/UtilsHelper";
 import fonts from "../../common/theme/fonts";
+import Counter from "../../menu/components/Counter";
 
 interface props {
   order: Order;
+  isEditMode?: boolean;
+  onEditLineItem: (idx: number, quantity: number) => void;
+  lineItemsChanges: any;
 }
 
 const LineItemsList = ({
@@ -17,7 +21,7 @@ const LineItemsList = ({
   showPaidLabel = false,
   isEditMode = false,
   lineItemsChanges = {},
-  onEditLineItem = null,
+  onEditLineItem,
 }: props) => {
   const [expandAtrributes, setExpandAttributes] = useState([]);
 
@@ -88,6 +92,33 @@ const LineItemsList = ({
                 </View>
               </View>
               {!isEditMode && <Text>${Number(item.total).toFixed(2)}</Text>}
+              {isEditMode && (
+                <Counter
+                  min={item.paid || 0}
+                  quantity={
+                    productChangeQuantityPreview == null
+                      ? item.quantity
+                      : productChangeQuantityPreview
+                  }
+                  onDecrease={() => {
+                    const newQuantity =
+                      productChangeQuantityPreview == null
+                        ? item.quantity
+                        : productChangeQuantityPreview;
+
+                    onEditLineItem(idx, newQuantity - 1);
+                  }}
+                  onIncrement={() => {
+                    const newQuantity =
+                      productChangeQuantityPreview == null
+                        ? item.quantity
+                        : productChangeQuantityPreview;
+
+                    onEditLineItem(idx, newQuantity + 1);
+                  }}
+                />
+              )}
+
               {/* TODO: INTEGRAR COUNTER */}
               {/* {isEditMode && (
                 <CounterV2
