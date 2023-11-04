@@ -11,6 +11,13 @@ import { formatCurrency } from "../../common/UtilsHelper";
 import { printECRCustomReceipt } from "../ReceiptApi";
 import SendReceiptBySmsForm from "./SendReceiptBySmsForm";
 import { getPaymentStatusForReceipt } from "../ReceiptHelper";
+import { Ionicons } from "@expo/vector-icons";
+import {
+  isNextPaymentAvailable,
+  isNextPaymentAvailableBySplitOfProducts,
+} from "../../payment/PaymentHelper";
+import useSplitStore from "../../payment/SplitStore";
+import { goToPaymentScreen } from "../../common/NavigationHelper";
 
 const receiptOptions = ["SHOW", "SMS"];
 
@@ -22,6 +29,7 @@ const ReceiptScreen = ({ payment }: props) => {
   const [selectedReceipt, setSelectedReceipt] = useState<string | undefined>(
     undefined
   );
+  const { splitProductsToPay, splitAmountsToPay } = useSplitStore();
 
   const printReceiptQuery = useMutation({
     mutationFn: printECRCustomReceipt,
@@ -40,6 +48,10 @@ const ReceiptScreen = ({ payment }: props) => {
     setSelectedReceipt(option);
   };
 
+  const onPressPayNext = () => {
+    goToPaymentScreen(payment.orders_ids[0]);
+  };
+
   const paymentDetailsLabelValues = [
     {
       label: "Status",
@@ -49,6 +61,12 @@ const ReceiptScreen = ({ payment }: props) => {
     { label: "Reference", value: payment.reference },
     { label: "Total", value: formatCurrency(payment.total) },
   ];
+
+  const isSplitByProduct = false;
+
+  let isPayNextIsAvailable = isSplitByProduct
+    ? isNextPaymentAvailableBySplitOfProducts(splitProductsToPay)
+    : isNextPaymentAvailable(splitAmountsToPay);
 
   return (
     <ScrollView>
@@ -77,7 +95,7 @@ const ReceiptScreen = ({ payment }: props) => {
                     onPress={() => onPressReceiptOption(option)}
                     variant="iconButtonWithLabelCenterOutline"
                     active={isActive}
-                    marginV-15
+                    marginV-10
                     marginH-25
                     style={{ borderColor: Colors.primary, width: 300 }}
                   >
@@ -91,6 +109,22 @@ const ReceiptScreen = ({ payment }: props) => {
                   </Button>
                 );
               })}
+              {isPayNextIsAvailable && (
+                <Button
+                  onPress={onPressPayNext}
+                  style={{ width: 300, marginTop: 40 }}
+                  label="PAY NEXT"
+                  text70
+                  iconSource={() => (
+                    <Ionicons
+                      name="person-sharp"
+                      size={14}
+                      color="white"
+                      style={{ marginRight: 10 }}
+                    />
+                  )}
+                />
+              )}
             </View>
           </View>
         </View>

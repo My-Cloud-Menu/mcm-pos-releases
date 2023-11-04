@@ -5,16 +5,7 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useState } from "react";
-import {
-  Button,
-  Chip,
-  Colors,
-  Drawer,
-  Fader,
-  StateScreen,
-  Text,
-  View,
-} from "react-native-ui-lib";
+import { Button, Chip, Colors, Drawer, Text, View } from "react-native-ui-lib";
 import { Payment } from "mcm-types";
 import { goToPaymentDetailsScreen } from "../../common/NavigationHelper";
 import { shadowPropsSoft } from "../../common/theme/shadows";
@@ -28,7 +19,7 @@ type props = {
 };
 
 const TransactionsList = (props: props) => {
-  const [itemsPerPage, setItemsPerPage] = useState(8);
+  const [itemsPerPage, setItemsPerPage] = useState(12);
 
   const onSeeDetails = (payment: Payment) => {
     goToPaymentDetailsScreen(payment.id, payment);

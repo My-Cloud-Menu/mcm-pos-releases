@@ -4,7 +4,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Colors, Text, TextField, View } from "react-native-ui-lib";
 import CategoriesCarousel from "../../modules/menu/components/CategoriesCarousel";
 import ProductsList from "../../modules/menu/components/ProductsList";
@@ -30,12 +30,15 @@ import {
   ordersQueryKey,
 } from "../../modules/orders/OrdersApi";
 import ExperienceSelector from "../../modules/menu/components/ExperienceSelector";
-import { showAlert } from "../../modules/common/AlertHelper";
+import useSplitStore from "../../modules/payment/SplitStore";
+import { useIsFocused } from "@react-navigation/native";
 
 const Menu = () => {
+  const isFocused = useIsFocused();
   const { cartProducts, clearCart } = useCartStore();
   const { selectedCategory } = useGlobal();
   const orderStore = useOrderStore();
+  const { resetSplitPayment } = useSplitStore();
 
   const ordersQuery = useQuery({
     queryKey: [ordersQueryKey],
@@ -77,6 +80,10 @@ const Menu = () => {
 
     return true;
   };
+
+  useEffect(() => {
+    resetSplitPayment();
+  }, [isFocused]);
 
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>

@@ -22,7 +22,7 @@ export const createPayment = async (params: {
     method: params.method,
     reference: params.reference.toString(),
     employee: {
-      id: params.employee.toString(),
+      id: params.employee.id.toString(),
       first_name: params.employee.first_name || "",
       last_name: params.employee.last_name || "",
     },
@@ -167,7 +167,7 @@ export const createTipAdjustment = async (
       amount: params.amount,
       reference: params.reference,
       employee: {
-        id: params.employee.id,
+        id: params.employee.id.toString(),
         first_name: params.employee.first_name,
         last_name: params.employee.last_name,
       },

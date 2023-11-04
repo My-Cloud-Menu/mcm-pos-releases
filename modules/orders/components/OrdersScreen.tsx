@@ -1,11 +1,13 @@
 import { FlatList, ScrollView, StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import { Stack, router, useLocalSearchParams } from "expo-router";
-import { Order } from "mcm-types/src/order";
+import { Order } from "mcm-types";
 import OrderCardItem from "./OrderCardItem";
 import metrics from "../../common/theme/metrics";
 import { Text, View } from "react-native-ui-lib";
 import { goToOrderDetailsScreen } from "../../common/NavigationHelper";
+import useSplitStore from "../../payment/SplitStore";
+import { useIsFocused } from "@react-navigation/native";
 
 const getColumnsNumbers = () => {
   if (metrics.screenWidth > 900) return 5;
@@ -18,7 +20,9 @@ type props = {
 };
 
 const OrdersScreen = ({ orders }: props) => {
+  const isFocused = useIsFocused();
   const { orderId } = useLocalSearchParams<{ orderId?: string }>();
+  const { resetSplitPayment } = useSplitStore();
 
   const onPressOrder = (order: Order) => {
     goToOrderDetailsScreen(order.id, order);
@@ -28,7 +32,8 @@ const OrdersScreen = ({ orders }: props) => {
     if (orders.length > 0 && !orderId) {
       onPressOrder(orders[0]);
     }
-  });
+    resetSplitPayment();
+  }, [isFocused]);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>

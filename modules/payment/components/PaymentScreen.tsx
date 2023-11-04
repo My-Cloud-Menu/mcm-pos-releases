@@ -6,7 +6,10 @@ import { Order, ecrSaleResponse } from "../../../types";
 import TipSelector from "../../../modules/payment/components/TipSelector";
 import OrderChargesCard from "../../../modules/payment/components/OrderChargesCard";
 import usePaymentStore from "../PaymentStore";
-import { goToReceiptScreen } from "../../common/NavigationHelper";
+import {
+  goToReceiptScreen,
+  goToSplitPaymentScreen,
+} from "../../common/NavigationHelper";
 import PaymentMethodSelector from "../../menu/components/PaymentMethodSelector";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -14,7 +17,9 @@ import {
   updatePaymentPaidSuccessfullyInBackend,
 } from "../PaymentApi";
 import {
+  getBaseAmountToPay,
   getCreatePaymentStructureForBackend,
+  getSubtotalAmountForTip,
   handlePaymentInEcr,
 } from "../PaymentHelper";
 import { Payment } from "mcm-types";
@@ -22,20 +27,41 @@ import { handlePetitionError } from "../../common/AlertHelper";
 import { useBackHandler } from "../../common/hooks/UseBackHandler";
 import TerminalConnectionChecker from "../../auth/components/TerminalConnectionChecker";
 import useEcrStore from "../../ecr/EcrStore";
+import SplitPaymentCounter from "./SplitPaymentCounter";
+import useSplitStore from "../SplitStore";
+import Decimal from "decimal.js";
+import { queryClient } from "../../../app/_layout";
+import { orderQueryKey } from "../../orders/OrdersApi";
+import { useIsFocused } from "@react-navigation/native";
 
 interface props {
   order: Order;
 }
 
 const PaymentScreen = ({ order }: props) => {
+  const isFocused = useIsFocused();
+
   const paymentStore = usePaymentStore();
   const setCurrentBachNumber = useEcrStore(
     (state) => state.setCurrentBachNumber
   );
-  const totalToPay = Number(order.total) + (paymentStore.inputValues.tip || 0);
+  const {
+    splitAmountsToPay,
+    onSplitAmountPayFinish,
+    onSplitProductsPayFinish,
+  } = useSplitStore();
+
+  let amountBaseToPay = Number(getBaseAmountToPay(order, splitAmountsToPay));
+
+  let amountBaseForTips = getSubtotalAmountForTip(order, splitAmountsToPay);
+  let amountFinalTotal = new Decimal(amountBaseToPay)
+    .plus(paymentStore.inputValues.tip || 0)
+    .toFixed(2);
+
   const [paymentCreatedInBackend, setPaymentCreatedInBackend] = useState<
     Payment | undefined
   >(undefined);
+
   const [ecrResultCreated, setEcrResultCreated] = useState<
     ecrSaleResponse | undefined
   >(undefined);
@@ -45,14 +71,20 @@ const PaymentScreen = ({ order }: props) => {
       handlePetitionError(error);
     },
     onSuccess: (payment: Payment) => {
+      onSplitAmountPayFinish();
+      onSplitProductsPayFinish();
       goToReceiptScreen(payment.id, payment);
+      queryClient.invalidateQueries({
+        queryKey: [orderQueryKey, payment.orders_ids[0]],
+      });
     },
-    mutationFn: async (orderId: string) => {
+    mutationFn: async () => {
       let paymentToSend = paymentCreatedInBackend;
 
       if (!Boolean(paymentToSend)) {
         const paymentStructure = getCreatePaymentStructureForBackend({
-          orderId: orderId,
+          orderId: order.id,
+          totalToPay: amountBaseToPay,
         });
 
         paymentToSend = await createPayment(paymentStructure);
@@ -77,6 +109,8 @@ const PaymentScreen = ({ order }: props) => {
         paymentToSend,
         ecrResultToSend
       );
+      alert("Pago actualizado :)");
+      console.log(paymentToSend);
 
       return paymentUpdated;
     },
@@ -103,14 +137,13 @@ const PaymentScreen = ({ order }: props) => {
     setPaymentCreatedInBackend(undefined);
     setEcrResultCreated(undefined);
     paymentStore.resetInputValues();
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
     setPaymentCreatedInBackend(undefined);
     setEcrResultCreated(undefined);
   }, [paymentStore.inputValues.tip]);
 
-  console.log("payment created", paymentCreatedInBackend);
   return (
     <View flex backgroundColor={Colors.graySoft}>
       <TerminalConnectionChecker />
@@ -121,7 +154,20 @@ const PaymentScreen = ({ order }: props) => {
             Total a Pagar
           </Text>
           <Text text20 marginT-5 marginB-20>
-            $ {totalToPay.toFixed(2)}{" "}
+            $ {amountFinalTotal}{" "}
+            <View row center style={{ position: "absolute" }}>
+              <SplitPaymentCounter />
+              <Button
+                marginL-3
+                onPress={() => goToSplitPaymentScreen(order.id, order)}
+                size="xSmall"
+                label="Split Amount"
+                style={{
+                  paddingHorizontal: 12,
+                  backgroundColor: Colors.green,
+                }}
+              />
+            </View>
           </Text>
           <Text center text65 marginT-10>
             Method
@@ -130,7 +176,7 @@ const PaymentScreen = ({ order }: props) => {
           <Text center text65 marginT-40>
             Tip
           </Text>
-          <TipSelector paymentTotal={Number(order.cart.subtotal)} />
+          <TipSelector paymentTotal={amountBaseForTips} />
           <View marginT-40>
             <OrderChargesCard order={order} />
           </View>
@@ -139,7 +185,7 @@ const PaymentScreen = ({ order }: props) => {
       <View paddingB-20>
         <Button
           disabled={createPaymentQuery.isLoading}
-          onPress={() => createPaymentQuery.mutate(order.id)}
+          onPress={() => createPaymentQuery.mutate()}
           label={
             createPaymentQuery.isLoading ? (
               <ActivityIndicator color={"white"} />

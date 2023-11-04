@@ -4,7 +4,7 @@ import { Colors, LoaderScreen, StateScreen } from "react-native-ui-lib";
 import { useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { Order } from "../../types";
-import { getOrderById } from "../../modules/orders/OrdersApi";
+import { getOrderById, orderQueryKey } from "../../modules/orders/OrdersApi";
 import PaymentScreen from "../../modules/payment/components/PaymentScreen";
 
 const payment = () => {
@@ -19,7 +19,7 @@ const payment = () => {
     );
 
   const { data: order, isLoading: isOrderLoading } = useQuery<Order>({
-    queryKey: ["orders", params.orderId],
+    queryKey: [orderQueryKey, params.orderId],
     queryFn: () => getOrderById(params.orderId),
   });
 

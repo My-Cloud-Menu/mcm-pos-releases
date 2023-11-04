@@ -17,12 +17,7 @@ const MenuLayout = () => {
               headerShown: false,
             }}
           />
-          {/* <Stack.Screen
-            name="home"
-            options={{
-              headerShown: false,
-            }}
-          /> */}
+
           <Stack.Screen
             name="table-selector"
             options={{ title: "Table Selector" }}
@@ -33,6 +28,10 @@ const MenuLayout = () => {
           />
           <Stack.Screen name="clockin" options={{ title: "Clock In" }} />
           <Stack.Screen name="settings" options={{ title: "Settings" }} />
+          <Stack.Screen
+            name="split-payment"
+            options={{ title: "Split Payment" }}
+          />
         </Stack>
       </View>
     </View>
