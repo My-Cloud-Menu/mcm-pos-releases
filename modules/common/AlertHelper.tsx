@@ -104,8 +104,14 @@ export const showAlert = (props: alertProps) => {
     description: props.description,
     type: props.type,
     duration: props.duration || 5000,
-    style: { paddingBottom: 30, margin: 3, borderRadius: 10 },
-    titleStyle: { fontSize: 24 },
+    style: {
+      paddingBottom: 20,
+      margin: 3,
+      borderRadius: 10,
+      marginTop: 28,
+    },
+    titleProps: { style: { color: "#fff", marginBottom: 5 } },
+    // titleStyle: { fontSize: 24 },
     icon: () => {
       if (props.type == "warning") {
         return (

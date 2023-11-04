@@ -37,7 +37,7 @@ const orders = () => {
             borderStartStartRadius: 8,
             borderEndStartRadius: 8,
             backgroundColor: Colors.white,
-            width: 580,
+            width: 530,
           }}
         >
           <OrderDetailsScreen orderId={orderId} />

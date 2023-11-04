@@ -79,7 +79,10 @@ const OrderDetailsScreen = ({ orderId }: props) => {
       }
 
       if (availableToRemove == 0) {
-        throw "items cannot be deleted because the Check must have at least 1 item active";
+        throw {
+          message:
+            "items cannot be deleted because the Check must have at least 1 item active",
+        };
       }
 
       if (itemDecreaseChanges.length > 0) {
@@ -153,12 +156,16 @@ const OrderDetailsScreen = ({ orderId }: props) => {
             </Text>
           </View>
         )}
-        <View row>
+        <View row centerV marginB-5>
           <LabelValue label="Order ID" value={`#${order.id}`} />
           <LabelValue
             label="Hour"
             value={dayjs(order.date_created).format("hh:mm A - DD/MM/YYYY")}
           />
+        </View>
+        <View row>
+          <LabelValue label="Total" value={formatCurrency(order.total)} />
+          <LabelValue label="Experience" value="Pickup" />
           <Chip
             label={formatOrderStatus[order.status]}
             backgroundColor="yellow"
@@ -192,8 +199,6 @@ const OrderDetailsScreen = ({ orderId }: props) => {
             )}
         </View>
         <View row marginT-14 style={{ columnGap: 5 }}>
-          <LabelValue label="Total" value={formatCurrency(order.total)} />
-          <LabelValue label="Experience" value="Pickup" />
           <LabelValue
             label="Name"
             value={

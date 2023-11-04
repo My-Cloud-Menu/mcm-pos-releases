@@ -146,7 +146,14 @@ const ReceiptScreen = ({ payment }: props) => {
           )}
 
           {selectedReceipt == "SHOW" && (
-            <View>
+            <View
+              flex
+              style={{
+                minWidth: 430,
+                paddingHorizontal: 20,
+                backgroundColor: "#fff",
+              }}
+            >
               <Button
                 marginT-5
                 marginB-20

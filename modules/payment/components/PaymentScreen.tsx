@@ -161,9 +161,15 @@ const PaymentScreen = ({ order }: props) => {
           <Text marginT-15 text50L>
             Total a Pagar
           </Text>
-          <Text text20 marginT-5 marginB-20>
-            $ {amountFinalTotal}{" "}
-            <View row center style={{ position: "absolute" }}>
+          <View>
+            <Text text20 marginT-5 marginB-20>
+              $ {amountFinalTotal}{" "}
+            </Text>
+            <View
+              row
+              center
+              style={{ position: "absolute", left: 190, top: 23 }}
+            >
               <SplitPaymentCounter />
               <Button
                 marginL-3
@@ -176,7 +182,8 @@ const PaymentScreen = ({ order }: props) => {
                 }}
               />
             </View>
-          </Text>
+          </View>
+
           <Text center text65 marginT-10>
             Method
           </Text>
