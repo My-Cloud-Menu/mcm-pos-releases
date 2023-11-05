@@ -131,7 +131,7 @@ export const getEcrRequestUrl = (pathName: string = "") => {
 
   let url: string = __DEV__
     ? `${setup.ipDev}/${pathName}`
-    : `http://${setup.ip}:${setup.port}/${pathName}`;
+    : `${setup.ip}:${setup.port}/${pathName}`;
 
   return url;
 };

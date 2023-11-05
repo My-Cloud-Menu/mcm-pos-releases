@@ -43,7 +43,7 @@ export const initialECRSetupConfiguration: EcrSetup = {
   station_number: "1234",
   cashier_id: "4321",
   ipDev: "https://564c961b-1f3a-41a1-a37d-a2b0b620645b.mock.pstmn.io",
-  ip: "10.0.0.28",
+  ip: "http://10.0.0.28",
   port: "2030",
   api_key: "f6196298e20d41ada45de8dc4d1963c5",
   force_duplicate: "no",
