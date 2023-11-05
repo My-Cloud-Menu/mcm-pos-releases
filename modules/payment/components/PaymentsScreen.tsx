@@ -8,7 +8,6 @@ import {
   Text,
   View,
 } from "react-native-ui-lib";
-import WebView from "react-native-webview";
 import TextField from "react-native-ui-lib/textField";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getPayments, makeEcrSettle, paymentsQueryKey } from "../PaymentApi";
@@ -22,6 +21,7 @@ import fonts from "../../common/theme/fonts";
 import TransactionsList from "./TransactionList";
 import HtmlContent from "../../common/components/HtmlContent";
 import TerminalConnectionChecker from "../../auth/components/TerminalConnectionChecker";
+import { textFieldCustomProps } from "../../settings/components/EcrSetupForm";
 
 const PaymentsScreen = () => {
   const paymentsQuery = useQuery({
@@ -150,10 +150,10 @@ const PaymentsScreen = () => {
   return (
     <MasterPasswordRequired>
       <TerminalConnectionChecker />
-      <ScrollView style={{ backgroundColor: "white" }}>
-        <Text>Payments</Text>
-        <View marginH-10>
+      <ScrollView style={{ backgroundColor: "white", paddingBottom: 200 }}>
+        <View marginH-10 marginT-20>
           <Button
+            size="small"
             onPress={onPressSettle}
             marginB-10
             disabled={!isSettleAvailable && !makeSettleQuery.isSuccess}
@@ -179,7 +179,6 @@ const PaymentsScreen = () => {
           ) : (
             isSettleAvailable && (
               <Checkbox
-                labelStyle={{ fontSize: fonts.size.sm }}
                 color={Colors.primary}
                 value={printSettle}
                 label="Imprimir Resultado del Settle"
@@ -190,13 +189,15 @@ const PaymentsScreen = () => {
             )
           )}
         </View>
-        <TextField
-          onChangeText={(value) => setFilterText(value)}
-          containerStyle={{ paddingHorizontal: 15, marginTop: 13 }}
-          placeholder={"Buscar por Reference o ID"}
-          floatingPlaceholder
-          maxLength={30}
-        />
+        <View style={{ width: 500, marginTop: 20, marginBottom: 20 }}>
+          <TextField
+            onChangeText={(value) => setFilterText(value)}
+            placeholder={"Buscar por Referencia o ID"}
+            label={"Buscar por Referencia o ID"}
+            maxLength={60}
+            {...textFieldCustomProps}
+          />
+        </View>
         {paymentsQuery.isLoading || paymentsQuery.isFetching ? (
           <View center marginT-30>
             <ActivityIndicator size="large" color={Colors.primary} />

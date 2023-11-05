@@ -10,23 +10,28 @@ import {
   View,
 } from "react-native-ui-lib";
 import LabelValue from "../../common/components/LabelValue";
-import { Entypo, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import LineItemsList from "./LineItemsList";
 import {
   decreaseLineItem,
   getOrderById,
   increaseLineItem,
   orderQueryKey,
+  ordersQueryKey,
 } from "../OrdersApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { formatCurrency } from "../../common/UtilsHelper";
 import { goToPaymentScreen } from "../../common/NavigationHelper";
 import dayjs from "dayjs";
-import { formatOrderStatus } from "../OrderUtils";
 import { getPayments, paymentsQueryKey } from "../../payment/PaymentApi";
 import TransactionsList from "../../payment/components/TransactionList";
 import { handlePetitionError, showAlert } from "../../common/AlertHelper";
 import { queryClient } from "../../../app/_layout";
+import {
+  getOrderExperienceLabel,
+  getOrderStatusColor,
+  getOrderStatusLabel,
+} from "../OrderHelper";
 
 type props = {
   orderId: string;
@@ -48,6 +53,11 @@ const OrderDetailsScreen = ({ orderId }: props) => {
     onSuccess: () => {
       showAlert({ title: "Orden actualizada exitosamente!", type: "success" });
       queryClient.invalidateQueries({ queryKey: [orderQueryKey, orderId] });
+
+      queryClient.invalidateQueries({
+        queryKey: [ordersQueryKey],
+      });
+
       setIsEditMode(false);
     },
     mutationFn: async () => {
@@ -165,15 +175,18 @@ const OrderDetailsScreen = ({ orderId }: props) => {
         </View>
         <View row>
           <LabelValue label="Total" value={formatCurrency(order.total)} />
-          <LabelValue label="Experience" value="Pickup" />
+          <LabelValue
+            label="Experience"
+            value={getOrderExperienceLabel(order)}
+          />
           <Chip
-            label={formatOrderStatus[order.status]}
-            backgroundColor="yellow"
+            label={getOrderStatusLabel(order.status)}
+            backgroundColor={getOrderStatusColor(order.status)}
             containerStyle={{ borderWidth: 0 }}
             marginR-10
-            labelStyle={{ fontWeight: "bold" }}
+            labelStyle={{ fontWeight: "bold", color: "#fff" }}
           />
-          {order.status != "check-closed" && (
+          {/* {order.status != "check-closed" && (
             <Chip
               label={
                 <View row centerV>
@@ -186,7 +199,7 @@ const OrderDetailsScreen = ({ orderId }: props) => {
               backgroundColor="#000"
               containerStyle={{ borderWidth: 0, borderRadius: 8 }}
             />
-          )}
+          )} */}
           {order.status != "check-closed" &&
             order.payment_status == "not_fulfilled" && (
               <Feather
@@ -213,7 +226,8 @@ const OrderDetailsScreen = ({ orderId }: props) => {
           /> */}
         </View>
         <Text marginT-20 text70>
-          Items
+          Items (
+          {order.cart.line_items.reduce((acc, cal) => acc + cal.quantity, 0)})
         </Text>
         <View paddingR-30>
           <LineItemsList
@@ -226,7 +240,7 @@ const OrderDetailsScreen = ({ orderId }: props) => {
         {!isEditMode && (
           <>
             <Text marginT-20 text70 marginB-8>
-              Payments
+              Payments ({(paymentsQuery?.data?.payments || []).length})
             </Text>
             <TransactionsList
               isLoading={paymentsQuery.isLoading}
@@ -236,18 +250,17 @@ const OrderDetailsScreen = ({ orderId }: props) => {
         )}
       </View>
       <View marginB-10>
-        {!isEditMode && (
+        {!isEditMode && order.payment_status != "fulfilled" && (
           <Button
-            disabled={order.payment_status == "fulfilled"}
             marginV-4
             label="Complete Payment"
             useMinSize
             onPress={onPressCompletePayment}
           />
         )}
-        {!isEditMode && (
+        {/* {!isEditMode && (
           <Button disabled marginV-4 label="Cancel Order" useMinSize />
-        )}
+        )} */}
 
         {isEditMode && (
           <Button

@@ -109,8 +109,6 @@ const PaymentScreen = ({ order }: props) => {
         paymentToSend,
         ecrResultToSend
       );
-      alert("Pago actualizado :)");
-      console.log(paymentToSend);
 
       return paymentUpdated;
     },
@@ -156,7 +154,7 @@ const PaymentScreen = ({ order }: props) => {
     <View flex backgroundColor={Colors.graySoft}>
       <TerminalConnectionChecker />
       <ScrollView>
-        <View flex centerH>
+        <View flex centerH paddingB-60>
           <Stack.Screen options={{ title: `Payment - Order #${order.id}` }} />
           <Text marginT-15 text50L>
             Total a Pagar

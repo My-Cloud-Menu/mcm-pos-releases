@@ -6,7 +6,7 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   getPaymentById,
@@ -22,7 +22,6 @@ import { Order } from "mcm-types";
 import MasterPasswordRequired from "../../common/components/MasterPasswordRequired";
 import { Colors, LoaderScreen, Text, View } from "react-native-ui-lib";
 import fonts from "../../common/theme/fonts";
-import metrics from "../../common/theme/metrics";
 
 type props = {
   paymentId: string;
@@ -129,23 +128,26 @@ const TransferPaymentForm = (props: props) => {
   return (
     <MasterPasswordRequired>
       <ScrollView>
-        <Text>Transferir pago</Text>
+        <Text center marginT-10 text40 marginB-30>
+          Transferir Pago
+        </Text>
         <Text style={{ textAlign: "center" }}>Total a Transferir</Text>
         <Text
           style={{
             textAlign: "center",
             fontWeight: "bold",
-            fontSize: fonts.size.xl,
+            fontSize: 60,
           }}
         >
-          {paymentQuery.data.total}
+          $ {paymentQuery.data.total}
         </Text>
-
-        <Text style={styles.selectTableTitle}>Seleccione la Mesa</Text>
+        <Text text60 marginT-30 marginB-5>
+          Seleccione la Orden
+        </Text>
         <View>
           {ordersAvailableForSelect.length == 0 ? (
             <Text style={{ marginHorizontal: 6 }}>
-              No hay mesas disponible para transferir este pago
+              No hay ordenes disponible para transferir este pago
             </Text>
           ) : (
             ordersAvailableForSelect.map((checkForSelect, idx) => (
@@ -159,13 +161,13 @@ const TransferPaymentForm = (props: props) => {
 
                   <View style={{}}>
                     <Text>Total: {checkForSelect.total}</Text>
-                    <Text>
+                    <Text marginV-3>
                       Pendiente por Pagar: $
                       {new Decimal(checkForSelect.total)
                         .minus(checkForSelect.paid)
                         .toFixed(2)}
                     </Text>
-                    <Text style={{ maxWidth: metrics.screenWidth * 0.6 }}>
+                    <Text style={{}}>
                       Abierto por: {checkForSelect.cart.employee.first_name}{" "}
                       {checkForSelect.cart.employee.last_name} (#
                       {checkForSelect.cart.employee.id})
@@ -177,8 +179,7 @@ const TransferPaymentForm = (props: props) => {
                   <Text
                     style={{
                       textAlign: "center",
-                      fontWeight: "bold",
-                      fontSize: fonts.size.lg,
+                      fontSize: 35,
                     }}
                   >
                     {checkForSelect.cart.line_items.reduce(
@@ -208,17 +209,18 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   table: {
+    minWidth: 450,
     backgroundColor: "#E0E0E0",
-    paddingVertical: 5,
+    paddingVertical: 8,
     paddingHorizontal: 8,
-    margin: 5,
+    marginVertical: 7,
     borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
   tableTitle: {
-    fontSize: fonts.size.md,
+    fontSize: 30,
     fontWeight: "bold",
     marginRight: 20,
   },

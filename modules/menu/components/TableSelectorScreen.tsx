@@ -62,7 +62,7 @@ const TableSelectorScreen = ({ tablesAvailable }: props) => {
 
   const onPressTable = (table: Table) => {
     changeInputValue("table", table);
-    router.back();
+    router.push("/(menu)");
   };
 
   return (

@@ -10,8 +10,8 @@ import {
   handleEcrTipAdjustmentSuccessful,
   makeEcrTipAdjust,
   paymentQueryKey,
+  tipAdjustsQueryKey,
 } from "../PaymentApi";
-import { onRequestError } from "../../common/PetitionsHelper";
 import { Payment } from "mcm-types";
 import { handlePetitionError, showAlert } from "../../common/AlertHelper";
 import {
@@ -51,7 +51,14 @@ const AdjustTipForm = (props: props) => {
         queryKey: [paymentQueryKey, props.paymentId],
       });
 
-      alert("salio bien :)");
+      queryClient.invalidateQueries({
+        queryKey: [tipAdjustsQueryKey, props.paymentId],
+      });
+
+      showAlert({
+        title: "Ajuste de Propina creado exitosamente!",
+        type: "success",
+      });
     },
     mutationFn: async (params: { amount: string; payment: Payment }) => {
       const adjustTipStructure = getCreateTipAdjustStructureForBackend(
@@ -126,9 +133,9 @@ const AdjustTipForm = (props: props) => {
     if (createAdjustTipQuery.isLoading)
       return <ActivityIndicator color={Colors.white} />;
 
-    if (createAdjustTipQuery.isSuccess) return "Tip successfully adjusted";
+    if (createAdjustTipQuery.isSuccess) return "Propina Ajustada Exitosamente!";
 
-    return "Adjust Tip";
+    return "Ajustar Propina";
   };
 
   const onPressMakeAdjustTip = () => {
@@ -173,16 +180,18 @@ const AdjustTipForm = (props: props) => {
   return (
     <MasterPasswordRequired>
       <TerminalConnectionChecker />
-      <View style={{ backgroundColor: Colors.white, flex: 1 }}>
-        <Text>Adjust Tip</Text>
+      <View style={{ backgroundColor: Colors.white }}>
+        <Text center marginT-10 text40 marginB-30>
+          Ajuste de Propina
+        </Text>
         <View style={{ alignItems: "center" }}>
-          <Text>New Tip Value</Text>
+          <Text marginB-4>Ingrese nueva Propina</Text>
 
           <CurrencyInput
             style={{
               fontWeight: "bold",
-              fontSize: fonts.size.xxl,
-              width: metrics.screenWidth,
+              fontSize: 65,
+              // width: metrics.screenWidth,
               textAlign: "center",
             }}
             value={inputValues.amount}
@@ -208,8 +217,7 @@ const AdjustTipForm = (props: props) => {
         backgroundColor={
           createAdjustTipQuery.isSuccess ? Colors.green : Colors.primary
         }
-        marginT-5
-        style={{ borderRadius: 30, marginHorizontal: 10, marginBottom: 20 }}
+        style={{ marginTop: 90, marginBottom: 20, width: "80%" }}
       />
     </MasterPasswordRequired>
   );

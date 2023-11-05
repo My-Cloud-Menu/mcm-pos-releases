@@ -11,8 +11,9 @@ import {
 import { shadowProps } from "../../common/theme/shadows";
 import useEcrStore from "../../ecr/EcrStore";
 import { showAlert } from "../../common/AlertHelper";
+import TerminalConnectionChecker from "../../auth/components/TerminalConnectionChecker";
 
-const textFieldCustomProps = {
+export const textFieldCustomProps = {
   labelStyle: { fontWeight: "bold", color: "#424242" },
   placeholderTextColor: Colors.gray,
   style: {
@@ -41,6 +42,7 @@ const EcrSetupForm = () => {
 
   return (
     <View style={{ backgroundColor: "#fff", paddingBottom: 30 }}>
+      <TerminalConnectionChecker buttonLabel="Test Connection" />
       <View centerH row style={{ flexWrap: "wrap", gap: 30 }}>
         <View paddingH-20 paddingV-20 style={{ gap: 20 }}>
           <View style={styles.inputContainer}>

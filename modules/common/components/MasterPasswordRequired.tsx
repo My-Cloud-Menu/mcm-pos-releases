@@ -59,20 +59,20 @@ const MasterPasswordRequired = (props: props) => {
     ? "Ingrese DEV PIN para Continuar "
     : "Ingrese el Master PIN para Continuar";
 
-  return props.children;
+  // return props.children;
 
   if (isAuthorized) return props.children;
 
   return (
     <View style={styles.container}>
       <View>
-        <Pressable style={{ alignSelf: "flex-start" }} onPress={goBack}>
+        {/* <Pressable style={{ alignSelf: "flex-start" }} onPress={goBack}>
           <Image
             resizeMode="contain"
             style={styles.arrowBackIcon}
             source={require("../../../assets/images/arrow-back.png")}
           />
-        </Pressable>
+        </Pressable> */}
         <Text style={styles.title}>{title}</Text>
       </View>
       <View style={styles.contentContainer}>

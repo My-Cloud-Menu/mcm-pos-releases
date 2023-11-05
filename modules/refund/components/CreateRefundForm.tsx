@@ -13,15 +13,16 @@ import {
   handleRefundInEcr,
   refundReasonsForSelect,
 } from "../RefundHelper";
-import { createRefund, handleEcrRefundSuccessful } from "../RefundApi";
-import { onRequestError } from "../../common/PetitionsHelper";
-import fonts from "../../common/theme/fonts";
-import metrics from "../../common/theme/metrics";
+import {
+  createRefund,
+  handleEcrRefundSuccessful,
+  refundsQueryKey,
+} from "../RefundApi";
 import LabelValue from "../../common/components/LabelValue";
 import { formatCurrency } from "../../common/UtilsHelper";
 import TerminalConnectionChecker from "../../auth/components/TerminalConnectionChecker";
 import MasterPasswordRequired from "../../common/components/MasterPasswordRequired";
-import { handlePetitionError } from "../../common/AlertHelper";
+import { handlePetitionError, showAlert } from "../../common/AlertHelper";
 import { queryClient } from "../../../app/_layout";
 
 const initialInputValues = {
@@ -47,6 +48,12 @@ const CreateRefundForm = (props: props) => {
       queryClient.invalidateQueries({
         queryKey: [paymentQueryKey, props.paymentId],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: [refundsQueryKey, props.paymentId],
+      });
+
+      showAlert({ title: "Refund creado exitosamente!", type: "success" });
     },
     mutationFn: async (params: {
       amountToRefund: string;
@@ -86,27 +93,6 @@ const CreateRefundForm = (props: props) => {
     }
   }, [paymentQuery.data]);
 
-  //   useEffect(() => {
-  //     // Helpers for Suggestions Bar
-  //     const keyboardDidShowListener = Keyboard.addListener(
-  //       "keyboardDidShow",
-  //       () => {
-  //         setShowRefundButton(false);
-  //       }
-  //     );
-  //     const keyboardDidHideListener = Keyboard.addListener(
-  //       "keyboardDidHide",
-  //       () => {
-  //         setShowRefundButton(true);
-  //       }
-  //     );
-
-  //     return () => {
-  //       keyboardDidHideListener.remove();
-  //       keyboardDidShowListener.remove();
-  //     };
-  //   }, []);
-
   const amountAvailableForRefund = getAmountAvailableForRefund(
     paymentQuery.data
   );
@@ -137,6 +123,9 @@ const CreateRefundForm = (props: props) => {
     )
       return false;
 
+    if (Number(inputValues.amount) > Number(amountAvailableForRefund))
+      return false;
+
     return true;
   };
 
@@ -144,7 +133,7 @@ const CreateRefundForm = (props: props) => {
     if (createRefundQuery.isLoading)
       return <ActivityIndicator color={Colors.white} />;
 
-    if (createRefundQuery.isSuccess) return "Refund Created Succesfully";
+    if (createRefundQuery.isSuccess) return "Reembolso creado exitosamente!";
 
     return inputValues.amount == amountAvailableForRefund
       ? "Make Full Refund"
@@ -153,6 +142,10 @@ const CreateRefundForm = (props: props) => {
 
   const onPressMakeRefund = () => {
     if (!validateFields()) return;
+
+    if (createRefundQuery.isLoading || createRefundQuery.isSuccess) {
+      return;
+    }
 
     if (Platform.OS == "web") {
       makeRefund();
@@ -197,15 +190,17 @@ const CreateRefundForm = (props: props) => {
   return (
     <MasterPasswordRequired>
       <TerminalConnectionChecker />
-      <View style={{ backgroundColor: Colors.white, flex: 1 }}>
-        <Text>Refund</Text>
+      <View style={{ backgroundColor: Colors.white }}>
+        <Text center marginT-10 text40 marginB-30>
+          Reembolso
+        </Text>
         <View style={{ alignItems: "center" }}>
-          <Text>Total to refund</Text>
+          <Text>Total a reembolsar</Text>
           <CurrencyInput
             style={{
               fontWeight: "bold",
-              fontSize: fonts.size.xxl,
-              width: metrics.screenWidth,
+              fontSize: 65,
+              // width: metrics.screenWidth,
               textAlign: "center",
             }}
             value={inputValues.amount}
@@ -221,9 +216,9 @@ const CreateRefundForm = (props: props) => {
             onEndEditing={validateAmountInputValue}
           />
 
-          <View style={{ gap: 10 }}>
+          <View marginT-20 style={{ gap: 10 }}>
             <LabelValue
-              label="Disponible para Reembolso"
+              label="Disponible para Reembolso:   "
               value={formatCurrency(
                 getAmountAvailableForRefund(paymentQuery.data)
               )}
@@ -233,25 +228,25 @@ const CreateRefundForm = (props: props) => {
           {/* <RefundChargesDetails payment={paymentData} /> */}
           <Picker
             containerStyle={{
-              marginTop: 30,
+              marginTop: 60,
               backgroundColor: Colors.graySoft,
               borderRadius: 10,
               paddingHorizontal: 10,
               paddingTop: 5,
             }}
-            label="Reason"
+            label="Razon*"
             // floatingPlaceholderColor="#000"
             floatingPlaceholderStyle={{
-              fontSize: fonts.size.md,
+              fontSize: 30,
             }}
             style={{
-              width: metrics.screenWidth * 0.85,
-              fontSize: fonts.size.sm + 2,
+              width: 400,
+              fontSize: 23,
             }}
             migrate
             migrateTextField
             color={"#000"}
-            placeholder={"Select a Refund Reason"}
+            placeholder={"Seleccione la razon del reembolso"}
             value={inputValues.reason}
             onChange={(value) => {
               setInputValues({
@@ -262,7 +257,12 @@ const CreateRefundForm = (props: props) => {
             }}
           >
             {refundReasonsForSelect.map((reason) => (
-              <Picker.Item key={reason} value={reason} label={reason} />
+              <Picker.Item
+                key={reason}
+                value={reason}
+                label={reason}
+                labelStyle={{ padding: Platform.OS == "web" ? 15 : undefined }}
+              />
             ))}
           </Picker>
           {inputValues.customReason && (
@@ -274,16 +274,16 @@ const CreateRefundForm = (props: props) => {
                   customReasonDetails: value || "",
                 });
               }}
-              maxLength={150}
+              maxLength={200}
               containerStyle={{ marginTop: 15 }}
-              style={{ width: metrics.screenWidth * 0.89 }}
-              label="Details:"
+              style={{ width: 400 }}
+              label="Detalles:"
               placeholder="Refund Reason"
-              floatingPlaceholderStyle={{ fontSize: fonts.size.md }}
+              floatingPlaceholderStyle={{ fontSize: 23 }}
               fieldStyle={{
                 borderBottomWidth: 1.8,
                 borderColor: Colors.primary,
-                paddingBottom: 4,
+                paddingBottom: 10,
                 borderRadius: 6,
               }}
             />
@@ -299,8 +299,7 @@ const CreateRefundForm = (props: props) => {
         backgroundColor={
           createRefundQuery.isSuccess ? Colors.green : Colors.primary
         }
-        marginT-5
-        style={{ borderRadius: 30, marginHorizontal: 10, marginBottom: 20 }}
+        style={{ marginTop: 70, marginBottom: 20, width: "80%" }}
       />
     </MasterPasswordRequired>
   );

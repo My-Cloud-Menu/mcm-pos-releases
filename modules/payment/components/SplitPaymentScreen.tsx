@@ -95,11 +95,11 @@ const SplitPaymentScreen = (props: props) => {
             );
           })}
         </View>
-        <Button
+        {/* <Button
           fullWidth
           style={{ backgroundColor: Colors.green, marginTop: 30, width: 590 }}
           label="Products"
-        />
+        /> */}
 
         <Button
           onPress={onPressSplitButton}

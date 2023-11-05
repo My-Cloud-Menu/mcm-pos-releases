@@ -129,7 +129,7 @@ export const onSuccessfulECRResponse = (data: any, path: string) => {
 export const getEcrRequestUrl = (pathName: string = "") => {
   let { setup } = useEcrStore.getState();
 
-  let url: string = !__DEV__
+  let url: string = __DEV__
     ? `${setup.ipDev}/${pathName}`
     : `http://${setup.ip}:${setup.port}/${pathName}`;
 

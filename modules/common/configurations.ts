@@ -57,13 +57,13 @@ export const initialGlobalSetupConfiguration: GlobalSetup = {
   password_length: 4,
   showErrors: false,
   siteId: "11902122",
-  url: "http://172.17.0.1:3000",
+  url: "https://boripizza.api.mycloudmenu.com",
   showTableSelector: true,
   employeesShouldSeeJustTheirTables: true,
   masterPassword: "0000",
   devPassword: "0101",
   apiKey:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXRoIjpbIkFMTF9BQ0NFU1MiXSwiaWF0IjoxNjc0ODI5MDIzfQ.x1b5y2-Jy6jJSgVY0fce5aVWMHa2PbSpvpHrUSerpEU",
-  timeout: 40000,
+  timeout: 60000,
   timeOffSet: -240,
 };

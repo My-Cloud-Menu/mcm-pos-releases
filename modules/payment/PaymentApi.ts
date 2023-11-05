@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 
 export const paymentsQueryKey = "payments";
 export const paymentQueryKey = "payment";
+export const tipAdjustsQueryKey = "tip_adjusts";
 
 export const createPayment = async (params: {
   method: payment_method_available;
@@ -241,4 +242,26 @@ export const transferPayment = async (paymentId: string, orderId: string) => {
   );
 
   return response;
+};
+
+export const getTipAdjustmentsByPaymentId = async (
+  paymentId: string,
+  status = "completed"
+): Promise<TipAdjustment[]> => {
+  let { tip_adjustments } = await makeMcmRequest(
+    `admin/payments/${paymentId}/tipadjustments`,
+    "GET",
+    {},
+    {
+      withoutPaginate: true,
+    }
+  );
+
+  if (status) {
+    tip_adjustments = tip_adjustments.filter(
+      (tipAdjustment: TipAdjustment) => tipAdjustment.status == status
+    );
+  }
+
+  return tip_adjustments;
 };

@@ -3,6 +3,8 @@ import { makeEcrRequest, makeMcmRequest } from "../common/PetitionsHelper";
 import useEcrStore from "../ecr/EcrStore";
 import * as Linking from "expo-linking";
 
+export const refundsQueryKey = "refunds";
+
 export const createRefund = async (
   paymentId: string,
   params: {
@@ -98,4 +100,24 @@ export const handleEcrRefundSuccessful = async (params: {
   );
 
   return response;
+};
+
+export const getRefundsByPaymentId = async (
+  paymentId: string,
+  status = "completed"
+): Promise<Refund[]> => {
+  let { refunds } = await makeMcmRequest(
+    `admin/payments/${paymentId}/refunds`,
+    "GET",
+    {},
+    {
+      withoutPaginate: true,
+    }
+  );
+
+  if (status) {
+    refunds = refunds.filter((refund: Refund) => refund.status == status);
+  }
+
+  return refunds;
 };

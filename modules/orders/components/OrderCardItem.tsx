@@ -2,8 +2,13 @@ import { Pressable, StyleSheet } from "react-native";
 import React from "react";
 import { Chip, Colors, Text, View } from "react-native-ui-lib";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Order, ProductCart } from "../../../types";
 import { shadowProps } from "../../common/theme/shadows";
+import {
+  getOrderNextStatus,
+  getOrderStatusColor,
+  getOrderStatusLabel,
+} from "../OrderHelper";
+import { Order } from "mcm-types";
 
 const getTitleLabel = (order: Order) => {
   return order.id.slice(order.id.length - 2, order.id.length);
@@ -16,17 +21,8 @@ const getOrderNameLabel = (order: Order) => {
   );
 };
 
-const orderStatusLabel: any = {
-  "new-order": "New Order",
-  "in-kitchen": "In Kitchen",
-  "ready-for-pickup": "Ready For Pickup",
-  "delivery-in-progress": "Delivery In Progress",
-  "check-closed": "Closed",
-  cancelled: "Cancelled",
-};
-
 type Props = {
-  order: any;
+  order: Order;
   isActive?: boolean;
   onPress?: (order: Order) => void;
 };
@@ -67,10 +63,11 @@ const OrderCardItem = ({
             <Text text70>{getOrderNameLabel(order)}</Text>
             <Chip
               containerStyle={{ borderWidth: 0 }}
-              backgroundColor={Colors.secondary}
-              label={orderStatusLabel[order.status]}
+              backgroundColor={getOrderStatusColor(order.status)}
+              label={getOrderStatusLabel(order.status)}
               marginL-15
               padding-0
+              labelStyle={{ color: "#fff" }}
             />
           </View>
           <View row centerV marginT-6>
@@ -81,13 +78,15 @@ const OrderCardItem = ({
               )}{" "}
               items
             </Text>
-            <MaterialIcons
-              name="arrow-right-alt"
-              size={22}
-              color="black"
-              style={{ marginHorizontal: 3 }}
-            />
-            <Text text85>{orderStatusLabel[order.status] || "New Order"}</Text>
+            {order.status != "check-closed" && (
+              <MaterialIcons
+                name="arrow-right-alt"
+                size={22}
+                color="black"
+                style={{ marginHorizontal: 3 }}
+              />
+            )}
+            <Text text85>{getOrderStatusLabel(getOrderNextStatus(order))}</Text>
           </View>
         </View>
       </View>

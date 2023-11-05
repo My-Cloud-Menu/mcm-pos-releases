@@ -5,7 +5,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getEcrStatus, makeEcrLogon } from "../AuthApi";
 import { handlePetitionError } from "../../common/AlertHelper";
 
-const TerminalConnectionChecker = () => {
+type props = {
+  buttonLabel?: string;
+};
+
+const TerminalConnectionChecker = ({ buttonLabel = "Reconnect" }: props) => {
   const [isReconnected, setIsReconnected] = useState(false);
 
   const ecrStatusQuery = useQuery({
@@ -33,6 +37,7 @@ const TerminalConnectionChecker = () => {
         backgroundColor: "#ffc745",
         borderRadius: 4,
         paddingVertical: 5,
+        paddingHorizontal: 10,
       }}
     >
       <Text text75 marginR-10>
@@ -46,7 +51,7 @@ const TerminalConnectionChecker = () => {
           ecrLoginQuery.isLoading ? (
             <ActivityIndicator color={"white"} />
           ) : (
-            "Reconnect"
+            buttonLabel
           )
         }
       />

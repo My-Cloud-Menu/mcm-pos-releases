@@ -13,6 +13,7 @@ const orders = () => {
   const ordersQuery = useQuery({
     queryKey: [ordersQueryKey],
     queryFn: getOrders,
+    refetchInterval: 20000,
     initialData: {
       orders: [],
       count: 0,

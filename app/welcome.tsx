@@ -1,14 +1,43 @@
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  Entypo,
+  FontAwesome5,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { Image, Text, View } from "react-native-ui-lib";
 import fonts from "../modules/common/theme/fonts";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
+import useOrderStore from "../modules/orders/OrdersStore";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const changeInputValue = useOrderStore((state) => state.changeInputValue);
 
   const onPressButton = () => navigation.navigate("(menu)", { screen: "menu" });
+
+  const onPressClockIn = () =>
+    navigation.navigate("(menu)", { screen: "clocksinout" });
+  const onPressPayments = () =>
+    navigation.navigate("(menu)", { screen: "payments" });
+  const onPressOrders = () =>
+    navigation.navigate("(menu)", { screen: "orders" });
+  const onPressSettings = () =>
+    navigation.navigate("(menu)", { screen: "settings" });
+  const onPressLogout = () =>
+    navigation.navigate("(menu)", { screen: "clocksinout" });
+
+  const onPressOrderExperience = (experience = "pu") => {
+    changeInputValue("experience", experience);
+
+    if (experience == "qe") {
+      navigation.navigate("(menu)", { screen: "table-selector" });
+      return;
+    }
+
+    navigation.navigate("(menu)", { screen: "menu" });
+  };
 
   return (
     <View style={styles.container}>
@@ -23,41 +52,39 @@ const HomeScreen = () => {
 
       <View style={styles.cardsContainer}>
         <Pressable
-          onPress={onPressButton}
+          onPress={() => onPressOrderExperience("pu")}
           style={[styles.card, { marginRight: 10 }]}
         >
           <View style={styles.cardContent}>
             <View style={styles.cardIcon}>
-              <Ionicons name="map" size={50} color="#9e2820" />
+              <Entypo name="shopping-bag" size={45} color="#9e2820" />
             </View>
-            <Text style={styles.cardText}>Drive In</Text>
+            <Text style={styles.cardText}>Takeout</Text>
           </View>
         </Pressable>
         <Pressable
-          onPress={onPressButton}
+          onPress={() => onPressOrderExperience("qe")}
           style={[styles.card, { marginHorizontal: 10 }]}
         >
           <View style={styles.cardContent}>
             <View style={styles.cardIcon}>
-              <Ionicons name="business" size={fonts.size.md} color="#9e2820" />
+              <FontAwesome5 name="chair" size={45} color="#9e2820" />
             </View>
-            <View style={styles.cardTextContainer}>
-              <Text style={styles.cardText}>Take away</Text>
-            </View>
+            <Text style={styles.cardText}>Table</Text>
           </View>
         </Pressable>
         <Pressable
-          onPress={onPressButton}
+          onPress={() => onPressOrderExperience("dl")}
           style={[styles.card, { marginHorizontal: 10 }]}
         >
           <View style={styles.cardContent}>
             <View style={styles.cardIcon}>
-              <Ionicons name="cube" size={50} color="#9e2820" />
+              <MaterialIcons name="delivery-dining" size={49} color="#9e2820" />
             </View>
-            <Text style={styles.cardText}>Collection</Text>
+            <Text style={styles.cardText}>Delivery</Text>
           </View>
         </Pressable>
-        <Pressable
+        {/* <Pressable
           onPress={onPressButton}
           style={[styles.card, { marginHorizontal: 10 }]}
         >
@@ -67,9 +94,9 @@ const HomeScreen = () => {
             </View>
             <Text style={styles.cardText}>Delivery</Text>
           </View>
-        </Pressable>
+        </Pressable> */}
         <Pressable
-          onPress={onPressButton}
+          onPress={() => onPressOrderExperience("pu")}
           style={[styles.card, { marginHorizontal: 10 }]}
         >
           <View style={styles.cardContent}>
@@ -119,62 +146,63 @@ const HomeScreen = () => {
           <Pressable onPress={onPressButton} style={styles.iconWithText}>
             <Ionicons
               name="home"
-              size={50}
+              size={55}
               color="#9e2820"
               style={styles.footerIconfooter}
             />
             <Text style={styles.footerText}>Home</Text>
           </Pressable>
-          <Pressable onPress={onPressButton} style={styles.iconWithText}>
-            <Ionicons
-              name="cash-outline"
-              size={50}
-              color="#9e2820"
-              style={styles.footerIconfooter}
-            />
-            <Text style={styles.footerText}>Pay</Text>
-          </Pressable>
-          <Pressable onPress={onPressButton} style={styles.iconWithText}>
+
+          <Pressable onPress={onPressClockIn} style={styles.iconWithText}>
             <Ionicons
               name="alarm-outline"
-              size={50}
+              size={55}
               color="#9e2820"
               style={styles.footerIconfooter}
             />
-            <Text style={styles.footerText}>Clock in</Text>
+            <Text style={styles.footerText}>Clock in/out</Text>
           </Pressable>
-          <Pressable onPress={onPressButton} style={styles.iconWithText}>
+          <Pressable onPress={onPressPayments} style={styles.iconWithText}>
+            <Ionicons
+              name="cash-outline"
+              size={55}
+              color="#9e2820"
+              style={styles.footerIconfooter}
+            />
+            <Text style={styles.footerText}>Payments</Text>
+          </Pressable>
+          <Pressable onPress={onPressOrders} style={styles.iconWithText}>
             <Ionicons
               name="tv-outline"
-              size={50}
+              size={55}
               color="#9e2820"
               style={styles.footerIconfooter}
             />
-            <Text style={styles.footerText}>Monitor</Text>
+            <Text style={styles.footerText}>Orders</Text>
           </Pressable>
           <Pressable onPress={onPressButton} style={styles.iconWithText}>
             <Ionicons
               name="search-outline"
-              size={50}
+              size={55}
               color="#9e2820"
-              style={[styles.footerIconfooter, styles.searchIcon]}
+              style={[styles.footerIconfooter]}
             />
             <Text style={styles.footerText}>Search</Text>
           </Pressable>
-          <Pressable onPress={onPressButton} style={styles.iconWithText}>
-            <Ionicons
-              name="archive-outline"
-              size={50}
+          <Pressable onPress={onPressSettings} style={styles.iconWithText}>
+            <MaterialIcons
+              name="settings"
+              size={55}
               color="#9e2820"
               style={styles.footerIconfooter}
             />
-            <Text style={styles.footerText}>Cash save</Text>
+            <Text style={styles.footerText}>Settings</Text>
           </Pressable>
           <View style={{ flex: 1 }}>
-            <Pressable onPress={onPressButton} style={styles.iconWithText}>
+            <Pressable onPress={onPressLogout} style={styles.iconWithText}>
               <Ionicons
                 name="log-out-outline"
-                size={50}
+                size={55}
                 color="#9e2820"
                 style={styles.footerIconfooter}
               />
@@ -223,8 +251,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cardIcon: {
-    marginRight: 10,
+    // marginRight: 10,
     marginTop: 10,
+    marginBottom: 4,
   },
   cardText: {
     marginTop: 5,

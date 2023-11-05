@@ -14,7 +14,7 @@ const NativeNumericPad = ({
 
   useEffect(() => {
     const keyboardHideListener = Keyboard.addListener("keyboardDidHide", () => {
-      navigation.goBack();
+      // navigation.goBack();
     });
 
     showKeyboard();

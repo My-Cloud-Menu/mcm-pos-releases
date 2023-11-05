@@ -1,3 +1,4 @@
+import { Order } from "mcm-types";
 import { useCartStore } from "../../stores/cartStore";
 import useAuthStore from "../auth/AuthStore";
 import useOrderStore from "./OrdersStore";
@@ -66,4 +67,46 @@ export const getOrderStructure = () => {
   }
 
   return orderStructure;
+};
+
+export const getOrderExperienceLabel = (order: Order) => {
+  if (
+    order.cart.experience == "dl" &&
+    order.cart.additional_properties?.isDropship
+  )
+    return "Dropship";
+  else if (order.cart.experience == "dl") return "Delivery";
+  else if (order.cart.experience == "qe")
+    return `Table ${order.cart.table.label || ""}`;
+  else return "Pickup";
+};
+
+export const getOrderStatusLabel = (status: string) => {
+  if (status == "new-order") return "New Order";
+  else if (status == "pending-payment") return "Pending Payment";
+  else if (status == "in-kitchen") return "Preparing";
+  else if (status == "ready-for-pickup") return "Ready";
+  else if (status == "check-closed") return "Closed";
+
+  return status;
+};
+
+export const getOrderStatusColor = (status: string) => {
+  if (status == "pending-payment") return "#000";
+  else if (status == "new-order") return "#3865a3";
+  else if (status == "in-kitchen") return "#FF8F00";
+  else if (status == "ready-for-pickup") return "#FF8F00";
+  else if (status == "check-closed") return "#2E7D32";
+
+  return "#df490e";
+};
+
+export const getOrderNextStatus = (order: Order) => {
+  if (order.status == "pending-payment") return "new-order";
+  else if (order.status == "new-order") return "in-kitchen";
+  else if (order.status == "in-kitchen") return "ready-for-pickup";
+  else if (order.status == "ready-for-pickup") return "check-closed";
+  else if (order.status == "check-closed") return null;
+
+  return order.status;
 };

@@ -61,7 +61,10 @@ function RootLayoutNav() {
       navigation.navigate("(menu)", { screen: "menu" });
     }
 
-    if (!["/", "/login"].includes(pathname) && !Boolean(employeeLogged)) {
+    if (
+      !["/", "/login", "/settings"].includes(pathname) &&
+      !Boolean(employeeLogged)
+    ) {
       navigation.dispatch({ type: "POP_TO_TOP" });
     }
   }, [pathname]);

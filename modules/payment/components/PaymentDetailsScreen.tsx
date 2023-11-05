@@ -1,5 +1,5 @@
 import { StyleSheet, ActivityIndicator, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Button, Chip, Colors, Text, View } from "react-native-ui-lib";
 import { Stack } from "expo-router";
 import { Payment } from "mcm-types";
@@ -18,6 +18,15 @@ import {
 import CreateRefundForm from "../../refund/components/CreateRefundForm";
 import AdjustTipForm from "./AdjustTipForm";
 import TransferPaymentForm from "./TransferPaymentForm";
+import { useQuery } from "@tanstack/react-query";
+import { getRefundsByPaymentId, refundsQueryKey } from "../../refund/RefundApi";
+import RefundList from "./RefundList";
+import Decimal from "decimal.js";
+import {
+  getTipAdjustmentsByPaymentId,
+  tipAdjustsQueryKey,
+} from "../PaymentApi";
+import TipAdjustsList from "./TipAdjustsList";
 dayjs.extend(utc);
 
 const paymentOptions = [
@@ -32,9 +41,21 @@ interface props {
 }
 
 const PaymentDetailsScreen = ({ payment }: props) => {
+  const refundsQuery = useQuery({
+    queryKey: [refundsQueryKey, payment.id],
+    queryFn: () => getRefundsByPaymentId(payment.id),
+  });
+
+  const tipAdjustsQuery = useQuery({
+    queryKey: [tipAdjustsQueryKey, payment.id],
+    queryFn: () => getTipAdjustmentsByPaymentId(payment.id),
+  });
+
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
     undefined
   );
+
+  const scrollRef = useRef();
 
   const onPressOption = (option: string) => {
     if (selectedOption == option && !["receipt"].includes(option)) {
@@ -47,23 +68,60 @@ const PaymentDetailsScreen = ({ payment }: props) => {
     if (option == "receipt") {
       goToReceiptScreen(payment.id, payment, true);
     }
+    setTimeout(() => {
+      scrollRef.current?.scrollTo({
+        y: 0,
+        x: 0,
+      });
+    }, 300);
+  };
+
+  const isOptionDisabled = (option: string) => {
+    if (
+      option == "refund" &&
+      ["refunded", "pending"].includes(payment.status)
+    ) {
+      return true;
+    }
+
+    if (option == "adjust_tip") {
+      let amountToAdjustIsValid = new Decimal(payment.total)
+        .minus(payment.total_refunded)
+        .greaterThanOrEqualTo(payment.tip);
+
+      if (
+        !(
+          ["completed", "partially_refunded"].includes(payment.status) &&
+          payment.method == "ecr-cash" &&
+          amountToAdjustIsValid
+        )
+      ) {
+        return true;
+      }
+    }
+
+    if (option == "transfer" && payment.status != "completed") {
+      return true;
+    }
+
+    return false;
   };
 
   return (
-    <ScrollView>
+    <ScrollView ref={scrollRef} style={{ backgroundColor: "#fff" }}>
       <Stack.Screen
         options={{
           title: `Detalles del Pago - #${payment.id}`,
           headerShown: true,
         }}
       />
-      <View row>
+      <View row paddingB-50>
         <View
           flex
           paddingT-10
           paddingL-30
           br40
-          style={{ backgroundColor: "#fff", minHeight: 1000 }}
+          style={{ backgroundColor: "#fff" }}
         >
           <View flex marginT-20>
             {/* <Text text40 marginB-30>
@@ -76,7 +134,7 @@ const PaymentDetailsScreen = ({ payment }: props) => {
                   label="Cheques Pagados"
                   value={
                     <View marginV-4 row style={{ flexWrap: "wrap", gap: 5 }}>
-                      {payment.orders_ids.map((orderId) => (
+                      {(payment?.orders_ids || []).map((orderId) => (
                         <Chip
                           onPress={() => goToOrderDetailsScreen(orderId)}
                           backgroundColor={Colors.primary}
@@ -142,6 +200,24 @@ const PaymentDetailsScreen = ({ payment }: props) => {
               </View>
             </View>
 
+            {refundsQuery.isSuccess && refundsQuery?.data?.length > 0 && (
+              <View>
+                <Text marginT-20 text70 marginB-8>
+                  Reembolsos ({refundsQuery.data.length})
+                </Text>
+                <RefundList refunds={refundsQuery.data} />
+              </View>
+            )}
+
+            {tipAdjustsQuery.isSuccess && tipAdjustsQuery?.data?.length > 0 && (
+              <View>
+                <Text marginT-20 text70 marginB-8>
+                  Ajuste de Propina ({tipAdjustsQuery.data.length})
+                </Text>
+                <TipAdjustsList tip_adjusts={tipAdjustsQuery.data} />
+              </View>
+            )}
+
             <View
               flex
               paddingH-10
@@ -150,20 +226,25 @@ const PaymentDetailsScreen = ({ payment }: props) => {
             >
               {paymentOptions.map((option) => {
                 const isOptionActive = selectedOption == option.value;
+                const optionIsDisabled = isOptionDisabled(option.value);
 
+                let textColor = isOptionActive
+                  ? Colors.primary
+                  : Colors.primary;
+
+                if (optionIsDisabled) {
+                  textColor = Colors.gray;
+                }
                 return (
                   <Button
+                    disabled={optionIsDisabled}
                     fullWidth
                     onPress={() => onPressOption(option.value)}
                     variant="iconButtonWithLabelCenterOutline"
                     active={isOptionActive}
                     style={{ width: "100%" }}
                   >
-                    <Text
-                      center
-                      color={isOptionActive ? Colors.primary : Colors.primary}
-                      text60L
-                    >
+                    <Text center color={textColor} text60L>
                       {option.label}
                     </Text>
                   </Button>
