@@ -1,5 +1,5 @@
 import { ActivityIndicator, Pressable, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Colors, Image, Text, View } from "react-native-ui-lib";
 import NativeNumericPad from "../modules/auth/components/NativeNumericPad";
 import fonts from "../modules/common/theme/fonts";
@@ -31,6 +31,10 @@ const LoginScreen = () => {
     router.push("/welcome");
     // navigation.navigate("(menu)", { screen: "menu" })
   };
+
+  useEffect(() => {
+    if (userInput.length == setup.password_length) onSubmit();
+  }, [userInput]);
 
   return (
     <View style={styles.container}>
