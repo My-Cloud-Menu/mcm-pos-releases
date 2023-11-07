@@ -30,7 +30,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.mycloudmenu.mcm.pos",
-      "versionCode": 11
+      "versionCode": 12
     },
     "web": {
       "bundler": "metro",
@@ -39,6 +39,14 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
       [
         "expo-screen-orientation",
         {
