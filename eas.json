@@ -13,5 +13,8 @@
         "buildType": "apk"
       }
     }
+  },
+  "cli": {
+    "promptToConfigurePushNotifications": false
   }
 }

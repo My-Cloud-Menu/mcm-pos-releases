@@ -3,13 +3,14 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Slot, SplashScreen, useNavigation, usePathname } from "expo-router";
 import { useEffect } from "react";
-import { SafeAreaView, View, useColorScheme } from "react-native";
+import { View, useColorScheme } from "react-native";
 import "../modules/common/theme/MCMTheme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FlashMessage from "react-native-flash-message";
 import { Colors } from "react-native-ui-lib";
 import useAuthStore from "../modules/auth/AuthStore";
 import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export const queryClient = new QueryClient();
 
@@ -70,17 +71,17 @@ function RootLayoutNav() {
   }, [pathname]);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <StatusBar style="light" backgroundColor={Colors.primary} />
+    <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
-        <View
-          style={{ flex: 1, backgroundColor: Colors.graySoft, paddingTop: 20 }}
-        >
-          <Slot />
-        </View>
+        <QueryClientProvider client={queryClient}>
+          <StatusBar style="light" backgroundColor={Colors.primary} />
+          <View style={{ flex: 1, backgroundColor: Colors.graySoft }}>
+            <Slot />
+          </View>
 
-        <FlashMessage position="top" />
+          <FlashMessage position="top" />
+        </QueryClientProvider>
       </SafeAreaView>
-    </QueryClientProvider>
+    </SafeAreaProvider>
   );
 }

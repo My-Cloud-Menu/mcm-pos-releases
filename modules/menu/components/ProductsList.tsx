@@ -93,7 +93,6 @@ const ProductsList = () => {
           />
         );
       }}
-      estimatedItemSize={products.length || 10}
     />
   );
 };
