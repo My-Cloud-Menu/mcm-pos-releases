@@ -60,7 +60,7 @@ export const makeMcmRequest = async (
     const { data } = await axios.request({
       method: method,
       headers: headers,
-      data: { site_id: setup.siteId, ...body },
+      data: method == "GET" ? undefined : { site_id: setup.siteId, ...body },
       params: { site_id: setup.siteId, ...params },
       url: url,
       timeout: setup.timeout,

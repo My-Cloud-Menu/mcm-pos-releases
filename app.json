@@ -19,7 +19,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.mycloudmenu.mcm.pos",
       "requireFullScreen": true,
-      "buildNumber": "11",
+      "buildNumber": "12",
       "icon": "./assets/images/icon.png"
     },
     "android": {
