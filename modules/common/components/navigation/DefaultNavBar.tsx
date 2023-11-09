@@ -11,6 +11,7 @@ import {
 import { router, useNavigation, usePathname } from "expo-router";
 import useAuthStore from "../../../auth/AuthStore";
 import { showWarningAlert } from "../../AlertHelper";
+import { FlashList } from "@shopify/flash-list";
 
 const navItems = [
   {
@@ -79,32 +80,40 @@ const DefaultNavBar = () => {
         assetGroup="assets"
         assetName="logoMain"
       />
-      <View flex marginT-20>
-        {navItems.map((navItem, idx) => {
-          let isNavItemActive = navItem.pathname == activePathName;
-          return (
-            <Button
-              onPress={() => router.push(navItem.pathname)}
-              key={`navitem-${idx}`}
-              variant="iconButtonWithLabelCenter"
-              active={isNavItemActive}
-              marginV-5
-              style={{ width: 109 }}
-            >
-              {navItem.icon({
-                color: isNavItemActive ? Colors.white : Colors.gray,
-              })}
-              <Text
-                color={isNavItemActive ? Colors.white : Colors.black}
-                marginT-8
-                text80
-                style={{ fontWeight: "400" }}
+      <View marginT-20>
+
+        <FlashList
+          data={navItems}
+          style={{
+            borderWidth: 1,
+            borderColor: 'red'
+          }}
+          renderItem={({ item: navItem, index: idx }) => {
+            let isNavItemActive = navItem.pathname == activePathName;
+            return (
+              <Button
+                onPress={() => router.push(navItem.pathname)}
+                key={`navitem-${idx}`}
+                variant="iconButtonWithLabelCenter"
+                active={isNavItemActive}
+                marginV-5
+                style={{ width: 109 }}
               >
-                {navItem.name}
-              </Text>
-            </Button>
-          );
-        })}
+                {navItem.icon({
+                  color: isNavItemActive ? Colors.white : Colors.gray,
+                })}
+                <Text
+                  color={isNavItemActive ? Colors.white : Colors.black}
+                  marginT-8
+                  text80
+                  style={{ fontWeight: "400" }}
+                >
+                  {navItem.name}
+                </Text>
+              </Button>
+            );
+          }}
+        />
       </View>
 
       {/* <Button

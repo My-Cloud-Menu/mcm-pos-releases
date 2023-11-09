@@ -14,6 +14,7 @@ import { logout, timesSheetQueryKey } from "../AuthApi";
 import { router, useNavigation } from "expo-router";
 import { onRequestError } from "../../common/PetitionsHelper";
 import { queryClient } from "../../../app/_layout";
+import { FlatList } from "react-native-gesture-handler";
 dayjs.extend(utc);
 
 type props = {
@@ -42,18 +43,16 @@ const ClocksInOutScreen = (props: props) => {
 
         showAlert({
           type: "warning",
-          title: `The employee ${
-            employee.first_name || employee.middle_name
-          } clocked out successfully`,
+          title: `The employee ${employee.first_name || employee.middle_name
+            } clocked out successfully`,
         });
 
         setTimeout(() => {
           showAlert({
             type: "success",
-            title: `The employee ${
-              timeSheetOfEmployeeAvailable[0].user.first_name ||
+            title: `The employee ${timeSheetOfEmployeeAvailable[0].user.first_name ||
               timeSheetOfEmployeeAvailable[0].user.middle_name
-            } is now the current user!`,
+              } is now the current user!`,
           });
         }, 4000);
       } else {
@@ -70,9 +69,8 @@ const ClocksInOutScreen = (props: props) => {
     authStore.changeCurrentEmployeeLogged(employee);
     showAlert({
       type: "success",
-      title: `The employee ${
-        employee.first_name || employee.middle_name
-      } is now the current user!`,
+      title: `The employee ${employee.first_name || employee.middle_name
+        } is now the current user!`,
     });
   };
 
@@ -87,7 +85,7 @@ const ClocksInOutScreen = (props: props) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View row spread centerV marginB-25 paddingR-20>
         <Text text50>Active Employees ({props.timesSheet.length})</Text>
         <View>
@@ -105,83 +103,86 @@ const ClocksInOutScreen = (props: props) => {
         <Text style={styles.cellHeader}>Activity</Text>
         <Text style={styles.cellHeader}>Actions</Text>
       </View>
-      {props.timesSheet.map((item, index) => {
-        const timeLogged = dayjs()
-          .utcOffset(initialGlobalSetupConfiguration.timeOffSet)
-          .diff(
-            dayjs(item.begin).utcOffset(
-              initialGlobalSetupConfiguration.timeOffSet
-            ),
-            "minutes"
-          );
+      <FlatList
+        renderItem={({ item, index }) => {
+          const timeLogged = dayjs()
+            .utcOffset(initialGlobalSetupConfiguration.timeOffSet)
+            .diff(
+              dayjs(item.begin).utcOffset(
+                initialGlobalSetupConfiguration.timeOffSet
+              ),
+              "minutes"
+            );
 
-        // Convierte la diferencia en minutos a formato hh:mm
-        const hours = Math.floor(timeLogged / 60);
-        const minutes = timeLogged % 60;
+          // Convierte la diferencia en minutos a formato hh:mm
+          const hours = Math.floor(timeLogged / 60);
+          const minutes = timeLogged % 60;
 
-        // Formatea la hora y los minutos
-        const timeLoggedFormatted = `${String(hours).padStart(2, "0")}:${String(
-          minutes
-        ).padStart(2, "0")}`;
+          // Formatea la hora y los minutos
+          const timeLoggedFormatted = `${String(hours).padStart(2, "0")}:${String(
+            minutes
+          ).padStart(2, "0")}`;
 
-        const isTimeExceeded = timeLogged > 962;
+          const isTimeExceeded = timeLogged > 962;
 
-        const isCurrent =
-          authStore.employeeLogged?.id.toString() == item.user.id.toString();
+          const isCurrent =
+            authStore.employeeLogged?.id.toString() == item.user.id.toString();
 
-        const name = item.user.first_name || item.user.middle_name;
-        const isLogoutQueryLoading =
-          logoutQuery.isLoading && logoutQuery.variables?.id == item.user.id;
-        return (
-          <View
-            key={index}
-            style={[styles.row, isCurrent ? styles.rowEven : styles.rowOdd]}
-          >
-            <View style={styles.cell}>
-              <Avatar label={getInitials(name)} size={30} />
-              <Text style={{ marginLeft: 5 }}> {name}</Text>
-            </View>
-            <Text style={styles.cell}>
-              {dayjs(item.begin)
-                .utcOffset(initialGlobalSetupConfiguration.timeOffSet)
-                .format("hh:mm a")}
-            </Text>
-            <Text
-              style={{
-                ...styles.cell,
-                fontWeight: "bold",
-                color: isTimeExceeded ? "#E57373" : undefined,
-              }}
+          const name = item.user.first_name || item.user.middle_name;
+          const isLogoutQueryLoading =
+            logoutQuery.isLoading && logoutQuery.variables?.id == item.user.id;
+          return (
+            <View
+              key={index}
+              style={[styles.row, isCurrent ? styles.rowEven : styles.rowOdd]}
             >
-              {timeLoggedFormatted}
-            </Text>
-            <Text style={styles.cell}>{item.activity.name}</Text>
-            <View style={styles.cell}>
-              {!isCurrent && (
-                <Button
-                  onPress={() => onPressSetCurrentEmployee(item.user)}
-                  style={{ backgroundColor: "#27ae60", marginRight: 10 }}
-                >
-                  <Text white>Set Current</Text>
-                </Button>
-              )}
-              <Button
-                onPress={() => onPressClockOutEmployee(item.user)}
-                style={{ backgroundColor: "#E57373", marginRight: 10 }}
+              <View style={styles.cell}>
+                <Avatar label={getInitials(name)} size={30} />
+                <Text style={{ marginLeft: 5 }}> {name}</Text>
+              </View>
+              <Text style={styles.cell}>
+                {dayjs(item.begin)
+                  .utcOffset(initialGlobalSetupConfiguration.timeOffSet)
+                  .format("hh:mm a")}
+              </Text>
+              <Text
+                style={{
+                  ...styles.cell,
+                  fontWeight: "bold",
+                  color: isTimeExceeded ? "#E57373" : undefined,
+                }}
               >
-                <Text white>
-                  {isLogoutQueryLoading ? (
-                    <ActivityIndicator color="white" />
-                  ) : (
-                    "Clock Out"
-                  )}
-                </Text>
-              </Button>
+                {timeLoggedFormatted}
+              </Text>
+              <Text style={styles.cell}>{item.activity.name}</Text>
+              <View style={styles.cell}>
+                {!isCurrent && (
+                  <Button
+                    onPress={() => onPressSetCurrentEmployee(item.user)}
+                    style={{ backgroundColor: "#27ae60", marginRight: 10 }}
+                  >
+                    <Text white>Set Current</Text>
+                  </Button>
+                )}
+                <Button
+                  onPress={() => onPressClockOutEmployee(item.user)}
+                  style={{ backgroundColor: "#E57373", marginRight: 10 }}
+                >
+                  <Text white>
+                    {isLogoutQueryLoading ? (
+                      <ActivityIndicator color="white" />
+                    ) : (
+                      "Clock Out"
+                    )}
+                  </Text>
+                </Button>
+              </View>
             </View>
-          </View>
-        );
-      })}
-    </ScrollView>
+          );
+        }}
+        data={props.timesSheet}
+      />
+    </View>
   );
 };
 
