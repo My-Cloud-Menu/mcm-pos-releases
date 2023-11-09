@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import React from "react";
+import React, { useMemo } from "react";
 import { Button, Colors, Image, Text, View } from "react-native-ui-lib";
 import {
   AntDesign,
@@ -72,6 +72,10 @@ const DefaultNavBar = () => {
     }
   };
 
+  const computedNavItems = useMemo(() =>
+    navItems.map(x => ({ ...x, active: x.pathname === activePathName }))
+    , [activePathName]);
+
   return (
     <View style={styles.container}>
       <View style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
@@ -83,26 +87,26 @@ const DefaultNavBar = () => {
         />
       </View>
       <FlashList
+        estimatedItemSize={98}
         contentContainerStyle={{
           padding: 20,
         }}
-        data={navItems}
+        data={computedNavItems}
         renderItem={({ item: navItem, index: idx }) => {
-          let isNavItemActive = navItem.pathname == activePathName;
           return (
             <Button
               onPress={() => router.push(navItem.pathname)}
               key={`navitem-${idx}`}
               variant="iconButtonWithLabelCenter"
-              active={isNavItemActive}
+              active={navItem.active}
               marginV-5
               style={{ width: 109 }}
             >
               {navItem.icon({
-                color: isNavItemActive ? Colors.white : Colors.gray,
+                color: navItem.active ? Colors.white : Colors.gray,
               })}
               <Text
-                color={isNavItemActive ? Colors.white : Colors.black}
+                color={navItem.active ? Colors.white : Colors.black}
                 marginT-8
                 text80
                 style={{ fontWeight: "400" }}

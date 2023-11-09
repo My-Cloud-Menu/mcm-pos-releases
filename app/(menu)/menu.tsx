@@ -85,7 +85,6 @@ const Menu = () => {
     resetSplitPayment();
   }, [isFocused]);
 
-  console.log({ cartProducts })
 
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
