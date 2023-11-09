@@ -9,7 +9,8 @@ const MenuLayout = () => {
     <View style={styles.container}>
       <DefaultNavBar />
       <View style={{ flex: 1, backgroundColor: Colors.graySoft }}>
-        <Stack>
+        <Slot />
+        {/* <Stack>
           <Stack.Screen name="orders" options={{}} />
           <Stack.Screen
             name="menu"
@@ -32,7 +33,7 @@ const MenuLayout = () => {
             name="split-payment"
             options={{ title: "Split Payment" }}
           />
-        </Stack>
+        </Stack> */}
       </View>
     </View>
   );

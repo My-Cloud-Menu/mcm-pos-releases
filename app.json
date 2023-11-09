@@ -19,7 +19,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.mycloudmenu.mcm.pos",
       "requireFullScreen": true,
-      "buildNumber": "12",
+      "buildNumber": "13",
       "icon": "./assets/images/icon.png"
     },
     "android": {
@@ -30,7 +30,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.mycloudmenu.mcm.pos",
-      "versionCode": 12
+      "versionCode": 13
     },
     "web": {
       "bundler": "metro",
