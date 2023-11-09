@@ -27,6 +27,7 @@ import {
   tipAdjustsQueryKey,
 } from "../PaymentApi";
 import TipAdjustsList from "./TipAdjustsList";
+import { FlashList } from "@shopify/flash-list";
 dayjs.extend(utc);
 
 const paymentOptions = [
@@ -133,7 +134,7 @@ const PaymentDetailsScreen = ({ payment }: props) => {
                 <LabelValue
                   label="Cheques Pagados"
                   value={
-                    <View marginV-4 row style={{ flexWrap: "wrap", gap: 5 }}>
+                    <View marginV-4 row style={{ flexWrap: "wrap", gap: 5, }}>
                       {(payment?.orders_ids || []).map((orderId) => (
                         <Chip
                           onPress={() => goToOrderDetailsScreen(orderId)}
@@ -185,9 +186,8 @@ const PaymentDetailsScreen = ({ payment }: props) => {
                 />
                 <LabelValue
                   label="Metodo de Pago"
-                  value={`${getMethodLabel(payment.method)} - ${
-                    payment.source
-                  }`}
+                  value={`${getMethodLabel(payment.method)} - ${payment.source
+                    }`}
                   vertical
                 />
 

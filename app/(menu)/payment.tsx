@@ -8,6 +8,7 @@ import { getOrderById, orderQueryKey } from "../../modules/orders/OrdersApi";
 import PaymentScreen from "../../modules/payment/components/PaymentScreen";
 
 const payment = () => {
+  console.log("klk wa")
   let params = useLocalSearchParams<{ orderId: string }>();
 
   if (!params.orderId)

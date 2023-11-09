@@ -1,9 +1,9 @@
 import React from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { Colors, Text, View } from "react-native-ui-lib";
-import { formatCurrency } from "../../common/UtilsHelper";
 import { Cart } from "mcm-types";
 import Decimal from "decimal.js";
+import { FlashList } from "@shopify/flash-list";
 
 type props = {
   cartSummary: Cart;
@@ -23,21 +23,26 @@ const CartCharges = ({ cartSummary, isLoading }: props) => {
         </Text>
       </View>
 
-      {cartSummary.tax_lines.map((taxLine) => (
-        <View row spread marginT-13>
-          <Text text80 $textNeutral>
-            {taxLine.label} ({taxLine.rate}%)
-          </Text>
-          <Text text80>
-            <Text text100L>$ </Text>
-            {taxLine.tax_total}
-          </Text>
-        </View>
-      ))}
-
-      {cartSummary.fee_lines
-        .filter((fee_line) => new Decimal(fee_line.total).greaterThan("0.00"))
-        .map((fee_lines) => (
+      <FlashList
+        data={cartSummary.tax_lines}
+        renderItem={({ item: taxLine }) => (
+          <View row spread marginT-13>
+            <Text text80 $textNeutral>
+              {taxLine.label} ({taxLine.rate}%)
+            </Text>
+            <Text text80>
+              <Text text100L>$ </Text>
+              {taxLine.tax_total}
+            </Text>
+          </View>
+        )}
+      />
+      <FlashList
+        data={
+          cartSummary.fee_lines
+            .filter((fee_line) => new Decimal(fee_line.total).greaterThan("0.00"))
+        }
+        renderItem={({ item: fee_lines }) => (
           <View row spread marginT-13>
             <Text text80 $textNeutral>
               {fee_lines.name}
@@ -47,8 +52,8 @@ const CartCharges = ({ cartSummary, isLoading }: props) => {
               {fee_lines.total}
             </Text>
           </View>
-        ))}
-
+        )}
+      />
       <View
         style={{
           marginTop: 15,

@@ -85,6 +85,8 @@ const Menu = () => {
     resetSplitPayment();
   }, [isFocused]);
 
+  console.log({ cartProducts })
+
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
       <View flex paddingT-25 paddingB-0 paddingL-20 paddingR-15>
@@ -154,7 +156,6 @@ const Menu = () => {
                     ({cartProducts.reduce((acc, cal) => acc + cal.quantity, 0)})
                   </Text>
                 </Text>
-
                 <View style={{ backgroundColor: "" }}>
                   <FlashList
                     contentContainerStyle={{
