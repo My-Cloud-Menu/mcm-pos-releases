@@ -57,8 +57,8 @@ const ProductsList = () => {
   const onPressProduct = (product: Product) => {
     let newProductIds = productIdsSelected.includes(product.id)
       ? productIdsSelected.filter(
-          (productId: number) => productId != product.id
-        )
+        (productId: number) => productId != product.id
+      )
       : [...productIdsSelected, product.id];
 
     setProductIdsSelected(newProductIds);

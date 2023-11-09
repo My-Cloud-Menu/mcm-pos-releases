@@ -60,9 +60,6 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "93a3d6c1-28f8-4bcc-a5cd-e49c997322d7"
       }
     },
     "owner": "mycloudmenu"

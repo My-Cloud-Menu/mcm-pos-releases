@@ -1,5 +1,5 @@
-import { ActivityIndicator, StyleSheet } from "react-native";
-import React from "react";
+import { StyleSheet } from "react-native";
+import React, { useMemo } from "react";
 import { Button, Colors, Image, Text, View } from "react-native-ui-lib";
 import {
   AntDesign,
@@ -11,6 +11,7 @@ import {
 import { router, useNavigation, usePathname } from "expo-router";
 import useAuthStore from "../../../auth/AuthStore";
 import { showWarningAlert } from "../../AlertHelper";
+import { FlashList } from "@shopify/flash-list";
 
 const navItems = [
   {
@@ -71,31 +72,41 @@ const DefaultNavBar = () => {
     }
   };
 
+  const computedNavItems = useMemo(() =>
+    navItems.map(x => ({ ...x, active: x.pathname === activePathName }))
+    , [activePathName]);
+
   return (
     <View style={styles.container}>
-      <Image
-        resizeMode="contain"
-        style={styles.logo}
-        assetGroup="assets"
-        assetName="logoMain"
-      />
-      <View flex marginT-20>
-        {navItems.map((navItem, idx) => {
-          let isNavItemActive = navItem.pathname == activePathName;
+      <View style={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+        <Image
+          resizeMode="contain"
+          style={styles.logo}
+          assetGroup="assets"
+          assetName="logoMain"
+        />
+      </View>
+      <FlashList
+        estimatedItemSize={98}
+        contentContainerStyle={{
+          padding: 20,
+        }}
+        data={computedNavItems}
+        renderItem={({ item: navItem, index: idx }) => {
           return (
             <Button
               onPress={() => router.push(navItem.pathname)}
               key={`navitem-${idx}`}
               variant="iconButtonWithLabelCenter"
-              active={isNavItemActive}
+              active={navItem.active}
               marginV-5
               style={{ width: 109 }}
             >
               {navItem.icon({
-                color: isNavItemActive ? Colors.white : Colors.gray,
+                color: navItem.active ? Colors.white : Colors.gray,
               })}
               <Text
-                color={isNavItemActive ? Colors.white : Colors.black}
+                color={navItem.active ? Colors.white : Colors.black}
                 marginT-8
                 text80
                 style={{ fontWeight: "400" }}
@@ -104,26 +115,8 @@ const DefaultNavBar = () => {
               </Text>
             </Button>
           );
-        })}
-      </View>
-
-      {/* <Button
-        variant="iconButtonWithLabelCenter"
-        marginV-5
-        onPress={onLogoutPress}
-        disabled={authStore.isLoading}
-      >
-        {authStore.isLoading ? (
-          <ActivityIndicator size="large" />
-        ) : (
-          <>
-            <MaterialIcons name="logout" size={25} color={Colors.gray} />
-            <Text color={Colors.gray} marginT-8 text90BL>
-              Logout
-            </Text>
-          </>
-        )}
-      </Button> */}
+        }}
+      />
     </View>
   );
 };
@@ -132,13 +125,12 @@ export default DefaultNavBar;
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
-    alignItems: "center",
     paddingHorizontal: 5,
     paddingVertical: 10,
     backgroundColor: Colors.white,
     borderTopEndRadius: 12,
     borderBottomEndRadius: 12,
+    width: 180
   },
   logo: {
     width: 50,

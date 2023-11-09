@@ -6,6 +6,7 @@ import { Colors, Text, View } from "react-native-ui-lib";
 import { decodeName } from "../../common/UtilsHelper";
 import fonts from "../../common/theme/fonts";
 import Counter from "../../menu/components/Counter";
+import { FlashList } from "@shopify/flash-list";
 
 interface props {
   order: Order;

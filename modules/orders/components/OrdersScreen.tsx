@@ -4,7 +4,7 @@ import { Stack, router, useLocalSearchParams } from "expo-router";
 import { Order } from "mcm-types";
 import OrderCardItem from "./OrderCardItem";
 import metrics from "../../common/theme/metrics";
-import { Text, View } from "react-native-ui-lib";
+import { View } from "react-native-ui-lib";
 import { goToOrderDetailsScreen } from "../../common/NavigationHelper";
 import useSplitStore from "../../payment/SplitStore";
 import { useIsFocused } from "@react-navigation/native";
@@ -35,41 +35,12 @@ const OrdersScreen = ({ orders }: props) => {
     resetSplitPayment();
   }, [isFocused]);
 
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Stack.Screen options={{ title: `Orders (${orders.length})` }} />
-      <View
-        style={{
-          marginTop: 20,
-          marginHorizontal: 12,
-          flexDirection: "row",
-          flexWrap: "wrap",
-          rowGap: 40,
-          columnGap: 20,
-        }}
-      >
-        {orders
-          .sort((a, b) => Number(b.id) - Number(a.id))
-          .map((order) => {
-            let isActive = orderId == order.id;
-            return (
-              <View
-                style={{
-                  minWidth: 270,
-                }}
-              >
-                <OrderCardItem
-                  key={`order-${order.id}`}
-                  order={order}
-                  isActive={isActive}
-                  onPress={onPressOrder}
-                />
-              </View>
-            );
-          })}
-      </View>
 
-      {/* <FlatList
+      {true && <FlatList
         style={{ marginTop: 20, marginLeft: 19 }}
         key={`orderslist-${getColumnsNumbers()}`}
         numColumns={getColumnsNumbers()}
@@ -100,7 +71,7 @@ const OrdersScreen = ({ orders }: props) => {
             </View>
           );
         }}
-      /> */}
+      />}
       <View paddingB-150 />
     </ScrollView>
   );
