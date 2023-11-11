@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Image, Pressable, StyleSheet } from "react-native";
 import React, { useState, useEffect, ReactNode } from "react";
 
 import useGlobalStore from "../GlobalStore";

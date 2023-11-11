@@ -230,7 +230,6 @@ const OrderDetailsScreen = ({ orderId }: props) => {
           {order.cart.line_items.reduce((acc, cal) => acc + cal.quantity, 0)})
         </Text>
         <View paddingR-30>
-
           <LineItemsList
             onEditLineItem={onEditLineItem}
             lineItemsChanges={lineItemsChanges}

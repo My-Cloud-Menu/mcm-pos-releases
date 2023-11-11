@@ -50,7 +50,6 @@ const Counter = (props: props) => {
         >
           {props.quantity}
         </Text>
-
         <AntDesign
           onPress={() => props.quantity != max && props.onIncrement()}
           name="plus"

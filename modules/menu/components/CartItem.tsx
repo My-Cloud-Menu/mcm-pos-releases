@@ -10,6 +10,7 @@ type Props = { product: ProductCart; productIdx: number };
 
 const CartItem = ({ product, productIdx }: Props) => {
   const cartStore = useCartStore();
+
   return (
     <View
       style={{
