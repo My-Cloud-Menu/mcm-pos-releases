@@ -8,6 +8,7 @@ import { Text, View } from "react-native-ui-lib";
 import { goToOrderDetailsScreen } from "../../common/NavigationHelper";
 import useSplitStore from "../../payment/SplitStore";
 import { useIsFocused } from "@react-navigation/native";
+import { checkClosedStatuses, checkOpenStatuses } from "../OrderHelper";
 
 const getColumnsNumbers = () => {
   if (metrics.screenWidth > 900) return 5;
@@ -49,7 +50,7 @@ const OrdersScreen = ({ orders }: props) => {
         }}
       >
         {orders
-          .sort((a, b) => Number(b.id) - Number(a.id))
+          .sort((a, b) => (checkClosedStatuses.includes(a.status) ? 1 : -1))
           .map((order) => {
             let isActive = orderId == order.id;
             return (

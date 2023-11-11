@@ -89,7 +89,7 @@ const DefaultNavBar = () => {
               variant="iconButtonWithLabelCenter"
               active={isNavItemActive}
               marginV-5
-              style={{ width: 109 }}
+              style={{ width: 100 }}
             >
               {navItem.icon({
                 color: isNavItemActive ? Colors.white : Colors.gray,
@@ -97,7 +97,7 @@ const DefaultNavBar = () => {
               <Text
                 color={isNavItemActive ? Colors.white : Colors.black}
                 marginT-8
-                text80
+                text90
                 style={{ fontWeight: "400" }}
               >
                 {navItem.name}

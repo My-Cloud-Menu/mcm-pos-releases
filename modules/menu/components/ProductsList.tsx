@@ -17,7 +17,7 @@ import { Product } from "mcm-types";
 
 const getColumsNumbers = () => {
   if (metrics.screenWidth > 900) return 4;
-  else if (metrics.screenWidth > 500) return 3;
+  else if (metrics.screenWidth > 800) return 3;
   else return 2;
 };
 

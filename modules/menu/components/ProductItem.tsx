@@ -155,7 +155,11 @@ const ProductItem = ({
               style={styles.image}
             />
             <View marginL-20 style={{ width: "100%" }}>
-              <Text text60 black style={{ maxWidth: "40%" }}>
+              <Text
+                text65
+                black
+                style={{ maxWidth: "40%", fontWeight: "bold" }}
+              >
                 {product.name.slice(0, 26)}
                 {product.name.length > 26 ? "..." : ""}
               </Text>

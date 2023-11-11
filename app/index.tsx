@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import fonts from "../modules/common/theme/fonts";
 import { router } from "expo-router";
 
-const version = "2.0.0";
+const version = "2.0.1";
 
 const HomeScreen = () => {
   const goWaiterLogin = () => {

@@ -9,6 +9,8 @@ export const checkOpenStatuses = [
   "ready-for-pickup",
 ];
 
+export const checkClosedStatuses = ["check-closed", "cancelled", "failed"];
+
 export const getOrderStructure = () => {
   const cartStore = useCartStore.getState();
 
@@ -77,7 +79,7 @@ export const getOrderExperienceLabel = (order: Order) => {
     return "Dropship";
   else if (order.cart.experience == "dl") return "Delivery";
   else if (order.cart.experience == "qe")
-    return `Table ${order.cart.table.label || ""}`;
+    return `${order.cart.table.label || ""}`;
   else return "Pickup";
 };
 

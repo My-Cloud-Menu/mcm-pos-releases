@@ -7,6 +7,7 @@ import axios from "../../common/axios";
 import { Category } from "../../../types";
 import { useGlobal } from "../../../stores/global";
 import { makeMcmRequest } from "../../common/PetitionsHelper";
+import { FlashList } from "@shopify/flash-list";
 
 const CategoriesCarousel = () => {
   const {
@@ -23,7 +24,7 @@ const CategoriesCarousel = () => {
   };
 
   return (
-    <View style={{}}>
+    <View style={{ flexWrap: "wrap" }}>
       {/* <FlashList
         estimatedItemSize={246}
         showsHorizontalScrollIndicator={false}
@@ -76,6 +77,8 @@ const CategoriesCarousel = () => {
       <View
         style={{
           flexDirection: "row",
+          flexWrap: "wrap",
+          rowGap: 5,
         }}
       >
         <Button
@@ -84,6 +87,7 @@ const CategoriesCarousel = () => {
           active={!selectedCategory?.id}
           marginV-2
           marginH-5
+          style={{ maxHeight: 80 }}
         >
           <Image
             source={{
@@ -97,11 +101,52 @@ const CategoriesCarousel = () => {
             </Text>
           </View>
         </Button>
+
         {categories
           .filter((category) => category.status == "published")
           .map((item) => {
             let isNavItemActive = selectedCategory?.id == item.id;
-            // let isNavItemActive = false;
+            return (
+              <Button
+                onPress={() => onPressCategory(item)}
+                variant="iconButtonWithLabelCenterOutline"
+                active={isNavItemActive}
+                marginV-2
+                marginH-5
+                style={{ maxHeight: 80 }}
+              >
+                {item?.image?.normal ? (
+                  <Image
+                    source={{ uri: item.image.normal }}
+                    style={styles.image}
+                  />
+                ) : (
+                  <Ionicons
+                    name="md-restaurant-outline"
+                    size={27}
+                    color={Colors.primary}
+                  />
+                )}
+                <View style={{ maxWidth: 150 }}>
+                  <Text
+                    center
+                    color={isNavItemActive ? Colors.primary : Colors.primary}
+                    marginT-14
+                    text80BL
+                  >
+                    {item.name}
+                  </Text>
+                </View>
+              </Button>
+            );
+          })}
+
+        {/* <FlashList
+          scrollEnabled
+          style={{ maxWidth: 100 }}
+          horizontal
+          renderItem={({ item }) => {
+            let isNavItemActive = selectedCategory?.id == item.id;
             return (
               <Button
                 onPress={() => onPressCategory(item)}
@@ -134,7 +179,12 @@ const CategoriesCarousel = () => {
                 </View>
               </Button>
             );
-          })}
+          }}
+          // getItemType={({ item }) => {
+          //   return item.type;
+          // }}
+          data={categories.filter((category) => category.status == "published")}
+        /> */}
       </View>
     </View>
   );
@@ -144,8 +194,8 @@ export default CategoriesCarousel;
 
 const styles = StyleSheet.create({
   image: {
-    width: 36,
-    height: 36,
+    width: 30,
+    height: 30,
     borderRadius: 8,
   },
 });

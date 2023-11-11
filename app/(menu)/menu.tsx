@@ -32,6 +32,10 @@ import {
 import ExperienceSelector from "../../modules/menu/components/ExperienceSelector";
 import useSplitStore from "../../modules/payment/SplitStore";
 import { useIsFocused } from "@react-navigation/native";
+import {
+  checkClosedStatuses,
+  checkOpenStatuses,
+} from "../../modules/orders/OrderHelper";
 
 const Menu = () => {
   const isFocused = useIsFocused();
@@ -47,6 +51,7 @@ const Menu = () => {
       orders: [],
       count: 0,
     },
+    refetchInterval: 40000,
   });
 
   const orderSummaryQuery = useQuery({
@@ -87,10 +92,10 @@ const Menu = () => {
 
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
-      <View flex paddingT-25 paddingB-0 paddingL-20 paddingR-15>
+      <View flex paddingT-5 paddingB-0 paddingL-5 paddingR-5>
         <View flex>
           <CategoriesCarousel />
-          <Text marginT-23 marginB-15 text50L>
+          <Text marginT-15 marginB-10 text70L>
             {selectedCategory?.name || "All"}
           </Text>
           <ProductsList />
@@ -99,8 +104,8 @@ const Menu = () => {
           style={{
             height: 0.5,
             backgroundColor: "#E0E0E0",
-            marginTop: 15,
-            marginBottom: 15,
+            marginTop: 10,
+            marginBottom: 5,
           }}
         />
 
@@ -118,8 +123,8 @@ const Menu = () => {
             />
           )}
           refreshing={ordersQuery.isLoading}
-          data={ordersQuery.data.orders.sort(
-            (a, b) => Number(b.id) - Number(a.id)
+          data={ordersQuery.data.orders.sort((a, b) =>
+            checkClosedStatuses.includes(a.status) ? 1 : -1
           )}
           renderItem={({ item }) => {
             return (
@@ -135,9 +140,9 @@ const Menu = () => {
         flex
         paddingT-10
         paddingR-10
-        paddingL-15
+        paddingL-10
         style={{
-          maxWidth: 320,
+          maxWidth: 295,
           backgroundColor: Colors.white,
           borderTopStartRadius: 12,
           borderBottomStartRadius: 12,
