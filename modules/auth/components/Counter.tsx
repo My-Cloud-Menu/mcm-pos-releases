@@ -1,6 +1,4 @@
-import { FlashList } from "@shopify/flash-list";
 import React from "react";
-import { Text } from "react-native";
 import { StyleSheet, View } from "react-native";
 import { Colors } from "react-native-ui-lib";
 
@@ -12,21 +10,16 @@ const Counter = ({ item = "", length = 4 }) => {
 
   return (
     <View style={styles.container}>
-      <FlashList
-        data={listOfElement}
-        horizontal
-        renderItem={({ item: element }) => {
-          return element < item.length ? (
-            <View
-              key={`counter-${element}`}
-              style={{ ...styles.element, ...styles.active }}
-            />
-          ) : (
-            <View key={`counter-${element}`} style={styles.element} />
-          )
-        }}
-
-      />
+      {listOfElement.map((element) =>
+        element < item.length ? (
+          <View
+            key={`counter-${element}`}
+            style={{ ...styles.element, ...styles.active }}
+          />
+        ) : (
+          <View key={`counter-${element}`} style={styles.element} />
+        )
+      )}
     </View>
   );
 };

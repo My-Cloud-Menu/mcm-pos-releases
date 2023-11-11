@@ -7,7 +7,6 @@ import axios from "../../common/axios";
 import { Category } from "../../../types";
 import { useGlobal } from "../../../stores/global";
 import { makeMcmRequest } from "../../common/PetitionsHelper";
-import { FlashList } from "@shopify/flash-list";
 
 const CategoriesCarousel = () => {
   const {
@@ -98,11 +97,11 @@ const CategoriesCarousel = () => {
             </Text>
           </View>
         </Button>
-
-        <FlashList
-          horizontal
-          renderItem={({ item }) => {
+        {categories
+          .filter((category) => category.status == "published")
+          .map((item) => {
             let isNavItemActive = selectedCategory?.id == item.id;
+            // let isNavItemActive = false;
             return (
               <Button
                 onPress={() => onPressCategory(item)}
@@ -135,13 +134,7 @@ const CategoriesCarousel = () => {
                 </View>
               </Button>
             );
-          }}
-          // getItemType={({ item }) => {
-          //   return item.type;
-          // }}
-          data={categories
-            .filter((category) => category.status == "published")}
-        />
+          })}
       </View>
     </View>
   );
