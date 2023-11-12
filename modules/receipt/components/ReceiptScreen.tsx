@@ -1,8 +1,6 @@
 import { StyleSheet, ActivityIndicator, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { Button, Colors, Text, View } from "react-native-ui-lib";
-import { Stack } from "expo-router";
-import ReceiptQrCode from "./ReceiptQrCode";
 import { Payment } from "mcm-types";
 import HtmlContent from "../../common/components/HtmlContent";
 import { useMutation } from "@tanstack/react-query";
@@ -81,7 +79,7 @@ const ReceiptScreen = ({ payment }: props) => {
             <Text text20L marginT-10 marginB-20>
               Thank You
             </Text>
-            <ReceiptQrCode paymentId={payment.id} />
+            {/* <ReceiptQrCode paymentId={payment.id} /> */}
             <View
               marginT-20
               centerH

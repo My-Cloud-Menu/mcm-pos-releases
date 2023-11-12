@@ -123,9 +123,9 @@ const Menu = () => {
             />
           )}
           refreshing={ordersQuery.isLoading}
-          data={ordersQuery.data.orders.sort((a, b) =>
-            checkClosedStatuses.includes(a.status) ? 1 : -1
-          )}
+          data={ordersQuery.data.orders
+            .sort((a, b) => Number(a.id) - Number(b.id))
+            .sort((a, b) => (checkClosedStatuses.includes(a.status) ? 1 : -1))}
           renderItem={({ item }) => {
             return (
               <OrderCardItem

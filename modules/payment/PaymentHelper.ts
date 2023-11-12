@@ -23,7 +23,7 @@ export const getCreatePaymentStructureForBackend = ({
   const currentEcrReference = useEcrStore.getState().setup.reference;
 
   const nextEcrReference =
-    currentEcrReference == 999999 ? 1 : currentEcrReference + 1;
+    currentEcrReference == 999999 ? 1 : Number(currentEcrReference) + 1;
 
   if (!employeeLogged) throw "Employee must be logged";
 
@@ -117,7 +117,7 @@ export const getCreateTipAdjustStructureForBackend = (amount: string) => {
   const currentEcrReference = useEcrStore.getState().setup.reference;
 
   const nextEcrReference =
-    currentEcrReference == 999999 ? 1 : currentEcrReference + 1;
+    currentEcrReference == 999999 ? 1 : Number(currentEcrReference) + 1;
 
   if (!employeeLogged) throw "Employee must be logged";
 

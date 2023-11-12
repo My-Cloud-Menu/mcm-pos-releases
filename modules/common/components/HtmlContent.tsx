@@ -8,7 +8,7 @@ type props = {
 const HtmlContent = (props: props) => {
   const contentToShow =
     `<style>
-  * {font-size:35px;}
+  * {font-size:35px !important;}
   img{width:50px;}
 </style>` +
     props.htmlContent.replace(
@@ -21,7 +21,6 @@ const HtmlContent = (props: props) => {
 
   return (
     <WebView
-      style={{ fontsize: "30px" }}
       source={{
         html: contentToShow,
       }}

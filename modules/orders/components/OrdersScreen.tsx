@@ -50,13 +50,14 @@ const OrdersScreen = ({ orders }: props) => {
         }}
       >
         {orders
+          .sort((a, b) => Number(a.id) - Number(b.id))
           .sort((a, b) => (checkClosedStatuses.includes(a.status) ? 1 : -1))
           .map((order) => {
             let isActive = orderId == order.id;
             return (
               <View
                 style={{
-                  minWidth: 270,
+                  minWidth: 230,
                 }}
               >
                 <OrderCardItem

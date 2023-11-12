@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -148,45 +148,46 @@ const OrderDetailsScreen = ({ orderId }: props) => {
     );
 
   return (
-    <View flex>
-      <View padding-10 flex>
-        {isEditMode && (
-          <View
-            row
-            center
-            style={{
-              backgroundColor: "#ffc745",
-              borderRadius: 6,
-              paddingVertical: 5,
-              marginBottom: 5,
-            }}
-          >
-            <Text text75 black>
-              EDIT MODE
-            </Text>
+    <ScrollView>
+      <View flex>
+        <View padding-10 flex>
+          {isEditMode && (
+            <View
+              row
+              center
+              style={{
+                backgroundColor: "#ffc745",
+                borderRadius: 6,
+                paddingVertical: 5,
+                marginBottom: 5,
+              }}
+            >
+              <Text text75 black>
+                EDIT MODE
+              </Text>
+            </View>
+          )}
+          <View row centerV marginB-5>
+            <LabelValue label="Order ID" value={`#${order.id}`} />
+            <LabelValue
+              label="Hour"
+              value={dayjs(order.date_created).format("hh:mm A - DD/MM/YYYY")}
+            />
           </View>
-        )}
-        <View row centerV marginB-5>
-          <LabelValue label="Order ID" value={`#${order.id}`} />
-          <LabelValue
-            label="Hour"
-            value={dayjs(order.date_created).format("hh:mm A - DD/MM/YYYY")}
-          />
-        </View>
-        <View row>
-          <LabelValue label="Total" value={formatCurrency(order.total)} />
-          <LabelValue
-            label="Experience"
-            value={getOrderExperienceLabel(order)}
-          />
-          <Chip
-            label={getOrderStatusLabel(order.status)}
-            backgroundColor={getOrderStatusColor(order.status)}
-            containerStyle={{ borderWidth: 0 }}
-            marginR-10
-            labelStyle={{ fontWeight: "bold", color: "#fff" }}
-          />
-          {/* {order.status != "check-closed" && (
+          <View row>
+            <LabelValue label="Total" value={formatCurrency(order.total)} />
+            <LabelValue
+              label="Experience"
+              value={getOrderExperienceLabel(order)}
+            />
+            <Chip
+              label={getOrderStatusLabel(order.status)}
+              backgroundColor={getOrderStatusColor(order.status)}
+              containerStyle={{ borderWidth: 0 }}
+              marginR-10
+              labelStyle={{ fontWeight: "bold", color: "#fff" }}
+            />
+            {/* {order.status != "check-closed" && (
             <Chip
               label={
                 <View row centerV>
@@ -200,84 +201,85 @@ const OrderDetailsScreen = ({ orderId }: props) => {
               containerStyle={{ borderWidth: 0, borderRadius: 8 }}
             />
           )} */}
-          {order.status != "check-closed" &&
-            order.payment_status == "not_fulfilled" && (
-              <Feather
-                onPress={() => setIsEditMode(!isEditMode)}
-                style={{ marginLeft: "auto" }}
-                name="edit"
-                size={25}
-                color={isEditMode ? Colors.yellow : Colors.black}
-              />
-            )}
-        </View>
-        <View row marginT-14 style={{ columnGap: 5 }}>
-          <LabelValue
-            label="Name"
-            value={
-              `${order.cart.customer.first_name} ${order.cart.customer.last_name}`.trim() ||
-              "Sin Especificar"
-            }
-          />
-          {/* <LabelValue
+            {order.status != "check-closed" &&
+              order.payment_status == "not_fulfilled" && (
+                <Feather
+                  onPress={() => setIsEditMode(!isEditMode)}
+                  style={{ marginLeft: "auto" }}
+                  name="edit"
+                  size={25}
+                  color={isEditMode ? Colors.yellow : Colors.black}
+                />
+              )}
+          </View>
+          <View row marginT-14 style={{ columnGap: 5 }}>
+            <LabelValue
+              label="Name"
+              value={
+                `${order.cart.customer.first_name} ${order.cart.customer.last_name}`.trim() ||
+                "Sin Especificar"
+              }
+            />
+            {/* <LabelValue
             
             label="Payment Status"
             value={formatOrderPaymentStatus[order.payment_status] || ""}
           /> */}
-        </View>
-        <Text marginT-20 text70>
-          Items (
-          {order.cart.line_items.reduce((acc, cal) => acc + cal.quantity, 0)})
-        </Text>
-        <View paddingR-30>
-          <LineItemsList
-            onEditLineItem={onEditLineItem}
-            lineItemsChanges={lineItemsChanges}
-            isEditMode={isEditMode}
-            order={order}
-          />
-        </View>
-        {!isEditMode && (
-          <>
-            <Text marginT-20 text70 marginB-8>
-              Payments ({(paymentsQuery?.data?.payments || []).length})
-            </Text>
-            <TransactionsList
-              isLoading={paymentsQuery.isLoading}
-              payments={paymentsQuery.data?.payments || []}
+          </View>
+          <Text marginT-20 text70>
+            Items (
+            {order.cart.line_items.reduce((acc, cal) => acc + cal.quantity, 0)})
+          </Text>
+          <View paddingR-30>
+            <LineItemsList
+              onEditLineItem={onEditLineItem}
+              lineItemsChanges={lineItemsChanges}
+              isEditMode={isEditMode}
+              order={order}
             />
-          </>
-        )}
-      </View>
-      <View marginB-10>
-        {!isEditMode && order.payment_status != "fulfilled" && (
-          <Button
-            marginV-4
-            label="Complete Payment"
-            useMinSize
-            onPress={onPressCompletePayment}
-          />
-        )}
-        {/* {!isEditMode && (
+          </View>
+          {!isEditMode && (
+            <>
+              <Text marginT-20 text70 marginB-8>
+                Payments ({(paymentsQuery?.data?.payments || []).length})
+              </Text>
+              <TransactionsList
+                isLoading={paymentsQuery.isLoading}
+                payments={paymentsQuery.data?.payments || []}
+              />
+            </>
+          )}
+        </View>
+        <View marginB-10>
+          {!isEditMode && order.payment_status != "fulfilled" && (
+            <Button
+              marginV-4
+              label="Complete Payment"
+              useMinSize
+              onPress={onPressCompletePayment}
+            />
+          )}
+          {/* {!isEditMode && (
           <Button disabled marginV-4 label="Cancel Order" useMinSize />
         )} */}
 
-        {isEditMode && (
-          <Button
-            disabled={editLineItemQuery.isLoading}
-            onPress={() => editLineItemQuery.mutate()}
-            label={
-              editLineItemQuery.isLoading ? (
-                <ActivityIndicator color={"white"} />
-              ) : (
-                "Save Changes"
-              )
-            }
-            marginV-4
-          />
-        )}
+          {isEditMode && (
+            <Button
+              disabled={editLineItemQuery.isLoading}
+              onPress={() => editLineItemQuery.mutate()}
+              label={
+                editLineItemQuery.isLoading ? (
+                  <ActivityIndicator color={"white"} />
+                ) : (
+                  "Save Changes"
+                )
+              }
+              marginV-4
+            />
+          )}
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
