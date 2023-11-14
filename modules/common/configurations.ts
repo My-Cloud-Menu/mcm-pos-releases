@@ -64,6 +64,6 @@ export const initialGlobalSetupConfiguration: GlobalSetup = {
   devPassword: "0101",
   apiKey:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXRoIjpbIkFMTF9BQ0NFU1MiXSwiaWF0IjoxNjc0ODI5MDIzfQ.x1b5y2-Jy6jJSgVY0fce5aVWMHa2PbSpvpHrUSerpEU",
-  timeout: 120000,
+  timeout: 240000,
   timeOffSet: -240,
 };
