@@ -11,6 +11,7 @@ import {
   goToOrderDetailsScreen,
   goToPaymentDetailsScreen,
 } from "../../common/NavigationHelper";
+import { handlePetitionError, showAlert } from "../../common/AlertHelper";
 dayjs.extend(customParseFormat);
 
 type props = {
@@ -21,6 +22,14 @@ const JournalScreen = (props: props) => {
   const paymentsQuery = useQuery({
     queryKey: [paymentsQueryKey],
     queryFn: () => getPayments(undefined, true),
+    onError: (error: any) => {
+      if (error?.response_message == "NO TRANSACTIONS.") {
+        showAlert({ type: "warning", title: "NO TRANSACTIONS" });
+        return;
+      }
+
+      handlePetitionError(error, "Error loading Journal");
+    },
     initialData: {
       payments: [],
       count: 0,

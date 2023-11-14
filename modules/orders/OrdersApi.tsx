@@ -58,17 +58,17 @@ export const getOrders = async (): Promise<GetOrdersRequestResponse> => {
     }
   );
 
-  const ecrSetup = useEcrStore.getState().setup;
+  // const ecrSetup = useEcrStore.getState().setup;
 
-  if (ecrSetup.batch_number) {
-    response.orders = response.orders.filter(
-      (order: Order) =>
-        !(
-          order.status == "check-closed" &&
-          order.additional_properties?.batch_number != ecrSetup.batch_number
-        )
-    );
-  }
+  // if (ecrSetup.batch_number) {
+  //   response.orders = response.orders.filter(
+  //     (order: Order) =>
+  //       !(
+  //         order.status == "check-closed" &&
+  //         order.additional_properties?.batch_number != ecrSetup.batch_number
+  //       )
+  //   );
+  // }
 
   return response;
 };
