@@ -199,9 +199,9 @@ const Menu = () => {
             labelColor={"#000"}
             placeholderTextColor={Colors.gray}
             value={orderStore.inputValues.first_name}
-            onChange={({ target }) =>
-              orderStore.changeInputValue("first_name", target.value)
-            }
+            onChangeText={(value) => {
+              orderStore.changeInputValue("first_name", value);
+            }}
           />
           <ExperienceSelector />
           <Button

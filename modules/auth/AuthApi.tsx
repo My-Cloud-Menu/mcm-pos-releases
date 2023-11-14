@@ -2,9 +2,10 @@ import { TimeSheet } from "../../types";
 import { makeEcrRequest, makeMcmRequest } from "../common/PetitionsHelper";
 
 export const timesSheetQueryKey = "timesheet";
+export const ecrStatusCheckerKey = "ecrStatusChecker";
 
-export const getEcrStatus = async () => {
-  return makeEcrRequest("getStatus");
+export const getEcrStatus = async (signal: any | undefined = undefined) => {
+  return makeEcrRequest("getStatus", {}, 120000, signal);
 };
 
 export const makeEcrLogon = async () => {

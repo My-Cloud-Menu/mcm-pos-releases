@@ -22,7 +22,7 @@ export const getOrderStructure = () => {
     experience: inputValues.experience,
     customer: {
       id: "",
-      first_name: inputValues.first_name,
+      first_name: inputValues.first_name || "",
       last_name: "",
       phone: "",
     },
@@ -67,7 +67,6 @@ export const getOrderStructure = () => {
       },
     };
   }
-
   return orderStructure;
 };
 

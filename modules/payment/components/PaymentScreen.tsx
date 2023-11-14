@@ -33,6 +33,7 @@ import Decimal from "decimal.js";
 import { queryClient } from "../../../app/_layout";
 import { orderQueryKey } from "../../orders/OrdersApi";
 import { useIsFocused } from "@react-navigation/native";
+import { ecrStatusCheckerKey } from "../../auth/AuthApi";
 
 interface props {
   order: Order;
@@ -79,6 +80,11 @@ const PaymentScreen = ({ order }: props) => {
       });
     },
     mutationFn: async () => {
+      await queryClient.cancelQueries({
+        queryKey: [ecrStatusCheckerKey],
+        exact: true,
+      });
+
       let paymentToSend = paymentCreatedInBackend;
 
       if (!Boolean(paymentToSend)) {

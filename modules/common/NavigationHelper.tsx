@@ -42,3 +42,7 @@ export const goToSplitPaymentScreen = (orderId: string, order?: Order) => {
   if (order) queryClient.setQueryData([orderQueryKey, orderId], order);
   router.push({ pathname: "/split-payment", params: { orderId: orderId } });
 };
+
+export const goToDeleteOrderScreen = (orderId: string) => {
+  router.push({ pathname: "/deleteorder", params: { orderId: orderId } });
+};

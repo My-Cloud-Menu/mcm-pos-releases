@@ -198,3 +198,15 @@ export const isNextPaymentAvailableBySplitOfProducts = (
 
   return true;
 };
+
+export const convertEcrJournalIntoTransactionList = (ecrJournal: any) => {
+  const transactions = [];
+
+  for (const key in ecrJournal.reference_value) {
+    if (ecrJournal.reference_value.hasOwnProperty(key)) {
+      transactions.push(...ecrJournal.reference_value[key].trans);
+    }
+  }
+
+  return transactions;
+};

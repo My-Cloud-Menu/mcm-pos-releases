@@ -47,7 +47,7 @@ export const initialECRSetupConfiguration: EcrSetup = {
   port: "2030",
   api_key: "f6196298e20d41ada45de8dc4d1963c5",
   force_duplicate: "no",
-  receipt_output: "HTML",
+  receipt_output: "BOTH",
   manual_entry_indicator: "no",
   receipt_email: "no",
   process_cashback: "no",
@@ -64,6 +64,6 @@ export const initialGlobalSetupConfiguration: GlobalSetup = {
   devPassword: "0101",
   apiKey:
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXRoIjpbIkFMTF9BQ0NFU1MiXSwiaWF0IjoxNjc0ODI5MDIzfQ.x1b5y2-Jy6jJSgVY0fce5aVWMHa2PbSpvpHrUSerpEU",
-  timeout: 60000,
+  timeout: 120000,
   timeOffSet: -240,
 };

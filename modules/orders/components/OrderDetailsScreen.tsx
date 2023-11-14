@@ -21,7 +21,10 @@ import {
 } from "../OrdersApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { formatCurrency } from "../../common/UtilsHelper";
-import { goToPaymentScreen } from "../../common/NavigationHelper";
+import {
+  goToDeleteOrderScreen,
+  goToPaymentScreen,
+} from "../../common/NavigationHelper";
 import dayjs from "dayjs";
 import { getPayments, paymentsQueryKey } from "../../payment/PaymentApi";
 import TransactionsList from "../../payment/components/TransactionList";
@@ -109,6 +112,7 @@ const OrderDetailsScreen = ({ orderId }: props) => {
   const [lineItemsChanges, setLineItemsChanges] = useState<any>({});
 
   const onPressCompletePayment = () => goToPaymentScreen(order.id, order);
+  const onPressDeleteOrder = () => goToDeleteOrderScreen(order.id);
 
   const onEditLineItem = (idx: number, quantity: number) => {
     const currentOrder = order;
@@ -257,6 +261,16 @@ const OrderDetailsScreen = ({ orderId }: props) => {
               label="Complete Payment"
               useMinSize
               onPress={onPressCompletePayment}
+            />
+          )}
+
+          {!isEditMode && (
+            <Button
+              marginV-4
+              label="Delete Order"
+              useMinSize
+              style={{ backgroundColor: "#D84315" }}
+              onPress={onPressDeleteOrder}
             />
           )}
           {/* {!isEditMode && (

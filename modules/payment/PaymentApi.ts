@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 export const paymentsQueryKey = "payments";
 export const paymentQueryKey = "payment";
 export const tipAdjustsQueryKey = "tip_adjusts";
+export const ecrJournalQueryKey = "ecr_journal";
 
 export const createPayment = async (params: {
   method: payment_method_available;
@@ -53,7 +54,7 @@ export const makeEcrCardSale = async (payment: Payment, excludeTip = false) => {
       process_cashback: setup.process_cashback,
     };
 
-    const response = await makeEcrRequest("sale", data, 120000);
+    const response = await makeEcrRequest("sale", data);
     try {
       !__DEV__ && Linking.openURL("mcmpos://");
     } catch (err) {}
@@ -186,7 +187,7 @@ export const makeEcrTipAdjust = async (
       tip: tip,
     };
 
-    const response = await makeEcrRequest("tipAdjust", data, 120000);
+    const response = await makeEcrRequest("tipAdjust", data);
 
     try {
       !__DEV__ && Linking.openURL("mcmpos://");
@@ -220,7 +221,7 @@ export const makeEcrSettle = async (receipt_output = "BOTH") => {
       receipt_output: receipt_output,
     };
 
-    const response = await makeEcrRequest("settle", data, 120000);
+    const response = await makeEcrRequest("settle", data);
     try {
       !__DEV__ && Linking.openURL("mcmpos://");
     } catch (err) {}
@@ -264,4 +265,12 @@ export const getTipAdjustmentsByPaymentId = async (
   }
 
   return tip_adjustments;
+};
+
+export const getEcrJournal = async () => {
+  const data = { target_reference: "all" };
+
+  const response = await makeEcrRequest("journal", data);
+
+  return response;
 };

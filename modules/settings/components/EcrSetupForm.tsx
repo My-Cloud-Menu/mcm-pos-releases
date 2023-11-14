@@ -156,6 +156,19 @@ const EcrSetupForm = () => {
         <View paddingH-20 paddingV-20 style={{ gap: 20 }}>
           <View style={styles.inputContainer}>
             <Checkbox
+              value={newValues.receipt_output == "BOTH"}
+              onValueChange={(value) =>
+                setNewValues({
+                  ...newValues,
+                  receipt_output: value ? "BOTH" : "HTML",
+                })
+              }
+              color={Colors.primary}
+              label="Print Receipt Automatically"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Checkbox
               value={newValues.receipt_email == "yes"}
               onValueChange={(value) =>
                 setNewValues({

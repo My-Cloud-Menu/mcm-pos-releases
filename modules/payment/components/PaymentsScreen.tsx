@@ -10,7 +10,13 @@ import {
 } from "react-native-ui-lib";
 import TextField from "react-native-ui-lib/textField";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getPayments, makeEcrSettle, paymentsQueryKey } from "../PaymentApi";
+import {
+  ecrJournalQueryKey,
+  getEcrJournal,
+  getPayments,
+  makeEcrSettle,
+  paymentsQueryKey,
+} from "../PaymentApi";
 import { handlePetitionError } from "../../common/AlertHelper";
 import { getOrders, ordersQueryKey } from "../../orders/OrdersApi";
 import { checkOpenStatuses } from "../../orders/OrderHelper";
@@ -22,6 +28,8 @@ import TransactionsList from "./TransactionList";
 import HtmlContent from "../../common/components/HtmlContent";
 import TerminalConnectionChecker from "../../auth/components/TerminalConnectionChecker";
 import { textFieldCustomProps } from "../../settings/components/EcrSetupForm";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 const PaymentsScreen = () => {
   const paymentsQuery = useQuery({
@@ -73,7 +81,7 @@ const PaymentsScreen = () => {
 
   const getPaymentsFiltered = () => {
     let result = paymentsQuery.data.payments;
-    console.log(setup.batch_number);
+
     if (setup.batch_number) {
       result = result.filter(
         (payment) =>
@@ -113,6 +121,7 @@ const PaymentsScreen = () => {
         "web version",
         `Se encontraron ${tablesStillOpen} mesa(s) con cuentas abiertas. Estas seguro que deseas hacer el Settle?`
       );
+
       Alert.alert(
         "WARNING - Mesas Abiertas",
         `Se encontraron ${tablesStillOpen} mesa(s) con cuentas abiertas. Estas seguro que deseas hacer el Settle?`,
@@ -189,13 +198,28 @@ const PaymentsScreen = () => {
             )
           )}
         </View>
-        <View style={{ width: 500, marginTop: 20, marginBottom: 20 }}>
-          <TextField
-            onChangeText={(value) => setFilterText(value)}
-            placeholder={"Buscar por Referencia o ID"}
-            label={"Buscar por Referencia o ID"}
-            maxLength={60}
-            {...textFieldCustomProps}
+        <View row centerV spread paddingR-10>
+          <View style={{ width: 500, marginTop: 20, marginBottom: 20 }}>
+            <TextField
+              onChangeText={(value) => setFilterText(value)}
+              placeholder={"Buscar por Referencia o ID"}
+              label={"Buscar por Referencia o ID"}
+              maxLength={60}
+              {...textFieldCustomProps}
+            />
+          </View>
+          <Button
+            onPress={() => router.push("/(menu)/journal")}
+            style={{ width: 200 }}
+            iconSource={() => (
+              <Ionicons
+                name="journal"
+                size={14}
+                style={{ marginRight: 7 }}
+                color="white"
+              />
+            )}
+            label="Journal"
           />
         </View>
         {paymentsQuery.isLoading || paymentsQuery.isFetching ? (
@@ -216,7 +240,7 @@ const PaymentsScreen = () => {
           {showSettle && (
             <ScrollView style={{ maxWidth: 1200, marginHorizontal: "auto" }}>
               <HtmlContent
-                htmlContent={makeSettleQuery.data?.receipt_output?.settle}
+                htmlContent={makeSettleQuery.data?.receipt_output?.settle || ""}
               />
             </ScrollView>
           )}

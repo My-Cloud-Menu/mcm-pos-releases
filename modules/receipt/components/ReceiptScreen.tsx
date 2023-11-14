@@ -75,7 +75,7 @@ const ReceiptScreen = ({ payment }: props) => {
           br40
           style={{ backgroundColor: "#fff", minHeight: 1000 }}
         >
-          <View flex centerH>
+          <View flex centerH paddingR-40>
             <Text text20L marginT-10 marginB-20>
               Thank You
             </Text>
@@ -85,28 +85,29 @@ const ReceiptScreen = ({ payment }: props) => {
               centerH
               style={{ flexWrap: "wrap", maxWidth: 800 }}
             >
-              {receiptOptions.map((option) => {
-                const isActive = option == selectedReceipt;
-                return (
-                  <Button
-                    key={`receiptoption-${option}`}
-                    onPress={() => onPressReceiptOption(option)}
-                    variant="iconButtonWithLabelCenterOutline"
-                    active={isActive}
-                    marginV-10
-                    marginH-25
-                    style={{ borderColor: Colors.primary, width: 300 }}
-                  >
-                    <Text
-                      center
-                      color={isActive ? Colors.primary : Colors.primary}
-                      text60L
+              {payment.receipt_html &&
+                receiptOptions.map((option) => {
+                  const isActive = option == selectedReceipt;
+                  return (
+                    <Button
+                      key={`receiptoption-${option}`}
+                      onPress={() => onPressReceiptOption(option)}
+                      variant="iconButtonWithLabelCenterOutline"
+                      active={isActive}
+                      marginV-10
+                      marginH-25
+                      style={{ borderColor: Colors.primary, width: 300 }}
                     >
-                      {option}
-                    </Text>
-                  </Button>
-                );
-              })}
+                      <Text
+                        center
+                        color={isActive ? Colors.primary : Colors.primary}
+                        text60L
+                      >
+                        {option}
+                      </Text>
+                    </Button>
+                  );
+                })}
               {isPayNextIsAvailable && (
                 <Button
                   onPress={onPressPayNext}

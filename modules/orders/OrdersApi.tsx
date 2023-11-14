@@ -6,6 +6,7 @@ import { checkOpenStatuses, getOrderStructure } from "./OrderHelper";
 import utc from "dayjs/plugin/utc";
 import { GetOrdersRequestResponse } from "mcm-types";
 import useEcrStore from "../ecr/EcrStore";
+import { initialGlobalSetupConfiguration } from "../common/configurations";
 
 dayjs.extend(utc);
 
@@ -50,7 +51,10 @@ export const getOrders = async (): Promise<GetOrdersRequestResponse> => {
     {},
     {
       withoutPaginate: true,
-      // after: dayjs().utc().subtract(24, "hours").toISOString(),
+      after: dayjs()
+        .utcOffset(initialGlobalSetupConfiguration.timeOffSet)
+        .startOf("day")
+        .toISOString(),
     }
   );
 
@@ -91,4 +95,10 @@ export const increaseLineItem = async (
   });
 
   return result;
+};
+
+export const deleteOrder = async (orderId: string) => {
+  const response = await makeMcmRequest(`admin/orders/${orderId}`, "DELETE");
+
+  return response;
 };

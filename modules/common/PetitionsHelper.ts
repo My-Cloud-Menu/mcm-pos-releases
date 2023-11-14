@@ -83,7 +83,8 @@ export const makeMcmRequest = async (
 export const makeEcrRequest = async (
   path: string,
   body?: object,
-  timeout = 30000
+  timeout = 30000,
+  signal: any | undefined = undefined
 ) => {
   try {
     const initialBody = getEcrRequestInitialBody();
@@ -100,7 +101,8 @@ export const makeEcrRequest = async (
       data: bodyParameters,
       headers: headers,
       url: url,
-      timeout: timeout,
+      signal: signal,
+      // timeout: timeout,
     });
 
     if (data?.approval_code == "00") {
@@ -202,5 +204,7 @@ export const sendLogs = (
     app: "orderandpay",
     logs: logMessage,
     type: type,
-  }).then();
+  })
+    .then()
+    .catch();
 };

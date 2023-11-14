@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 import React from "react";
 import { Button, Colors, Image, Text, View } from "react-native-ui-lib";
 import {
@@ -79,33 +79,35 @@ const DefaultNavBar = () => {
         assetGroup="assets"
         assetName="logoMain"
       />
-      <View flex marginT-20>
-        {navItems.map((navItem, idx) => {
-          let isNavItemActive = navItem.pathname == activePathName;
-          return (
-            <Button
-              onPress={() => router.push(navItem.pathname)}
-              key={`navitem-${idx}`}
-              variant="iconButtonWithLabelCenter"
-              active={isNavItemActive}
-              marginV-5
-              style={{ width: 100 }}
-            >
-              {navItem.icon({
-                color: isNavItemActive ? Colors.white : Colors.gray,
-              })}
-              <Text
-                color={isNavItemActive ? Colors.white : Colors.black}
-                marginT-8
-                text90
-                style={{ fontWeight: "400" }}
+      <ScrollView>
+        <View flex marginT-20>
+          {navItems.map((navItem, idx) => {
+            let isNavItemActive = navItem.pathname == activePathName;
+            return (
+              <Button
+                onPress={() => router.push(navItem.pathname)}
+                key={`navitem-${idx}`}
+                variant="iconButtonWithLabelCenter"
+                active={isNavItemActive}
+                marginV-5
+                style={{ width: 100 }}
               >
-                {navItem.name}
-              </Text>
-            </Button>
-          );
-        })}
-      </View>
+                {navItem.icon({
+                  color: isNavItemActive ? Colors.white : Colors.gray,
+                })}
+                <Text
+                  color={isNavItemActive ? Colors.white : Colors.black}
+                  marginT-8
+                  text90
+                  style={{ fontWeight: "400" }}
+                >
+                  {navItem.name}
+                </Text>
+              </Button>
+            );
+          })}
+        </View>
+      </ScrollView>
 
       {/* <Button
         variant="iconButtonWithLabelCenter"

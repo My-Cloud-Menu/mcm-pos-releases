@@ -2,7 +2,7 @@ import { ActivityIndicator, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { Button, Text, View } from "react-native-ui-lib";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getEcrStatus, makeEcrLogon } from "../AuthApi";
+import { ecrStatusCheckerKey, getEcrStatus, makeEcrLogon } from "../AuthApi";
 import { handlePetitionError } from "../../common/AlertHelper";
 
 type props = {
@@ -13,8 +13,8 @@ const TerminalConnectionChecker = ({ buttonLabel = "Reconnect" }: props) => {
   const [isReconnected, setIsReconnected] = useState(false);
 
   const ecrStatusQuery = useQuery({
-    queryKey: ["ecrStatusChecker"],
-    queryFn: getEcrStatus,
+    queryKey: [ecrStatusCheckerKey],
+    queryFn: ({ signal }) => getEcrStatus(signal),
     retry: false,
     refetchOnWindowFocus: false,
   });

@@ -30,15 +30,18 @@ const OrdersScreen = ({ orders }: props) => {
   };
 
   useEffect(() => {
-    if (orders.length > 0 && !orderId) {
-      onPressOrder(orders[0]);
-    }
+    // if (orders.length > 0 && !orderId) {
+    //   onPressOrder(orders[0]);
+    // }
     resetSplitPayment();
   }, [isFocused]);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Stack.Screen options={{ title: `Orders (${orders.length})` }} />
+      <Text text50 center marginT-20>
+        Orders ({orders.length})
+      </Text>
       <View
         style={{
           marginTop: 20,
