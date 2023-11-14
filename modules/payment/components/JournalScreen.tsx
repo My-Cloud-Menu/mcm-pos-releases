@@ -23,12 +23,7 @@ const JournalScreen = (props: props) => {
     queryKey: [paymentsQueryKey],
     queryFn: () => getPayments(undefined, true),
     onError: (error: any) => {
-      if (error?.response_message == "NO TRANSACTIONS.") {
-        showAlert({ type: "warning", title: "NO TRANSACTIONS" });
-        return;
-      }
-
-      handlePetitionError(error, "Error loading Journal");
+      handlePetitionError(error, "Error loading Payments");
     },
     initialData: {
       payments: [],
