@@ -68,7 +68,7 @@ export const makeMcmRequest = async (
       data: method == "GET" ? undefined : { site_id: setup.siteId, ...body },
       params: { site_id: setup.siteId, ...params },
       url: url,
-      timeout: setup.timeout,
+      timeout: 420000,
     });
 
     return data;
@@ -102,7 +102,7 @@ export const makeEcrRequest = async (
       headers: headers,
       url: url,
       signal: signal,
-      // timeout: timeout,
+      timeout: 420000,
     });
 
     if (data?.approval_code == "00") {
