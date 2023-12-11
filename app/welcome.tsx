@@ -6,10 +6,11 @@ import {
   Ionicons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { Image, Text, View } from "react-native-ui-lib";
+import { Button, Image, Text, View } from "react-native-ui-lib";
 import fonts from "../modules/common/theme/fonts";
 import { router, useNavigation } from "expo-router";
 import useOrderStore from "../modules/orders/OrdersStore";
+import { printECRCustomReceipt } from "../modules/receipt/ReceiptApi";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -41,6 +42,248 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Button
+        label="print test"
+        onPress={() => {
+          printECRCustomReceipt(`<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt</title>
+    <style>
+        * {
+            margin: 0px;
+
+        }
+
+        body {
+            font-size: 18px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .order-details {
+            margin-bottom: 10px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .item-name {
+            flex: 1;
+        }
+
+        .item-price {
+            flex: 0 0 50px;
+            text-align: right;
+        }
+
+        .addon {
+            margin-left: 20px;
+        }
+
+        .total {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .receipt-title {
+            font-size: 45px;
+            font-weight: bold;
+
+        }
+
+        .receipt-header {
+            margin-top: 5px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 18px;
+
+        }
+
+
+        .receipt-subtitle {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        p {
+            margin-top: 1px;
+
+            margin-bottom: 1px;
+        }
+
+        td {
+            /* padding: 5px; */
+            font-size: 23px;
+            padding-right: 10px;
+        }
+
+        .table-header {
+            font-size: 18px;
+            font-weight: bold;
+            padding-right: 5px;
+        }
+
+        .product-column {
+            word-wrap: break-word;
+            max-width: 290px;
+
+        }
+
+
+
+        table {
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        .dots {
+            border-top: 2px dashed #000;
+            margin-top: 1px;
+
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .product-ingredient {
+            margin-left: 10px;
+            font-size: 18px;
+        }
+
+        .product-price {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="receipt-header">
+        <h1 class="receipt-title">BORIPIZZA</h1>
+        <p>RESIDENCIA DE ESTUDIANTES INTER METRO CA</p>
+        <p>SAN JUAN</p>
+    </div>
+
+    <h2 class="receipt-subtitle">FACTURA DE CONSUMO</h2>
+
+    <div class="order-details">
+        <p>FECHA: NOV 11, 2023</p>
+        <p>HORA: 7:42 AM</p>
+        <p>RECIBO: 00121</p>
+        <p>REFERENCIA: 02141</p>
+        <br />
+        <p>ORDEN: 12345</p>
+        <p>EXPERIENCIA: TABLE 1</p>
+
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th align="left" class="table-header">UDS</th>
+                <th align="left" class="table-header">PRODUCTO</th>
+                <th align="right" class="table-header">PRECIO</th>
+                <th align="right" class="table-header">TOTAL</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td colspan="4">
+                    <hr class="dots" />
+                </td>
+            </tr>
+            <tr>
+                <td class="product-quantity">1</td>
+                <td class="product-column">
+                    <p>PIZZA DE PEPPERONI</p>
+                    <p class="product-ingredient">EXTRA QUESO</p>
+                    <p class="product-ingredient">EXTRA JAMON</p>
+                </td>
+                <td align="right" class="product-price">40.50</td>
+                <td align="right" class="product-price">10.00</td>
+            </tr>
+
+            <tr>
+                <td class="product-quantity">2</td>
+                <td class="product-column">
+                    <p>En La Madre</p>
+                </td>
+                <td align="right" class="product-price">10.00</td>
+                <td align="right" class="product-price">10.00</td>
+            </tr>
+
+            <tr>
+                <td class="product-quantity">10</td>
+                <td class="product-column">
+                    <p>La Suprema</p>
+                    <p class="product-ingredient">EXTRA Carne</p>
+                    <p class="product-ingredient">EXTRA JAMON</p>
+                </td>
+                <td align="right" class="product-price">10.00</td>
+                <td align="right" class="product-price">10.00</td>
+            </tr>
+
+            <tr>
+                <td colspan="4">
+                    <hr class="dots" />
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" align="right">SUBTOTAL</td>
+                <td colspan="2" align="right">20.00</td>
+            </tr>
+            <tr />
+            <tr />
+            <tr />
+            <tr />
+
+            <tr>
+                <td colspan="2" align="right">TAX MUNICIPAL</td>
+                <td colspan="2" align="right">2.00</td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right">TAX ESTATAL</td>
+                <td colspan="2" align="right">2.00</td>
+            </tr>
+            <tr class="bold">
+                <td colspan="2" align="right">TOTAL</td>
+                <td colspan="2" align="right">$22.00</td>
+            </tr>
+
+        </tbody>
+
+
+    </table>
+
+
+    <p style="text-align: center; margin-top: 30px; font-weight: bold;">
+        *** GRACIAS POR SU VISITA ***
+    </p>
+
+    <p style="margin-top: 15px;">
+        ATENDIDO POR: CARLOS SANTOS
+    </p>
+
+
+
+</body>
+
+</html>`)
+            .then((message) => console.log(message))
+            .catch(console.log);
+        }}
+      />
       <View style={styles.logoContainer}>
         <Image
           resizeMode="contain"
