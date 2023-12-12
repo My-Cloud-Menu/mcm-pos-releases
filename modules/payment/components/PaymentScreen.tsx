@@ -34,6 +34,7 @@ import { queryClient } from "../../../app/_layout";
 import { orderQueryKey } from "../../orders/OrdersApi";
 import { useIsFocused } from "@react-navigation/native";
 import { ecrStatusCheckerKey } from "../../auth/AuthApi";
+import { printECRCustomReceipt } from "../../receipt/ReceiptApi";
 
 interface props {
   order: Order;
@@ -115,6 +116,10 @@ const PaymentScreen = ({ order }: props) => {
         paymentToSend,
         ecrResultToSend
       );
+
+      if (paymentUpdated?.receipt_itemized_html) {
+        await printECRCustomReceipt(paymentUpdated.receipt_itemized_html);
+      }
 
       return paymentUpdated;
     },

@@ -17,7 +17,7 @@ import {
 import useSplitStore from "../../payment/SplitStore";
 import { goToPaymentScreen } from "../../common/NavigationHelper";
 
-const receiptOptions = ["SHOW", "SMS"];
+const receiptOptions = ["Show Payment Receipt", "Show Order Receipt", "SMS"];
 
 interface props {
   payment: Payment;
@@ -144,7 +144,7 @@ const ReceiptScreen = ({ payment }: props) => {
             </View>
           )}
 
-          {selectedReceipt == "SHOW" && (
+          {selectedReceipt == "Show Payment Receipt" && (
             <View
               flex
               style={{
@@ -168,6 +168,35 @@ const ReceiptScreen = ({ payment }: props) => {
                 }
               />
               <HtmlContent htmlContent={payment.receipt_html} />
+            </View>
+          )}
+
+          {selectedReceipt == "Show Order Receipt" && (
+            <View
+              flex
+              style={{
+                minWidth: 430,
+                paddingHorizontal: 20,
+                backgroundColor: "#fff",
+              }}
+            >
+              <Button
+                marginT-5
+                marginB-20
+                size="small"
+                disabled={printReceiptQuery.isLoading}
+                onPress={() =>
+                  printReceiptQuery.mutate(payment.receipt_itemized_html)
+                }
+                label={
+                  printReceiptQuery.isLoading ? (
+                    <ActivityIndicator color={"white"} />
+                  ) : (
+                    "Print Receipt"
+                  )
+                }
+              />
+              <HtmlContent htmlContent={payment.receipt_itemized_html} />
             </View>
           )}
 
