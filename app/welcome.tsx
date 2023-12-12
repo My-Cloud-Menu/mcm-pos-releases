@@ -168,7 +168,7 @@ const HomeScreen = () => {
 
 <body>
     <div class="receipt-header">
-        <h1 class="receipt-title">BORIPIZZA</h1>
+        <h1 class="receipt-title">BORI PIZZA</h1>
         <p>RESIDENCIA DE ESTUDIANTES INTER METRO CA</p>
         <p>SAN JUAN</p>
     </div>
@@ -209,7 +209,7 @@ const HomeScreen = () => {
                     <p class="product-ingredient">EXTRA QUESO</p>
                     <p class="product-ingredient">EXTRA JAMON</p>
                 </td>
-                <td align="right" class="product-price">40.50</td>
+                <td align="right" class="product-price">10.00</td>
                 <td align="right" class="product-price">10.00</td>
             </tr>
 
@@ -219,11 +219,11 @@ const HomeScreen = () => {
                     <p>En La Madre</p>
                 </td>
                 <td align="right" class="product-price">10.00</td>
-                <td align="right" class="product-price">10.00</td>
+                <td align="right" class="product-price">20.00</td>
             </tr>
 
             <tr>
-                <td class="product-quantity">10</td>
+                <td class="product-quantity">1</td>
                 <td class="product-column">
                     <p>La Suprema</p>
                     <p class="product-ingredient">EXTRA Carne</p>
@@ -241,7 +241,7 @@ const HomeScreen = () => {
 
             <tr>
                 <td colspan="2" align="right">SUBTOTAL</td>
-                <td colspan="2" align="right">20.00</td>
+                <td colspan="2" align="right">40.00</td>
             </tr>
             <tr />
             <tr />
@@ -258,7 +258,7 @@ const HomeScreen = () => {
             </tr>
             <tr class="bold">
                 <td colspan="2" align="right">TOTAL</td>
-                <td colspan="2" align="right">$22.00</td>
+                <td colspan="2" align="right">$44.00</td>
             </tr>
 
         </tbody>
@@ -272,7 +272,7 @@ const HomeScreen = () => {
     </p>
 
     <p style="margin-top: 15px;">
-        ATENDIDO POR: CARLOS SANTOS
+        ATENDIDO POR: JUAN PEREZ
     </p>
 
 
