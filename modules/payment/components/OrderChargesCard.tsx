@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import fonts from "../../common/theme/fonts";
 import { formatCurrency } from "../../common/UtilsHelper";
 import { Text, View } from "react-native-ui-lib";
-import { Order } from "mcm-types/src/order";
+import { Order } from "mcm-types";
 import usePaymentStore from "../PaymentStore";
 
 const getFeeLabel = (feeName: string) => {
@@ -42,9 +42,14 @@ const OrderChargesCard = ({ order }: props) => {
         <Text text60L>{formatCurrency(tip || 0)}</Text>
       </View>
       <View style={styles.charge}>
+        <Text text60L>Descuentos</Text>
+        <Text text60L> {formatCurrency(order.cart.discount_total)}</Text>
+      </View>
+      <View style={styles.charge}>
         <Text text60L>Pagado</Text>
         <Text text60L> {formatCurrency(order.paid)}</Text>
       </View>
+
       <View style={styles.charge}>
         <Text text60>Total</Text>
         <Text text60>{formatCurrency(order.total)}</Text>

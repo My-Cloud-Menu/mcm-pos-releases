@@ -49,6 +49,20 @@ const CartCharges = ({ cartSummary, isLoading }: props) => {
           </View>
         ))}
 
+      {cartSummary.coupon_lines.map((coupon: any) => (
+        <View row spread marginT-13>
+          <Text text80 green10>
+            COUPON: {coupon.code}
+          </Text>
+          <Text text80 green10>
+            <Text text80 green10>
+              ${" "}
+            </Text>
+            {coupon.total}
+          </Text>
+        </View>
+      ))}
+
       <View
         style={{
           marginTop: 15,

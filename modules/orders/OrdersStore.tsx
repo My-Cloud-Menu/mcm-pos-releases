@@ -7,6 +7,7 @@ interface InputValues {
   payment_method: payment_method_available;
   experience: "pu" | "dl" | "qe";
   table?: Table;
+  coupon_code: string;
 }
 
 interface OrderStore {
@@ -22,6 +23,7 @@ const initialInputValues: InputValues = {
   payment_method: "ecr-card",
   experience: "pu",
   table: undefined,
+  coupon_code: "",
 };
 
 const useOrderStore = create<OrderStore>((set, get) => ({

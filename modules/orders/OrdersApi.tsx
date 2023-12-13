@@ -2,10 +2,9 @@ import dayjs from "dayjs";
 import { queryClient } from "../../app/_layout";
 import { Order } from "../../types";
 import { makeMcmRequest } from "../common/PetitionsHelper";
-import { checkOpenStatuses, getOrderStructure } from "./OrderHelper";
+import { getOrderStructure } from "./OrderHelper";
 import utc from "dayjs/plugin/utc";
 import { GetOrdersRequestResponse } from "mcm-types";
-import useEcrStore from "../ecr/EcrStore";
 import { initialGlobalSetupConfiguration } from "../common/configurations";
 
 dayjs.extend(utc);

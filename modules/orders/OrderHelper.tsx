@@ -18,6 +18,7 @@ export const getOrderStructure = () => {
   const inputValues = useOrderStore.getState().inputValues;
 
   let orderStructure: any = {
+    coupon_code: inputValues.coupon_code.trim(),
     payment_method: "ecr",
     experience: inputValues.experience,
     customer: {

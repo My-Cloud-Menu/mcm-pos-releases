@@ -36,6 +36,7 @@ import {
   checkClosedStatuses,
   checkOpenStatuses,
 } from "../../modules/orders/OrderHelper";
+import CouponCodeInput from "../../modules/menu/components/CouponCodeInput";
 
 const Menu = () => {
   const isFocused = useIsFocused();
@@ -192,7 +193,7 @@ const Menu = () => {
 
         <View paddingB-10>
           <TextField
-            marginV-30
+            marginV-15
             label="Customer Name"
             placeholder="Enter the Customer Name"
             color={Colors.primary}
@@ -202,6 +203,10 @@ const Menu = () => {
             onChangeText={(value) => {
               orderStore.changeInputValue("first_name", value);
             }}
+          />
+          <CouponCodeInput
+            cartSummary={orderSummaryQuery.data}
+            onPressApply={() => orderSummaryQuery.refetch()}
           />
           <ExperienceSelector />
           <Button

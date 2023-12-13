@@ -136,11 +136,11 @@ export const onSuccessfulECRResponse = (data: any, path: string) => {
 export const getEcrRequestUrl = (pathName: string = "") => {
   let { setup } = useEcrStore.getState();
 
-  let url: string = __DEV__
-    ? `${setup.ipDev}/${pathName}`
-    : `${setup.ip}:${setup.port}/${pathName}`;
+  // let url: string = __DEV__
+  //   ? `${setup.ipDev}/${pathName}`
+  //   : `${setup.ip}:${setup.port}/${pathName}`;
 
-  // let url: string = `${setup.ip}:${setup.port}/${pathName}`;
+  let url: string = `${setup.ip}:${setup.port}/${pathName}`;
 
   return url;
 };

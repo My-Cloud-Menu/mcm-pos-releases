@@ -67,38 +67,40 @@ const TipSelector = ({ paymentTotal }: props) => {
             </Button>
           );
         })}
-        <CurrencyInput
-          style={{
-            borderColor: Colors.primary,
-            width: 150,
-            minHeight: 50,
-            borderRadius: 8,
-            borderWidth: 0.08,
-            textAlign: "center",
-            color: Colors.primary,
-            fontSize: 19,
-          }}
-          value={
-            paymentStore.inputValues.selectedTip == "custom"
-              ? Number(paymentStore.inputValues.tip)
-              : null
-          }
-          onChangeValue={(newAmount) => {
-            newAmount = newAmount || 0;
-            paymentStore.changeInputValue("tip", Math.abs(newAmount));
-            paymentStore.changeInputValue("selectedTip", "custom");
-
-            // setAmount(Math.abs(newAmount).toString());
-          }}
-          prefix="$ "
-          delimiter=","
-          separator="."
-          precision={2}
-          minValue={0}
-          maxValue={999.99}
-          placeholder="Custom Tip"
-        />
       </View>
+      <CurrencyInput
+        style={{
+          marginTop: 20,
+          borderColor: Colors.primary,
+          width: 150,
+          minHeight: 50,
+          borderRadius: 8,
+          borderWidth: 0.08,
+          textAlign: "center",
+          color: Colors.primary,
+          backgroundColor: "#fff",
+          fontSize: 19,
+        }}
+        value={
+          paymentStore.inputValues.selectedTip == "custom"
+            ? Number(paymentStore.inputValues.tip)
+            : null
+        }
+        onChangeValue={(newAmount) => {
+          newAmount = newAmount || 0;
+          paymentStore.changeInputValue("tip", Math.abs(newAmount));
+          paymentStore.changeInputValue("selectedTip", "custom");
+
+          // setAmount(Math.abs(newAmount).toString());
+        }}
+        prefix="$ "
+        delimiter=","
+        separator="."
+        precision={2}
+        minValue={0}
+        maxValue={999.99}
+        placeholder="Custom Tip"
+      />
     </View>
   );
 };

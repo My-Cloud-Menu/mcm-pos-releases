@@ -117,10 +117,6 @@ const PaymentScreen = ({ order }: props) => {
         ecrResultToSend
       );
 
-      if (paymentUpdated?.receipt_itemized_html) {
-        await printECRCustomReceipt(paymentUpdated.receipt_itemized_html);
-      }
-
       return paymentUpdated;
     },
   });

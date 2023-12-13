@@ -85,29 +85,39 @@ const ReceiptScreen = ({ payment }: props) => {
               centerH
               style={{ flexWrap: "wrap", maxWidth: 800 }}
             >
-              {payment.receipt_html &&
-                receiptOptions.map((option) => {
-                  const isActive = option == selectedReceipt;
-                  return (
-                    <Button
-                      key={`receiptoption-${option}`}
-                      onPress={() => onPressReceiptOption(option)}
-                      variant="iconButtonWithLabelCenterOutline"
-                      active={isActive}
-                      marginV-10
-                      marginH-25
-                      style={{ borderColor: Colors.primary, width: 300 }}
+              <Button
+                key={`receiptoption-printitemizedreceipt`}
+                onPress={() =>
+                  printReceiptQuery.mutate(payment.receipt_itemized_html)
+                }
+                marginV-10
+                marginH-25
+                style={{ borderColor: Colors.primary, width: 300 }}
+                label="Print Order Receipt"
+              />
+
+              {receiptOptions.map((option) => {
+                const isActive = option == selectedReceipt;
+                return (
+                  <Button
+                    key={`receiptoption-${option}`}
+                    onPress={() => onPressReceiptOption(option)}
+                    variant="iconButtonWithLabelCenterOutline"
+                    active={isActive}
+                    marginV-10
+                    marginH-25
+                    style={{ borderColor: Colors.primary, width: 300 }}
+                  >
+                    <Text
+                      center
+                      color={isActive ? Colors.primary : Colors.primary}
+                      text60L
                     >
-                      <Text
-                        center
-                        color={isActive ? Colors.primary : Colors.primary}
-                        text60L
-                      >
-                        {option}
-                      </Text>
-                    </Button>
-                  );
-                })}
+                      {option}
+                    </Text>
+                  </Button>
+                );
+              })}
               {isPayNextIsAvailable && (
                 <Button
                   onPress={onPressPayNext}
