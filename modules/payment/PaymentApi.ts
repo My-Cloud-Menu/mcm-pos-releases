@@ -4,6 +4,9 @@ import useEcrStore from "../ecr/EcrStore";
 import { GetPaymentsRequestResponse, Payment, TipAdjustment } from "mcm-types";
 import * as Linking from "expo-linking";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import { initialGlobalSetupConfiguration } from "../common/configurations";
+dayjs.extend(utc);
 
 export const paymentsQueryKey = "payments";
 export const paymentQueryKey = "payment";
@@ -134,7 +137,10 @@ export const getPayments = async (
     {},
     {
       order_id: orderId,
-      //after: dayjs().utc().subtract(24, "hours").toISOString(),
+      after: dayjs()
+        .utcOffset(initialGlobalSetupConfiguration.timeOffSet)
+        .subtract(48, "hours")
+        .toISOString(),
       withoutPaginate: true,
     }
   );

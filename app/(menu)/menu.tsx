@@ -186,7 +186,14 @@ const Menu = () => {
                 />
               </>
             ) : (
-              <Text>No products Added</Text>
+              <View marginT-30>
+                <Text center text85>
+                  No products Added
+                </Text>
+                <Text $textNeutralLight center>
+                  Add items to start order
+                </Text>
+              </View>
             )}
           </ScrollView>
         </View>

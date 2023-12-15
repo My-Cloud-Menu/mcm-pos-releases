@@ -85,6 +85,7 @@ export const getOrderExperienceLabel = (order: Order) => {
 
 export const getOrderStatusLabel = (status: string) => {
   if (status == "new-order") return "New Order";
+  else if (status == "backorder") return "Backorder";
   else if (status == "pending-payment") return "Pending Payment";
   else if (status == "in-kitchen") return "Preparing";
   else if (status == "ready-for-pickup") return "Ready";
@@ -105,6 +106,7 @@ export const getOrderStatusColor = (status: string) => {
 
 export const getOrderNextStatus = (order: Order) => {
   if (order.status == "pending-payment") return "new-order";
+  else if (order.status == "backorder") return "new-order";
   else if (order.status == "new-order") return "in-kitchen";
   else if (order.status == "in-kitchen") return "ready-for-pickup";
   else if (order.status == "ready-for-pickup") return "check-closed";

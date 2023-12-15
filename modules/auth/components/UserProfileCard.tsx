@@ -28,7 +28,7 @@ const UserProfileCard = () => {
           </Text>
           <Text text65>{name || "Guest"}</Text>
         </View>
-        <Feather name="bell" size={24} color={Colors.grayActive} />
+        <Feather name="bell" size={22} color={Colors.grayActive} />
       </View>
     </View>
   );
@@ -37,10 +37,10 @@ const UserProfileCard = () => {
 export default UserProfileCard;
 
 const styles = StyleSheet.create({
-  container: { maxWidth: "95%", marginBottom: 30 },
+  container: { maxWidth: "95%", marginBottom: 5 },
   image: {
-    width: 60,
-    height: 60,
+    width: 45,
+    height: 45,
     borderRadius: 8,
   },
 });

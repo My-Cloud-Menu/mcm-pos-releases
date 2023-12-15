@@ -39,7 +39,7 @@ const navItems = [
   },
   {
     name: "Payments",
-    pathname: "/payments",
+    pathname: "/journal",
     icon: (props = {}) => (
       <FontAwesome5 size={30} name="money-check" {...props} />
     ),
