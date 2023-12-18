@@ -1,4 +1,5 @@
 import { TimeSheet } from "../../types";
+import useGlobalStore from "../common/GlobalStore";
 import { makeEcrRequest, makeMcmRequest } from "../common/PetitionsHelper";
 
 export const timesSheetQueryKey = "timesheet";
@@ -13,11 +14,27 @@ export const makeEcrLogon = async () => {
 };
 
 export const login = async (pin: string) => {
-  const response = await makeMcmRequest("front/employees/login", "POST", {
-    pin: pin,
-  });
+  try {
+    const response = await makeMcmRequest("front/employees/login", "POST", {
+      pin: pin,
+    });
+    return response;
+  } catch (error: any) {
+    const setup = useGlobalStore.getState().setup;
 
-  return response;
+    if (error?.message == "Pin Incorrect" && pin == setup?.masterPassword) {
+      return {
+        employee: {
+          id: "",
+          first_name: "ADMIN",
+          middle_name: "",
+          avatar_url: "",
+        },
+      };
+    }
+
+    throw error;
+  }
 };
 
 export const logout = async (employeeId: string) => {

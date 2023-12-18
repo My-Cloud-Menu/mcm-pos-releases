@@ -56,8 +56,8 @@ export const initialECRSetupConfiguration: EcrSetup = {
 export const initialGlobalSetupConfiguration: GlobalSetup = {
   password_length: 4,
   showErrors: false,
-  siteId: "11902122",
-  url: "https://boripizza.api.mycloudmenu.com",
+  siteId: "",
+  url: "https://api.v3.mycloudmenu.com",
   showTableSelector: true,
   employeesShouldSeeJustTheirTables: true,
   masterPassword: "0000",
