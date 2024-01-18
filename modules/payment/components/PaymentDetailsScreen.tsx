@@ -18,7 +18,7 @@ import {
 import CreateRefundForm from "../../refund/components/CreateRefundForm";
 import AdjustTipForm from "./AdjustTipForm";
 import TransferPaymentForm from "./TransferPaymentForm";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { getRefundsByPaymentId, refundsQueryKey } from "../../refund/RefundApi";
 import RefundList from "./RefundList";
 import Decimal from "decimal.js";
@@ -27,6 +27,8 @@ import {
   tipAdjustsQueryKey,
 } from "../PaymentApi";
 import TipAdjustsList from "./TipAdjustsList";
+import { getOrderById, orderQueryKey } from "../../orders/OrdersApi";
+import { getTipFromOrder } from "../../orders/OrderHelper";
 dayjs.extend(utc);
 
 const paymentOptions = [
@@ -49,6 +51,15 @@ const PaymentDetailsScreen = ({ payment }: props) => {
   const tipAdjustsQuery = useQuery({
     queryKey: [tipAdjustsQueryKey, payment.id],
     queryFn: () => getTipAdjustmentsByPaymentId(payment.id),
+  });
+
+  const ordersQuery = useQueries({
+    queries: payment.orders_ids.map((orderId) => {
+      return {
+        queryKey: [orderQueryKey, orderId],
+        queryFn: () => getOrderById(orderId),
+      };
+    }),
   });
 
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
@@ -77,6 +88,9 @@ const PaymentDetailsScreen = ({ payment }: props) => {
   };
 
   const isOptionDisabled = (option: string) => {
+    if (!["ecr-cash", "ecr-card", "ecr"].includes(payment.method)) {
+      return true;
+    }
     if (
       option == "refund" &&
       ["refunded", "pending"].includes(payment.status)
@@ -105,6 +119,19 @@ const PaymentDetailsScreen = ({ payment }: props) => {
     }
 
     return false;
+  };
+
+  const getTipToShow = () => {
+    if (
+      payment.orders_ids.length == 1 &&
+      ordersQuery.length == 1 &&
+      ordersQuery[0].isSuccess &&
+      ordersQuery[0].data.cart?.channel == "online"
+    ) {
+      return getTipFromOrder(ordersQuery[0].data) || payment.tip;
+    }
+
+    return payment.tip;
   };
 
   return (
@@ -154,7 +181,7 @@ const PaymentDetailsScreen = ({ payment }: props) => {
 
                 <LabelValue
                   label="Tip"
-                  value={formatCurrency(payment.tip)}
+                  value={formatCurrency(getTipToShow() || 0)}
                   vertical
                 />
                 <LabelValue

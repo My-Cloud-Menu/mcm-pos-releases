@@ -18,6 +18,7 @@ import {
   increaseLineItem,
   orderQueryKey,
   ordersQueryKey,
+  updateOrder,
 } from "../OrdersApi";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { formatCurrency } from "../../common/UtilsHelper";
@@ -32,8 +33,11 @@ import { handlePetitionError, showAlert } from "../../common/AlertHelper";
 import { queryClient } from "../../../app/_layout";
 import {
   getOrderExperienceLabel,
+  getOrderSourceBadge,
   getOrderStatusColor,
   getOrderStatusLabel,
+  getTipFromOrder,
+  isOrderMadeFromWebapp,
 } from "../OrderHelper";
 
 type props = {
@@ -108,6 +112,23 @@ const OrderDetailsScreen = ({ orderId }: props) => {
     },
   });
 
+  const moveToCompletedQuery = useMutation({
+    mutationFn: async () => {
+      return await updateOrder(orderId, { status: "check-closed" });
+    },
+    onSuccess: () => {
+      showAlert({
+        title: "Order moved to completed successfully!",
+        type: "success",
+      });
+      queryClient.invalidateQueries({ queryKey: [orderQueryKey, orderId] });
+
+      queryClient.invalidateQueries({
+        queryKey: [ordersQueryKey],
+      });
+    },
+  });
+
   const [isEditMode, setIsEditMode] = useState(false);
   const [lineItemsChanges, setLineItemsChanges] = useState<any>({});
 
@@ -154,6 +175,28 @@ const OrderDetailsScreen = ({ orderId }: props) => {
   return (
     <ScrollView>
       <View flex>
+        <View padding-10 row centerV>
+          <View row>
+            <Chip
+              label={getOrderStatusLabel(order)}
+              backgroundColor={getOrderStatusColor(order)}
+              containerStyle={{ borderWidth: 0 }}
+              marginR-10
+              labelStyle={{ fontWeight: "bold", color: "#fff" }}
+            />
+            {getOrderSourceBadge(order)}
+          </View>
+          {order.status != "check-closed" &&
+            order.payment_status == "not_fulfilled" && (
+              <Feather
+                onPress={() => setIsEditMode(!isEditMode)}
+                style={{ marginLeft: "auto" }}
+                name="edit"
+                size={25}
+                color={isEditMode ? Colors.yellow : Colors.black}
+              />
+            )}
+        </View>
         <View padding-10 flex>
           {isEditMode && (
             <View
@@ -184,13 +227,7 @@ const OrderDetailsScreen = ({ orderId }: props) => {
               label="Experience"
               value={getOrderExperienceLabel(order)}
             />
-            <Chip
-              label={getOrderStatusLabel(order.status)}
-              backgroundColor={getOrderStatusColor(order.status)}
-              containerStyle={{ borderWidth: 0 }}
-              marginR-10
-              labelStyle={{ fontWeight: "bold", color: "#fff" }}
-            />
+
             {/* {order.status != "check-closed" && (
             <Chip
               label={
@@ -205,18 +242,8 @@ const OrderDetailsScreen = ({ orderId }: props) => {
               containerStyle={{ borderWidth: 0, borderRadius: 8 }}
             />
           )} */}
-            {order.status != "check-closed" &&
-              order.payment_status == "not_fulfilled" && (
-                <Feather
-                  onPress={() => setIsEditMode(!isEditMode)}
-                  style={{ marginLeft: "auto" }}
-                  name="edit"
-                  size={25}
-                  color={isEditMode ? Colors.yellow : Colors.black}
-                />
-              )}
           </View>
-          <View row marginT-14 style={{ columnGap: 5 }}>
+          <View row marginT-14 style={{ gap: 7, flexWrap: "wrap" }}>
             <LabelValue
               label="Name"
               value={
@@ -224,12 +251,30 @@ const OrderDetailsScreen = ({ orderId }: props) => {
                 "Sin Especificar"
               }
             />
+            {Boolean(order.cart.customer.phone) && (
+              <LabelValue label="Phone" value={order.cart.customer.phone} />
+            )}
+
+            {Boolean(order.cart.customer.email) && (
+              <LabelValue label="Email" value={order.cart.customer.email} />
+            )}
+
             {/* <LabelValue
             
             label="Payment Status"
             value={formatOrderPaymentStatus[order.payment_status] || ""}
           /> */}
           </View>
+
+          {Boolean(order.cart.customer_notes) && (
+            <View marginT-20>
+              <Text text70 style={{ fontWeight: "bold" }}>
+                Customer Notes:
+              </Text>
+              <Text text70>{order.cart.customer_notes}</Text>
+            </View>
+          )}
+
           <Text marginT-20 text70>
             Items (
             {order.cart.line_items.reduce((acc, cal) => acc + cal.quantity, 0)})
@@ -248,6 +293,7 @@ const OrderDetailsScreen = ({ orderId }: props) => {
                 Payments ({(paymentsQuery?.data?.payments || []).length})
               </Text>
               <TransactionsList
+                tip={getTipFromOrder(order)}
                 isLoading={paymentsQuery.isLoading}
                 payments={paymentsQuery.data?.payments || []}
               />
@@ -255,6 +301,23 @@ const OrderDetailsScreen = ({ orderId }: props) => {
           )}
         </View>
         <View marginB-10>
+          {!isEditMode &&
+            order.status == "in-kitchen" &&
+            isOrderMadeFromWebapp(order) && (
+              <Button
+                marginV-4
+                label={
+                  moveToCompletedQuery.isLoading ? (
+                    <ActivityIndicator color={"white"} />
+                  ) : (
+                    "Move to Completed"
+                  )
+                }
+                useMinSize
+                style={{ backgroundColor: Colors.green10 }}
+                onPress={() => moveToCompletedQuery.mutate()}
+              />
+            )}
           {!isEditMode && order.payment_status != "fulfilled" && (
             <Button
               marginV-4
@@ -266,7 +329,7 @@ const OrderDetailsScreen = ({ orderId }: props) => {
 
           {!isEditMode && (
             <Button
-              marginV-4
+              marginV-10
               label="Delete Order"
               useMinSize
               style={{ backgroundColor: "#D84315" }}

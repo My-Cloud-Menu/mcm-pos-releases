@@ -4,7 +4,7 @@ import { Order } from "../../types";
 import { makeMcmRequest } from "../common/PetitionsHelper";
 import { getOrderStructure } from "./OrderHelper";
 import utc from "dayjs/plugin/utc";
-import { GetOrdersRequestResponse } from "mcm-types";
+import { GetOrdersRequestResponse, UpdateOrderRequestParams } from "mcm-types";
 import { initialGlobalSetupConfiguration } from "../common/configurations";
 
 dayjs.extend(utc);
@@ -57,6 +57,10 @@ export const getOrders = async (): Promise<GetOrdersRequestResponse> => {
     }
   );
 
+  response.orders = response.orders.filter(
+    (order: Order) => !["pending-payment", "cancelled"].includes(order.status)
+  );
+
   // const ecrSetup = useEcrStore.getState().setup;
 
   // if (ecrSetup.batch_number) {
@@ -98,6 +102,16 @@ export const increaseLineItem = async (
 
 export const deleteOrder = async (orderId: string) => {
   const response = await makeMcmRequest(`admin/orders/${orderId}`, "DELETE");
+
+  return response;
+};
+
+export const updateOrder = async (orderId: string, changes: any) => {
+  const response = await makeMcmRequest(
+    `admin/orders/${orderId}`,
+    "PUT",
+    changes
+  );
 
   return response;
 };

@@ -2,6 +2,8 @@ import { Order } from "mcm-types";
 import { useCartStore } from "../../stores/cartStore";
 import useAuthStore from "../auth/AuthStore";
 import useOrderStore from "./OrdersStore";
+import { Chip, Text, View } from "react-native-ui-lib";
+import { Entypo } from "@expo/vector-icons";
 
 export const checkOpenStatuses = [
   "new-order",
@@ -18,6 +20,7 @@ export const getOrderStructure = () => {
   const inputValues = useOrderStore.getState().inputValues;
 
   let orderStructure: any = {
+    channel: "pos",
     coupon_code: inputValues.coupon_code.trim(),
     payment_method: "ecr",
     experience: inputValues.experience,
@@ -83,23 +86,29 @@ export const getOrderExperienceLabel = (order: Order) => {
   else return "Pickup";
 };
 
-export const getOrderStatusLabel = (status: string) => {
-  if (status == "new-order") return "New Order";
-  else if (status == "backorder") return "Backorder";
-  else if (status == "pending-payment") return "Pending Payment";
-  else if (status == "in-kitchen") return "Preparing";
-  else if (status == "ready-for-pickup") return "Ready";
-  else if (status == "check-closed") return "Closed";
+export const getOrderStatusLabel = (order: Order) => {
+  if (order.status == "in-kitchen" && isOrderMadeFromWebapp(order))
+    return "Pending Pickup";
 
-  return status;
+  if (order.status == "new-order") return "New Order";
+  else if (order.status == "backorder") return "Backorder";
+  else if (order.status == "pending-payment") return "Pending Payment";
+  else if (order.status == "in-kitchen") return "Preparing";
+  else if (order.status == "ready-for-pickup") return "Ready";
+  else if (order.status == "check-closed") return "Closed";
+
+  return order.status;
 };
 
-export const getOrderStatusColor = (status: string) => {
-  if (status == "pending-payment") return "#000";
-  else if (status == "new-order") return "#3865a3";
-  else if (status == "in-kitchen") return "#FF8F00";
-  else if (status == "ready-for-pickup") return "#FF8F00";
-  else if (status == "check-closed") return "#2E7D32";
+export const getOrderStatusColor = (order: Order) => {
+  if (order.status == "in-kitchen" && isOrderMadeFromWebapp(order))
+    return "#FF8F00";
+
+  if (order.status == "pending-payment") return "#000";
+  else if (order.status == "new-order") return "#3865a3";
+  else if (order.status == "in-kitchen") return "#FF8F00";
+  else if (order.status == "ready-for-pickup") return "#FF8F00";
+  else if (order.status == "check-closed") return "#2E7D32";
 
   return "#df490e";
 };
@@ -113,4 +122,40 @@ export const getOrderNextStatus = (order: Order) => {
   else if (order.status == "check-closed") return null;
 
   return order.status;
+};
+
+export const isOrderMadeFromWebapp = (order: any) => {
+  return order.cart?.channel == "online";
+};
+
+export const getOrderSourceBadge = (order: Order) => {
+  if (isOrderMadeFromWebapp(order))
+    return (
+      <Chip
+        containerStyle={{ borderWidth: 0 }}
+        backgroundColor={"#000"}
+        label={
+          <View row centerV>
+            <Entypo name="shopping-bag" size={12} color="#fff" />
+            <Text marginL-5 white>
+              {" "}
+              Online Store
+            </Text>
+          </View>
+        }
+        labelStyle={{ color: "#fff" }}
+      />
+    );
+
+  return <></>;
+};
+
+export const getTipFromOrder = (order: any) => {
+  if (order.cart?.channel == "online") {
+    return order.cart.fee_lines.find(
+      (feeLine: any) => feeLine.name == "Tip Amount"
+    )?.total;
+  }
+
+  return undefined;
 };

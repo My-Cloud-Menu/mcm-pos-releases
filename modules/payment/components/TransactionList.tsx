@@ -16,6 +16,7 @@ import { capitalizeFirstLetter } from "../../common/UtilsHelper";
 type props = {
   payments: Payment[];
   isLoading?: boolean;
+  tip?: string;
 };
 
 const TransactionsList = (props: props) => {
@@ -48,88 +49,94 @@ const TransactionsList = (props: props) => {
         {props.payments
           .sort((x, y) => (x?.date_created > y?.date_created ? -1 : 1))
           .slice(0, itemsPerPage)
-          .map((payment, idx) => (
-            <Drawer
-              key={`payment-${idx}`}
-              rightItems={[
-                {
-                  text: "Ver Detalles",
-                  background: Colors.green,
-                  onPress: () => onSeeDetails(payment),
-                },
-                {
-                  text: "Refund",
-                  background: Colors.green,
-                  onPress: () => onSeeDetails(payment),
-                },
-                {
-                  text: "Reprint",
-                  background: Colors.green,
-                  onPress: () => onSeeDetails(payment),
-                },
-              ]}
-            >
-              <Pressable onPress={() => onSeeDetails(payment)}>
-                <View
-                  spread
-                  row
-                  centerV
-                  paddingH-15
-                  paddingV-9
-                  br40
-                  style={{
-                    backgroundColor: "#EEEEEE",
-                    ...shadowPropsSoft,
-                  }}
-                >
-                  <View row centerV>
+          .map((payment, idx) => {
+            const tipToShow = Boolean(props.tip) ? props.tip : payment.tip;
+
+            return (
+              <Drawer
+                key={`payment-${idx}`}
+                rightItems={[
+                  {
+                    text: "Ver Detalles",
+                    background: Colors.green,
+                    onPress: () => onSeeDetails(payment),
+                  },
+                  {
+                    text: "Refund",
+                    background: Colors.green,
+                    onPress: () => onSeeDetails(payment),
+                  },
+                  {
+                    text: "Reprint",
+                    background: Colors.green,
+                    onPress: () => onSeeDetails(payment),
+                  },
+                ]}
+              >
+                <Pressable onPress={() => onSeeDetails(payment)}>
+                  <View
+                    spread
+                    row
+                    centerV
+                    paddingH-15
+                    paddingV-9
+                    br40
+                    style={{
+                      backgroundColor: "#EEEEEE",
+                      ...shadowPropsSoft,
+                    }}
+                  >
+                    <View row centerV>
+                      <View>
+                        <Text text100L>Ref</Text>
+                        <Text text60L>{payment.reference}</Text>
+                      </View>
+                      <View marginL-20>
+                        <Text text90L>Invoice: {payment.invoice}</Text>
+                        <Text text90L>
+                          Checks: {payment.orders_ids.join(", ")}
+                        </Text>
+                        <Text text90L>
+                          Date:{" "}
+                          {dayjs(payment.date_created)
+                            .utcOffset(-240)
+                            .format("DD/MM/YYYY")}
+                        </Text>
+                        <Text text90L>
+                          Time:{" "}
+                          {dayjs(payment.date_created)
+                            .utcOffset(-240)
+                            .format("h:mm a")}
+                        </Text>
+                        <Text text90L>Tip: ${tipToShow}</Text>
+                      </View>
+                    </View>
                     <View>
-                      <Text text100L>Ref</Text>
-                      <Text text60L>{payment.reference}</Text>
+                      <Chip
+                        labelStyle={{ color: "white" }}
+                        containerStyle={{
+                          maxWidth: 200,
+                          backgroundColor: getColorForStatusLabel(
+                            payment.status
+                          ),
+                          borderColor: "white",
+                        }}
+                        label={capitalizeFirstLetter(
+                          getStatusLabel(payment.status)
+                        )}
+                      />
                     </View>
-                    <View marginL-20>
-                      <Text text90L>Invoice: {payment.invoice}</Text>
-                      <Text text90L>
-                        Checks: {payment.orders_ids.join(", ")}
-                      </Text>
-                      <Text text90L>
-                        Date:{" "}
-                        {dayjs(payment.date_created)
-                          .utcOffset(-240)
-                          .format("DD/MM/YYYY")}
-                      </Text>
-                      <Text text90L>
-                        Time:{" "}
-                        {dayjs(payment.date_created)
-                          .utcOffset(-240)
-                          .format("h:mm a")}
-                      </Text>
-                      <Text text90L>Tip: ${payment.tip}</Text>
+                    <View row>
+                      <View>
+                        <Text text100L>Total</Text>
+                        <Text text60L>{payment.total}</Text>
+                      </View>
                     </View>
                   </View>
-                  <View>
-                    <Chip
-                      labelStyle={{ color: "white" }}
-                      containerStyle={{
-                        maxWidth: 200,
-                        backgroundColor: getColorForStatusLabel(payment.status),
-                        borderColor: "white",
-                      }}
-                      label={capitalizeFirstLetter(
-                        getStatusLabel(payment.status)
-                      )}
-                    />
-                  </View>
-                  <View row>
-                    <View>
-                      <Text text100L>Total</Text>
-                      <Text text60L>{payment.total}</Text>
-                    </View>
-                  </View>
-                </View>
-              </Pressable>
-            </Drawer>
-          ))}
+                </Pressable>
+              </Drawer>
+            );
+          })}
       </View>
       {props.payments.length > itemsPerPage && (
         <Button

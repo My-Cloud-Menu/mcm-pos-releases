@@ -1,12 +1,14 @@
 import { Pressable, StyleSheet } from "react-native";
 import React from "react";
 import { Chip, Colors, Text, View } from "react-native-ui-lib";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import { shadowProps } from "../../common/theme/shadows";
 import {
   getOrderNextStatus,
+  getOrderSourceBadge,
   getOrderStatusColor,
   getOrderStatusLabel,
+  isOrderMadeFromWebapp,
 } from "../OrderHelper";
 import { Order } from "mcm-types";
 
@@ -59,16 +61,17 @@ const OrderCardItem = ({
         </View>
 
         <View marginL-15>
-          <View row spread>
-            <Text text70>{getOrderNameLabel(order)}</Text>
+          <View row spread style={{ gap: 5 }}>
+            <Text text70 marginR-5>
+              {getOrderNameLabel(order)}
+            </Text>
             <Chip
               containerStyle={{ borderWidth: 0 }}
-              backgroundColor={getOrderStatusColor(order.status)}
-              label={getOrderStatusLabel(order.status)}
-              marginL-15
-              padding-0
+              backgroundColor={getOrderStatusColor(order)}
+              label={getOrderStatusLabel(order)}
               labelStyle={{ color: "#fff" }}
             />
+            {getOrderSourceBadge(order)}
           </View>
           <View row centerV marginT-6>
             <Text text85>
@@ -86,7 +89,12 @@ const OrderCardItem = ({
                 style={{ marginHorizontal: 3 }}
               />
             )}
-            <Text text85>{getOrderStatusLabel(getOrderNextStatus(order))}</Text>
+            <Text text85>
+              {getOrderStatusLabel({
+                ...order,
+                status: getOrderNextStatus(order),
+              })}
+            </Text>
           </View>
         </View>
       </View>

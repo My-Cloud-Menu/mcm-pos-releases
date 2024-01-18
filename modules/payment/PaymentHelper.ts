@@ -94,7 +94,9 @@ export const getStatusLabel = (paymentStatus: string) => {
 
 export const getMethodLabel = (paymentMethod: string) => {
   if (paymentMethod == "ecr-cash") paymentMethod = "Cash";
-  if (paymentMethod == "ecr-card") paymentMethod = "Card";
+  else if (paymentMethod == "ecr-card") paymentMethod = "Card";
+  else if (paymentMethod == "evertec") paymentMethod = "P2P";
+  else if (paymentMethod == "ath-movil") paymentMethod = "ATH Movil";
 
   return paymentMethod;
 };
