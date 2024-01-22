@@ -10,11 +10,11 @@ const version = "2.0.5";
 
 const HomeScreen = () => {
   const goWaiterLogin = () => {
-    router.push(`/login?title=MOZO&subTitle=Los Especiales del Dia`);
+    router.push(`/login?title=MOZO&subTitle=Welcome`);
   };
 
   const goAdminLogin = () => {
-    router.push(`/login?title=ADMIN&subTitle=Linda Linda`);
+    router.push(`/login?title=ADMIN&subTitle=`);
   };
 
   const onPressConfig = () => {
