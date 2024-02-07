@@ -76,6 +76,7 @@ const GeneralSetupForm = () => {
               label="API KEY"
               placeholder="API KEY"
               {...textFieldCustomProps}
+              multiline
             />
           </View>
         </View>

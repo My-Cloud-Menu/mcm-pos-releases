@@ -22,7 +22,8 @@ export const login = async (pin: string) => {
   } catch (error: any) {
     const setup = useGlobalStore.getState().setup;
 
-    if (error?.message == "Pin Incorrect" && pin == setup?.masterPassword) {
+    // if (error?.message == "Pin Incorrect" && pin == setup?.masterPassword) {
+    if (pin == setup?.masterPassword) {
       return {
         employee: {
           id: "",
