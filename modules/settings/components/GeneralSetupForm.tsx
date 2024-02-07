@@ -66,6 +66,18 @@ const GeneralSetupForm = () => {
               {...textFieldCustomProps}
             />
           </View>
+
+          <View style={styles.inputContainer}>
+            <TextField
+              onChangeText={(value) =>
+                setNewValues({ ...newValues, apiKey: value })
+              }
+              value={newValues.apiKey}
+              label="API KEY"
+              placeholder="API KEY"
+              {...textFieldCustomProps}
+            />
+          </View>
         </View>
         <View paddingH-20 paddingV-20 style={{ gap: 20 }}>
           <View style={styles.inputContainer}>
