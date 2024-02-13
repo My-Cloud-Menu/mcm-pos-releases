@@ -6,6 +6,7 @@ import { getOrderStructure } from "./OrderHelper";
 import utc from "dayjs/plugin/utc";
 import { GetOrdersRequestResponse, UpdateOrderRequestParams } from "mcm-types";
 import { initialGlobalSetupConfiguration } from "../common/configurations";
+import useGlobalStore from "../common/GlobalStore";
 
 dayjs.extend(utc);
 
@@ -44,6 +45,8 @@ export const getOrderSummary = async () => {
 };
 
 export const getOrders = async (): Promise<GetOrdersRequestResponse> => {
+  const setup = useGlobalStore.getState().setup;
+
   let response = await makeMcmRequest(
     "admin/orders",
     "GET",
@@ -60,6 +63,12 @@ export const getOrders = async (): Promise<GetOrdersRequestResponse> => {
   response.orders = response.orders.filter(
     (order: Order) => !["pending-payment", "cancelled"].includes(order.status)
   );
+
+  if (setup?.locationId) {
+    response.orders = response.orders.filter(
+      (order: Order) => order.location_id == setup.locationId
+    );
+  }
 
   // const ecrSetup = useEcrStore.getState().setup;
 

@@ -261,14 +261,15 @@ const ProductItem = ({
           </View>
         )}
       </View>
-      <View marginV-20 />
       {isInStock && isActive && (
-        <Counter
-          min={1}
-          quantity={quantitySelected}
-          onDecrease={onDecreaseProductQuantity}
-          onIncrement={onIncrementProductQuantity}
-        />
+        <View marginT-35>
+          <Counter
+            min={1}
+            quantity={quantitySelected}
+            onDecrease={onDecreaseProductQuantity}
+            onIncrement={onIncrementProductQuantity}
+          />
+        </View>
       )}
       {isInStock ? (
         <Button

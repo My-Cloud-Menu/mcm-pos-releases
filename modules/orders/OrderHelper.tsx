@@ -4,6 +4,7 @@ import useAuthStore from "../auth/AuthStore";
 import useOrderStore from "./OrdersStore";
 import { Chip, Text, View } from "react-native-ui-lib";
 import { Entypo } from "@expo/vector-icons";
+import useGlobalStore from "../common/GlobalStore";
 
 export const checkOpenStatuses = [
   "new-order",
@@ -14,12 +15,14 @@ export const checkOpenStatuses = [
 export const checkClosedStatuses = ["check-closed", "cancelled", "failed"];
 
 export const getOrderStructure = () => {
+  const setup = useGlobalStore.getState().setup;
   const cartStore = useCartStore.getState();
 
   const authStore = useAuthStore.getState();
   const inputValues = useOrderStore.getState().inputValues;
 
   let orderStructure: any = {
+    location_id: setup?.locationId,
     channel: "pos",
     coupon_code: inputValues.coupon_code.trim(),
     payment_method: "ecr",

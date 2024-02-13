@@ -58,6 +58,17 @@ const GeneralSetupForm = () => {
           <View style={styles.inputContainer}>
             <TextField
               onChangeText={(value) =>
+                setNewValues({ ...newValues, locationId: value })
+              }
+              value={newValues.locationId}
+              label="Location ID"
+              placeholder="Location ID"
+              {...textFieldCustomProps}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextField
+              onChangeText={(value) =>
                 setNewValues({ ...newValues, url: value })
               }
               value={newValues.url}

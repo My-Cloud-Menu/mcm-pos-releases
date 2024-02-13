@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet } from "react-native";
+import { Image, Platform, Pressable, StyleSheet } from "react-native";
 import React, { useState, useEffect, ReactNode } from "react";
 
 import useGlobalStore from "../GlobalStore";
@@ -6,6 +6,7 @@ import { Colors, Text, View } from "react-native-ui-lib";
 import Counter from "../../auth/components/Counter";
 import NativeNumericPad from "../../auth/components/NativeNumericPad";
 import fonts from "../theme/fonts";
+import NumericPad from "./NumericPad";
 
 const passwordMaxLength = 4;
 
@@ -82,13 +83,21 @@ const MasterPasswordRequired = (props: props) => {
         <Counter item={userInput} length={passwordMaxLength} />
         {error && <Text style={styles.error}>{error}</Text>}
       </View>
-
-      <NativeNumericPad
-        onChangeText={setUserInput}
-        textMaxLength={passwordMaxLength}
-        userInput={userInput}
-        onSubmit={onSubmit}
-      />
+      {Platform.OS == "web" ? (
+        <NumericPad
+          onChangeText={setUserInput}
+          textMaxLength={passwordMaxLength}
+          userInput={userInput}
+          onSubmit={onSubmit}
+        />
+      ) : (
+        <NativeNumericPad
+          onChangeText={setUserInput}
+          textMaxLength={passwordMaxLength}
+          userInput={userInput}
+          onSubmit={onSubmit}
+        />
+      )}
     </View>
   );
 };

@@ -24,6 +24,7 @@ export interface GlobalSetup {
   password_length: number;
   showErrors: boolean;
   siteId: string;
+  locationId: string;
   url: string;
   showTableSelector: boolean;
   employeesShouldSeeJustTheirTables: boolean;
@@ -57,6 +58,7 @@ export const initialGlobalSetupConfiguration: GlobalSetup = {
   password_length: 4,
   showErrors: false,
   siteId: "",
+  locationId: "",
   url: "https://api.v3.mycloudmenu.com",
   showTableSelector: true,
   employeesShouldSeeJustTheirTables: true,
