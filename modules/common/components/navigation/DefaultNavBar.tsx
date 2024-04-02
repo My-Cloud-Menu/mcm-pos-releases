@@ -11,6 +11,7 @@ import {
 import { router, useNavigation, usePathname } from "expo-router";
 import useAuthStore from "../../../auth/AuthStore";
 import { showWarningAlert } from "../../AlertHelper";
+import * as Linking from "expo-linking";
 
 const navItems = [
   {
@@ -50,6 +51,11 @@ const navItems = [
     icon: (props = {}) => <AntDesign size={35} name="setting" {...props} />,
   },
 ];
+const redirectToExternalLink = () => {
+  const externalLink =
+    "https://api.whatsapp.com/send/?phone=18095558989&text&type=phone_number&app_absent=0";
+  Linking.openURL(externalLink);
+};
 
 const DefaultNavBar = () => {
   const activePathName = usePathname();
@@ -109,23 +115,21 @@ const DefaultNavBar = () => {
         </View>
       </ScrollView>
 
-      {/* <Button
+      <Button
         variant="iconButtonWithLabelCenter"
         marginV-5
-        onPress={onLogoutPress}
+        onPress={redirectToExternalLink}
         disabled={authStore.isLoading}
       >
         {authStore.isLoading ? (
           <ActivityIndicator size="large" />
         ) : (
           <>
-            <MaterialIcons name="logout" size={25} color={Colors.gray} />
-            <Text color={Colors.gray} marginT-8 text90BL>
-              Logout
-            </Text>
+            <MaterialIcons size={35} name="support-agent" />
+            <Text>Support</Text>
           </>
         )}
-      </Button> */}
+      </Button>
     </View>
   );
 };
@@ -145,5 +149,9 @@ const styles = StyleSheet.create({
   logo: {
     width: 50,
     height: 50,
+  },
+  supportIcon: {
+    alignSelf: "center",
+    marginVertical: 20,
   },
 });

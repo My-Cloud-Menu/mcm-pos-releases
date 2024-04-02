@@ -193,7 +193,7 @@ const IngredientAccordion = ({
         groupToShow.push(
           <Pressable
             key={groupIdx}
-            style={{ marginVertical: 0, maxWidth: "350px" }}
+            style={{ marginVertical: 0, maxWidth: "100%" }}
           >
             <IngredientGroupHeader
               group={ingredientGroup}
@@ -201,7 +201,15 @@ const IngredientAccordion = ({
               onPress={() => onToggleActiveGroup(groupIdx)}
               ingredientsSelected={getIngredientsSelectedLabel(ingredientGroup)}
             />
-            <View style={{ flexDirection: "row", gap: 14, flexWrap: "wrap" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                gap: 14,
+                columnGap: 10,
+                flexWrap: "wrap",
+              }}
+            >
               {ingredientGroup.ingredients.map((ingredient, ingredientIdx) => {
                 ingredient.ingredients_groups.map(
                   (subIngredientGroup, subGroupIdx) => {
@@ -802,7 +810,7 @@ const IngredientAccordion = ({
                 );
 
                 return ingredient.variations.length > 0 ? (
-                  <View style={styles.ingredientVariationContainer}>
+                  <View>
                     <Text style={styles.ingredientTitle}>
                       {ingredient.name}
                     </Text>
@@ -916,7 +924,7 @@ const IngredientAccordion = ({
                       setGroupsForSelection([...groups]);
                     }}
                   >
-                    <Text text80>
+                    <Text>
                       {ingredient.name}{" "}
                       {ingredient.price != 0 && `($${ingredient.price})`}
                     </Text>

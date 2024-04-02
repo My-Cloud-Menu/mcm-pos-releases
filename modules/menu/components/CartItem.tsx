@@ -20,7 +20,7 @@ const CartItem = ({ product, productIdx }: Props) => {
         borderRadius: 8,
       }}
     >
-      <View row>
+      <View row style={{ padding: 8 }}>
         <Image
           source={{ uri: getProductImage(product.product) }}
           style={styles.image}
@@ -43,9 +43,7 @@ const CartItem = ({ product, productIdx }: Props) => {
 
               return (
                 <View marginV-4>
-                  <Text text90 style={{ fontWeight: "bold" }}>
-                    {attrib.label}{" "}
-                  </Text>
+                  <Text text90>{attrib.label} </Text>
                   <Text text90L grey20>
                     {attrib.value}
                     {extraPrice > 0.0 && (

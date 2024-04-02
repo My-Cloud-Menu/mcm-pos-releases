@@ -10,18 +10,14 @@ const UserProfileCard = () => {
 
   return (
     <View style={styles.container}>
-      <View row centerV>
-        <Image
-          source={
-            employeeLogged?.avatar_url
-              ? { uri: employeeLogged.avatar_url }
-              : undefined
-          }
-          style={styles.image}
-          assetGroup={employeeLogged?.avatar_url ? undefined : "assets"}
-          assetName={employeeLogged?.avatar_url ? undefined : "logoMain"}
-        />
-
+      <View
+        row
+        style={{
+          display: "flex",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
         <View marginL-20 marginR-50>
           <Text text80L $textNeutralLight>
             I'm a Waiter

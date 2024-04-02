@@ -1,7 +1,9 @@
 import React from "react";
 import { Pressable, StyleSheet } from "react-native";
 import {
+  AntDesign,
   Entypo,
+  Feather,
   FontAwesome5,
   Ionicons,
   MaterialIcons,
@@ -14,10 +16,9 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const changeInputValue = useOrderStore((state) => state.changeInputValue);
 
-  const onPressButton = () => navigation.navigate("(menu)", { screen: "menu" });
-
-  const onPressClockIn = () =>
+  const onPressButton = () =>
     navigation.navigate("(menu)", { screen: "clocksinout" });
+  const onPressMenu = () => navigation.navigate("(menu)", { screen: "menu" });
   const onPressPayments = () =>
     navigation.navigate("(menu)", { screen: "payments" });
   const onPressOrders = () =>
@@ -151,46 +152,46 @@ const HomeScreen = () => {
             />
             <Text style={styles.footerText}>Home</Text>
           </Pressable>
-
-          <Pressable onPress={onPressClockIn} style={styles.iconWithText}>
-            <Ionicons
-              name="alarm-outline"
+          <Pressable onPress={onPressMenu} style={styles.iconWithText}>
+            <MaterialIcons
+              name="restaurant"
               size={55}
               color="#9e2820"
               style={styles.footerIconfooter}
             />
-            <Text style={styles.footerText}>Clock in/out</Text>
-          </Pressable>
-          <Pressable onPress={onPressPayments} style={styles.iconWithText}>
-            <Ionicons
-              name="cash-outline"
-              size={55}
-              color="#9e2820"
-              style={styles.footerIconfooter}
-            />
-            <Text style={styles.footerText}>Payments</Text>
+            <Text style={styles.footerText}>Menu</Text>
           </Pressable>
           <Pressable onPress={onPressOrders} style={styles.iconWithText}>
-            <Ionicons
-              name="tv-outline"
+            <Feather
+              name="shopping-bag"
               size={55}
               color="#9e2820"
               style={styles.footerIconfooter}
             />
             <Text style={styles.footerText}>Orders</Text>
           </Pressable>
+
           <Pressable onPress={onPressButton} style={styles.iconWithText}>
-            <Ionicons
-              name="search-outline"
+            <FontAwesome5
+              name="user-clock"
               size={55}
               color="#9e2820"
               style={[styles.footerIconfooter]}
             />
-            <Text style={styles.footerText}>Search</Text>
+            <Text style={styles.footerText}>Employees</Text>
+          </Pressable>
+          <Pressable onPress={onPressPayments} style={styles.iconWithText}>
+            <FontAwesome5
+              name="money-check"
+              size={55}
+              color="#9e2820"
+              style={styles.footerIconfooter}
+            />
+            <Text style={styles.footerText}>Payments</Text>
           </Pressable>
           <Pressable onPress={onPressSettings} style={styles.iconWithText}>
-            <MaterialIcons
-              name="settings"
+            <AntDesign
+              name="setting"
               size={55}
               color="#9e2820"
               style={styles.footerIconfooter}
