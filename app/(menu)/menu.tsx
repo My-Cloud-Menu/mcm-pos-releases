@@ -48,22 +48,20 @@ import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 
 const Menu = () => {
   const isFocused = useIsFocused();
-  const { cartProducts, clearCart } = useCartStore();
+  const { cartProducts, clearCart, isClose, toggleClose, toggleOpen } =
+    useCartStore();
   const { selectedCategory } = useGlobal();
   const orderStore = useOrderStore();
   const { resetSplitPayment } = useSplitStore();
-  const [isMenuVisible, setMenuVisible] = useState(true);
-  const [isCustomerNameCollapsed, setCustomerNameCollapsed] = useState(false);
+  const [isCustomerNameCollapsed, setCustomerNameCollapsed] = useState(true);
+  const [isCouponCollapsed, setCouponCollapsed] = useState(true);
+
+  const toggleCoupon = () => {
+    setCouponCollapsed(!isCouponCollapsed);
+  };
 
   const toggleCustomerName = () => {
     setCustomerNameCollapsed(!isCustomerNameCollapsed);
-  };
-
-  const toggleMenu = () => {
-    setMenuVisible(!isMenuVisible);
-  };
-  const setToggleMenu = () => {
-    setMenuVisible(!isMenuVisible);
   };
 
   const ordersQuery = useQuery({
@@ -118,15 +116,17 @@ const Menu = () => {
         <View flex>
           <View
             row
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginRight: 10,
-              alignItems: "center",
-            }}
+            style={
+              {
+                // display: "flex",
+                // justifyContent: "center",
+                // marginRight: 10,
+                // alignItems: "center",
+              }
+            }
           >
             <CategoriesCarousel />
-            {!isMenuVisible && (
+            {/* {!isClose && (
               <Entypo
                 style={{
                   backgroundColor: "white",
@@ -138,9 +138,9 @@ const Menu = () => {
                 name="shopping-cart"
                 size={32}
                 color="#606060"
-                onPress={setToggleMenu}
+                onPress={toggleOpen}
               />
-            )}
+            )} */}
           </View>
           <Text marginT-15 marginB-10 text70L>
             {selectedCategory?.name || "All"}
@@ -183,7 +183,7 @@ const Menu = () => {
           }}
         />
       </View>
-      {isMenuVisible && (
+      {isClose && (
         <View
           flex
           paddingT-10
@@ -203,7 +203,7 @@ const Menu = () => {
             >
               <UserProfileCard />
               <FontAwesome5
-                onPress={toggleMenu}
+                onPress={toggleClose}
                 name="window-minimize"
                 size={24}
                 color="black"
@@ -260,19 +260,72 @@ const Menu = () => {
           <View paddingB-10>
             <View style={{ marginTop: 15, marginBottom: 15 }}>
               <View>
-                <TouchableOpacity onPress={toggleCustomerName}>
-                  <Text
-                    style={{ fontWeight: "600", marginBottom: 10 }}
-                    color={Colors.primary}
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    width: "100%",
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={toggleCustomerName}
+                    style={{
+                      flex: 1,
+                      marginRight: 8,
+                    }}
                   >
-                    Customer Name
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={{
+                        marginBottom: 10,
+                        borderWidth: 1,
+                        borderRadius: 20,
+                        padding: 6,
+                        textAlign: "center",
+                        borderColor: Colors.primary,
+                        backgroundColor: isCustomerNameCollapsed
+                          ? "white"
+                          : "#eaeaea",
+                      }}
+                      color={Colors.primary}
+                    >
+                      Customer Name
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={toggleCoupon}
+                    style={{
+                      flex: 1,
+                      marginLeft: 8,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        marginBottom: 10,
+                        borderWidth: 1,
+                        borderRadius: 20,
+                        padding: 6,
+                        textAlign: "center",
+                        borderColor: Colors.primary,
+                        backgroundColor: isCouponCollapsed
+                          ? "white"
+                          : "#eaeaea",
+                      }}
+                      color={Colors.primary}
+                    >
+                      Coupon
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
                 {!isCustomerNameCollapsed && (
                   <TextField
                     placeholder="Enter the Customer Name"
                     color={Colors.primary}
                     labelColor={"#000"}
+                    style={{
+                      marginLeft: 6,
+                    }}
                     placeholderTextColor={Colors.gray}
                     value={orderStore.inputValues.first_name}
                     onChangeText={(value) => {
@@ -282,10 +335,12 @@ const Menu = () => {
                 )}
               </View>
             </View>
-            <CouponCodeInput
-              cartSummary={orderSummaryQuery.data}
-              onPressApply={() => orderSummaryQuery.refetch()}
-            />
+            {!isCouponCollapsed && (
+              <CouponCodeInput
+                cartSummary={orderSummaryQuery.data}
+                onPressApply={() => orderSummaryQuery.refetch()}
+              />
+            )}
             <ExperienceSelector />
             <Button
               disabled={!isCreateOrderAvailable()}

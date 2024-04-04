@@ -42,8 +42,7 @@ const CartItem = ({ product, productIdx }: Props) => {
                 : attrib.price;
 
               return (
-                <View marginV-4>
-                  <Text text90>{attrib.label} </Text>
+                <View>
                   <Text text90L grey20>
                     {attrib.value}
                     {extraPrice > 0.0 && (

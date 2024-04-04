@@ -78,6 +78,7 @@ const ProductItem = ({
   const [additionalPrice, setAdditionalPrice] = useState(0);
   const [quantitySelected, setQuantitySelected] = useState(1);
   const [notes, setNotes] = useState("");
+  const { isClose, toggleOpen } = useCartStore();
   const [allergiesSelected, setAllergiesSelected] = useState<string[]>([]);
   const [variationSelected, setVariationSelected] = useState<
     ProductCartVariation | undefined
@@ -134,6 +135,7 @@ const ProductItem = ({
     setNotes("");
     setAllergiesSelected([]);
     handleClose();
+    toggleOpen();
     showAlert({
       type: "success",
       title: `(${quantitySelected}) ${product.name} added successfully`,
@@ -170,6 +172,12 @@ const ProductItem = ({
                 {product.name.slice(0, 26)}
                 {product.name.length > 26 ? "..." : ""}
               </Text>
+              {product.description && (
+                <Text text65 black style={{ padding: 10 }}>
+                  {product.description?.slice(0, 100)}
+                  ...
+                </Text>
+              )}
             </View>
           </View>
         </Pressable>
@@ -197,12 +205,19 @@ const ProductItem = ({
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  marginBottom: 40,
                 }}
               >
-                <Text text65 marginB-3 style={{ fontWeight: "bold" }}>
-                  Add Customization
-                </Text>
+                <View
+                  style={{
+                    width: "75%",
+                  }}
+                >
+                  <Text text65 marginB-3 style={{ fontWeight: "bold" }}>
+                    Add Customization to {product.name}
+                  </Text>
+                  <Text>{product.description}</Text>
+                </View>
+
                 <Button
                   onPress={handleClose}
                   color="black"
@@ -228,49 +243,54 @@ const ProductItem = ({
               </View>
 
               <View marginB-30>
-                <Text text80 marginB-3 style={{ fontWeight: "bold" }}>
-                  Variation
-                </Text>
-                <View
-                  row
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
-                    gap: 8,
-                    width: "100%",
-                  }}
-                >
-                  {variationsAvailable.map((variation: any) => (
-                    <Button
-                      flex
+                {variationsAvailable.length > 0 && (
+                  <View marginT-30>
+                    <Text text80 marginB-3 style={{ fontWeight: "bold" }}>
+                      Variation
+                    </Text>
+                    <View
+                      row
                       style={{
-                        marginRight: 10,
-                        marginTop: 5,
-                        backgroundColor:
-                          variationSelected?.id === variation.id
-                            ? "#e0e0e0"
-                            : "#ffffff",
-                        borderColor: "rgb(0, 0, 0)",
-                        paddingVertical: 2,
-                        paddingHorizontal: 7,
-                        borderRadius: 8,
-                      }}
-                      variant="iconButtonWithLabelCenterOutline"
-                      active={variationSelected?.id == variation.id}
-                      size="small"
-                      useMinSize
-                      onPress={() => {
-                        onChangeVariation(variation);
+                        display: "grid",
+                        gridTemplateColumns: "repeat(3, 1fr)",
+                        gap: 8,
+                        width: "100%",
                       }}
                     >
-                      <Text>
-                        {variation.name} {""}
-                        {variation.price != 0 &&
-                          `(${formatCurrency(variation.price)})`}
-                      </Text>
-                    </Button>
-                  ))}
-                </View>
+                      {variationsAvailable.map((variation: any) => (
+                        <Button
+                          flex
+                          style={{
+                            marginRight: 10,
+                            marginTop: 5,
+                            backgroundColor:
+                              variationSelected?.id === variation.id
+                                ? "#e0e0e0"
+                                : "#ffffff",
+                            borderColor: "rgb(0, 0, 0)",
+                            paddingVertical: 2,
+                            paddingHorizontal: 7,
+                            borderRadius: 8,
+                          }}
+                          variant="iconButtonWithLabelCenterOutline"
+                          active={variationSelected?.id == variation.id}
+                          size="small"
+                          useMinSize
+                          onPress={() => {
+                            onChangeVariation(variation);
+                          }}
+                          key={variation.id}
+                        >
+                          <Text>
+                            {variation.name}{" "}
+                            {variation.price != 0 &&
+                              `(${formatCurrency(variation.price)})`}
+                          </Text>
+                        </Button>
+                      ))}
+                    </View>
+                  </View>
+                )}
               </View>
 
               <View paddingH-5>

@@ -24,10 +24,27 @@ export interface CartStore {
   updateProduct: (cartProductId: number, product: UpdateProductCart) => void;
   clearCart: () => void;
   getSimilarProductIndex: (cartProduct: ProductCart) => number | boolean;
+  isClose: boolean;
+  toggleClose: () => void;
+  toggleOpen: () => void;
 }
 
 export const useCartStore = create<CartStore>((set, get) => ({
   cartProducts: [],
+  isClose: false,
+
+  toggleClose: () => {
+    set((state) => ({
+      isClose: false,
+    }));
+  },
+
+  toggleOpen: () => {
+    set((state) => ({
+      isClose: true,
+    }));
+  },
+
   getSimilarProductIndex: (product) => {
     const cartProducts = get().cartProducts;
     let idxFounded: number | boolean = false;

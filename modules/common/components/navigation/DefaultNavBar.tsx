@@ -1,5 +1,5 @@
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Colors, Image, Text, View } from "react-native-ui-lib";
 import {
   AntDesign,
@@ -40,7 +40,7 @@ const navItems = [
   },
   {
     name: "Payments",
-    pathname: "/journal",
+    pathname: "/payments",
     icon: (props = {}) => (
       <FontAwesome5 size={30} name="money-check" {...props} />
     ),
@@ -53,7 +53,7 @@ const navItems = [
 ];
 const redirectToExternalLink = () => {
   const externalLink =
-    "https://api.whatsapp.com/send/?phone=18095558989&text&type=phone_number&app_absent=0";
+    "https://api.whatsapp.com/send/?phone=17873330990&text&type=phone_number&app_absent=0";
   Linking.openURL(externalLink);
 };
 
@@ -61,6 +61,12 @@ const DefaultNavBar = () => {
   const activePathName = usePathname();
   const navigation = useNavigation();
   const authStore = useAuthStore((state) => state);
+
+  const [activeNavItem, setActiveNavItem] = useState("/welcome");
+
+  useEffect(() => {
+    setActiveNavItem(activePathName);
+  }, [activePathName]);
 
   const onLogoutPress = async () => {
     try {
@@ -88,7 +94,7 @@ const DefaultNavBar = () => {
       <ScrollView>
         <View flex marginT-20>
           {navItems.map((navItem, idx) => {
-            let isNavItemActive = navItem.pathname == activePathName;
+            let isNavItemActive = navItem.pathname === activeNavItem;
             return (
               <Button
                 onPress={() => router.push(navItem.pathname)}
@@ -96,7 +102,10 @@ const DefaultNavBar = () => {
                 variant="iconButtonWithLabelCenter"
                 active={isNavItemActive}
                 marginV-5
-                style={{ width: 100 }}
+                style={{
+                  width: 100,
+                  backgroundColor: isNavItemActive ? "#002c51" : "white",
+                }}
               >
                 {navItem.icon({
                   color: isNavItemActive ? Colors.white : Colors.gray,

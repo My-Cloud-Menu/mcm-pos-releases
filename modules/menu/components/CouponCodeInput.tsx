@@ -1,9 +1,8 @@
 import { StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { Cart } from "mcm-types";
 import { Button, Colors, Text, TextField, View } from "react-native-ui-lib";
 import useOrderStore from "../../orders/OrdersStore";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const getFeedbackColor = (feedback: string) => {
   if (feedback.toLowerCase() == "el cupon se ha aplicado exitosamente")
@@ -20,10 +19,6 @@ type props = {
 };
 
 const CouponCodeInput = (props: props) => {
-  const [isCouponCollapsed, setCouponCollapsed] = useState(false);
-  const toggleCoupon = () => {
-    setCouponCollapsed(!isCouponCollapsed);
-  };
   const orderStore = useOrderStore();
 
   return (
@@ -36,17 +31,9 @@ const CouponCodeInput = (props: props) => {
           flexDirection: "column",
         }}
       >
-        <TouchableOpacity onPress={toggleCoupon}>
-          <Text
-            style={{ fontWeight: "600", marginBottom: 10 }}
-            color={Colors.primary}
-          >
-            Coupon
-          </Text>
-        </TouchableOpacity>
-        {!isCouponCollapsed && (
+        <View row style={{ alignItems: "center" }}>
           <TextField
-            style={{ width: "100%" }}
+            style={{ width: "100%", marginLeft: 6 }}
             placeholder="Enter coupon code"
             color={Colors.primary}
             labelColor={"#000"}
@@ -60,19 +47,20 @@ const CouponCodeInput = (props: props) => {
               );
             }}
           />
-        )}
-        {orderStore.inputValues.coupon_code && (
-          <Button
-            size="small"
-            label="Apply"
-            onPress={() => props.onPressApply && props.onPressApply()}
-          />
-        )}
+          {orderStore.inputValues.coupon_code && (
+            <Button
+              size="small"
+              label="Apply"
+              onPress={() => props.onPressApply && props.onPressApply()}
+            />
+          )}
+        </View>
       </View>
       {props.cartSummary?.coupon_feedback?.feedback && (
         <Text
           marginT-5
           style={{
+            marginLeft: 6,
             color: getFeedbackColor(
               props.cartSummary?.coupon_feedback?.feedback
             ),
