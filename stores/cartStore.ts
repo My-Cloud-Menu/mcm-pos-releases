@@ -25,12 +25,14 @@ export interface CartStore {
   clearCart: () => void;
   getSimilarProductIndex: (cartProduct: ProductCart) => number | boolean;
   isClose: boolean;
+  isImgeHidden: boolean;
   toggleClose: () => void;
   toggleOpen: () => void;
 }
 
 export const useCartStore = create<CartStore>((set, get) => ({
   cartProducts: [],
+  isImgeHidden: true,
   isClose: false,
 
   toggleClose: () => {

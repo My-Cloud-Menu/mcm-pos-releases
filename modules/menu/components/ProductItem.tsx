@@ -155,10 +155,12 @@ const ProductItem = ({
       <View paddingT-20 paddingH-10>
         <Pressable onPress={() => onPress && onPress()}>
           <View>
-            <Image
-              source={{ uri: getProductImage(product) }}
-              style={styles.image}
-            />
+            {!product.isImageHidden && (
+              <Image
+                source={{ uri: getProductImage(product) }}
+                style={styles.image}
+              />
+            )}
             <View style={{ width: "100%" }}>
               <Text
                 text65
