@@ -16,7 +16,7 @@ import {
 import { Product } from "mcm-types";
 
 const getColumsNumbers = (): number => {
-  return 3;
+  return 4;
 };
 
 const ProductsList = () => {
@@ -77,7 +77,7 @@ const ProductsList = () => {
       style={{ height: 122 }}
       numColumns={getColumsNumbers()}
       data={products.map((item) => ({ ...item, image: item.images[0] }))}
-      ItemSeparatorComponent={() => <View style={{ height: 25 }} />}
+      ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
       scrollEnabled
       renderItem={({ item }) => {
         let isActive = productIdsSelected.includes(item.id);

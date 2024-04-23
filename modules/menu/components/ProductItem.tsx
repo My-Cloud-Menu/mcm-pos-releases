@@ -159,7 +159,7 @@ const ProductItem = ({
 
   return (
     <View style={styles.container}>
-      <View paddingT-20 paddingH-10>
+      <View paddingT-5 paddingH-5>
         <Pressable onPress={() => onPress && onPress()}>
           <View>
             {!product.isImageHidden && (
@@ -463,8 +463,8 @@ const ProductItem = ({
       </View>
 
       <View
-        paddingB-20
         paddingH-10
+        paddingB-5
         style={{ flexDirection: "row", justifyContent: "space-between" }}
       >
         <Text
@@ -521,7 +521,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 200,
+    height: 160,
     borderRadius: 8,
   },
 });
