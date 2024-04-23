@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from "react-native";
+import { FlatList, Pressable, ScrollView, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -7,6 +7,7 @@ import {
   Text,
   TextField,
   View,
+  Modal,
 } from "react-native-ui-lib";
 import { shadowProps } from "../../common/theme/shadows";
 import { ProductCartVariation, useCartStore } from "../../../stores/cartStore";
@@ -24,7 +25,7 @@ import {
 import { showAlert } from "../../common/AlertHelper";
 import Counter from "./Counter";
 import AllergiesChipSelector from "./AllergiesChipSelector";
-import { Modal } from "react-native-ui-lib";
+
 const getProductVariationsAvailable = (product: Product) => {
   return product.variations.filter(
     (variation) => variation.stock_status == "instock"
@@ -115,6 +116,12 @@ const ProductItem = ({
   const onDecreaseProductQuantity = () =>
     setQuantitySelected(quantitySelected - 1);
 
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+
   const onPressAddToCart = () => {
     if (!validateIngredientsSelection(ingredientsSelected)) {
       if (!isActive && onPress) onPress();
@@ -184,194 +191,271 @@ const ProductItem = ({
           </View>
         </Pressable>
         <View>
-          <Modal visible={open} onRequestClose={handleClose} transparent>
+          <Modal
+            visible={open}
+            onRequestClose={handleClose}
+            transparent
+            animationType="fade"
+          >
             <View
               style={{
                 position: "absolute",
+                height: 650,
                 top: "50%",
-                left: "45%",
-                width: "50%",
+                left: "50%",
+                width: "75%",
                 backgroundColor: "white",
-                borderRadius: 16,
-                transform: "translate(-50%, -50%)",
-                borderWidth: 2,
-                borderColor: "black",
+                borderRadius: 20,
+                transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
                 padding: 16,
                 overflowX: "auto",
-                overflowY: "scroll",
+                flexDirection: "row",
+                transitionDelay: "10s",
+                transitionDuration: "10s",
+                transitionProperty: "opacity",
+                transitionTimingFunction: "ease-in-out",
+                opacity: open ? 1 : 0,
+                transition: "opacity 3s ease-in-out",
               }}
             >
               <View
                 style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  width: "40%",
                 }}
               >
-                <View
+                <Image
+                  source={{ uri: getProductImage(product) }}
                   style={{
-                    width: "75%",
+                    width: "95%",
+                    height: "100%",
+                    borderRadius: 20,
                   }}
-                >
-                  <Text text65 marginB-3 style={{ fontWeight: "bold" }}>
-                    Add Customization to {product.name}
-                  </Text>
-                  <Text>{product.description}</Text>
-                </View>
-
-                <Button
-                  onPress={handleClose}
-                  color="black"
-                  style={{
-                    backgroundColor: "white",
-                  }}
-                >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 15 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </Button>
-              </View>
-
-              <View marginB-30>
-                {variationsAvailable.length > 0 && (
-                  <View marginT-30>
-                    <Text text80 marginB-3 style={{ fontWeight: "bold" }}>
-                      Variation
-                    </Text>
-                    <View
-                      row
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(3, 1fr)",
-                        gap: 8,
-                        width: "100%",
-                      }}
-                    >
-                      {variationsAvailable.map((variation: any) => (
-                        <Button
-                          flex
-                          style={{
-                            marginRight: 10,
-                            marginTop: 5,
-                            backgroundColor:
-                              variationSelected?.id === variation.id
-                                ? "#e0e0e0"
-                                : "#ffffff",
-                            borderColor: "rgb(0, 0, 0)",
-                            paddingVertical: 2,
-                            paddingHorizontal: 7,
-                            borderRadius: 8,
-                          }}
-                          variant="iconButtonWithLabelCenterOutline"
-                          active={variationSelected?.id == variation.id}
-                          size="small"
-                          useMinSize
-                          onPress={() => {
-                            onChangeVariation(variation);
-                          }}
-                          key={variation.id}
-                        >
-                          <Text>
-                            {variation.name}{" "}
-                            {variation.price != 0 &&
-                              `(${formatCurrency(variation.price)})`}
-                          </Text>
-                        </Button>
-                      ))}
-                    </View>
-                  </View>
-                )}
-              </View>
-
-              <View paddingH-5>
-                <IngredientAccordion
-                  isActive={true}
-                  product={product}
-                  ingredients={ingredients}
-                  ingredientsGroups={ingredientsGroups}
-                  groupsForSelection={ingredientsSelected}
-                  setGroupsForSelection={setIngredientsSelected}
-                />
-              </View>
-              <View marginT-20 paddingH-10>
-                <TextField
-                  value={notes}
-                  onChangeText={(value) => {
-                    setNotes(value);
-                  }}
-                  maxLength={150}
-                  placeholder="Comments"
-                  floatingPlaceholder
-                  fieldStyle={{
-                    borderBottomWidth: 1,
-                    borderColor: Colors.black,
-                    paddingBottom: 4,
-                  }}
-                />
-                <View style={{ marginTop: 30 }}>
-                  <Text style={{ marginBottom: 10 }}>Allergies</Text>
-                  <AllergiesChipSelector
-                    allergiesSelected={allergiesSelected}
-                    onChangeAllergiesSelected={setAllergiesSelected}
-                  />
-                </View>
-              </View>
-              <View marginT-35>
-                <Counter
-                  min={1}
-                  quantity={quantitySelected}
-                  onDecrease={onDecreaseProductQuantity}
-                  onIncrement={onIncrementProductQuantity}
                 />
               </View>
               <View
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  width: "60%",
                 }}
               >
-                <Text
-                  text65BL
-                  black
-                  marginT-12
+                <ScrollView
+                  style={{ marginBottom: 40 }}
+                  showsVerticalScrollIndicator={false}
+                >
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View style={{ width: "75%" }}>
+                      <Text text65 marginB-3 style={{ fontWeight: "bold" }}>
+                        {product.name}
+                      </Text>
+                      <Text style={{ lineHeight: 20 }}>
+                        {showFullDescription ||
+                        !product.description ||
+                        product.description.length <= 100
+                          ? `${product.description}`
+                          : `${product.description?.slice(0, 100)}... `}
+                        {product.description &&
+                          product.description.length > 100 && (
+                            <Text
+                              style={{
+                                paddingVertical: 1.5,
+                                paddingHorizontal: 6,
+                                borderRadius: 6,
+                                color: "#002C51",
+                                fontWeight: "bold",
+                              }}
+                              onPress={toggleDescription}
+                            >
+                              {showFullDescription ? "Show Less" : "Show More"}
+                            </Text>
+                          )}
+                      </Text>
+                      <Text
+                        text65BL
+                        black
+                        marginR-10
+                        marginT-10
+                        style={{
+                          right: 0,
+                          borderRadius: 8,
+                          width: "fit-content",
+                          padding: 10,
+                        }}
+                      >
+                        <Text>$</Text>
+                        {formatCurrency(product.price, true)}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        position: "absolute",
+                        top: 10,
+                        right: 10,
+                        zIndex: 1,
+                      }}
+                    >
+                      <Button
+                        onPress={handleClose}
+                        color="black"
+                        style={{
+                          backgroundColor: "white",
+                        }}
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 15 15"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </Button>
+                    </View>
+                  </View>
+
+                  <View marginB-30>
+                    {variationsAvailable.length > 0 && (
+                      <View marginT-30>
+                        <Text text80 marginB-3 style={{ fontWeight: "bold" }}>
+                          Variation
+                        </Text>
+
+                        <FlatList
+                          data={variationsAvailable}
+                          renderItem={({ item: variation }) => (
+                            <Button
+                              flex
+                              style={{
+                                marginRight: 10,
+                                marginTop: 5,
+                                backgroundColor:
+                                  variationSelected?.id === variation.id
+                                    ? "#e0e0e0"
+                                    : "#ffffff",
+                                borderColor: "rgb(0, 0, 0)",
+                                paddingVertical: 8,
+                                paddingHorizontal: 7,
+                                borderRadius: 8,
+                              }}
+                              // variant="iconButtonWithLabelCenterOutline"
+                              active={variationSelected?.id == variation.id}
+                              size="small"
+                              useMinSize
+                              onPress={() => {
+                                onChangeVariation(variation);
+                              }}
+                              key={variation.id}
+                            >
+                              <Text>
+                                {variation.name}{" "}
+                                {variation.price !== 0 &&
+                                  `(${formatCurrency(variation.price)})`}
+                              </Text>
+                            </Button>
+                          )}
+                          keyExtractor={(item) => item.id.toString()}
+                          numColumns={3}
+                        />
+                      </View>
+                    )}
+                  </View>
+
+                  <View paddingH-5>
+                    <IngredientAccordion
+                      isActive={true}
+                      product={product}
+                      ingredients={ingredients}
+                      ingredientsGroups={ingredientsGroups}
+                      groupsForSelection={ingredientsSelected}
+                      setGroupsForSelection={setIngredientsSelected}
+                    />
+                  </View>
+
+                  <View marginT-20 paddingH-10 marginB-20>
+                    <View style={{ marginTop: 30 }}>
+                      <AllergiesChipSelector
+                        allergiesSelected={allergiesSelected}
+                        onChangeAllergiesSelected={setAllergiesSelected}
+                      />
+                      <TextField
+                        value={notes}
+                        onChangeText={(value) => {
+                          setNotes(value);
+                        }}
+                        maxLength={150}
+                        placeholder="Comments"
+                        floatingPlaceholder
+                        fieldStyle={{
+                          borderBottomWidth: 1,
+                          borderColor: Colors.black,
+                          paddingBottom: 4,
+                        }}
+                      />
+                    </View>
+                  </View>
+                </ScrollView>
+
+                <View
                   style={{
-                    padding: 10,
-                    display: "flex",
-                    justifyContent: "flex-start",
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    paddingHorizontal: 10,
+                    marginTop: 20,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+
+                    alignItems: "center",
                   }}
                 >
-                  <Text>$</Text>
-                  {formatCurrency(product.price, true)}
-                </Text>
-                {isInStock ? (
-                  <Button
-                    onPress={onPressAddToCart}
-                    marginT-20
-                    size="medium"
-                    label={
-                      quantitySelected != 1
-                        ? `Add ${quantitySelected} Item to Cart`
-                        : "Add to Cart"
-                    }
-                    fullWidth
+                  <Counter
+                    min={1}
+                    quantity={quantitySelected}
+                    onDecrease={onDecreaseProductQuantity}
+                    onIncrement={onIncrementProductQuantity}
                   />
-                ) : (
-                  <Text center text60L style={{ color: "#FFA000" }}>
-                    Not Available
-                  </Text>
-                )}
+                  {isInStock ? (
+                    <Button
+                      onPress={onPressAddToCart}
+                      size="medium"
+                      style={{ marginTop: 10, marginLeft: 10 }}
+                      label={
+                        quantitySelected !== 1
+                          ? `Add ${quantitySelected} Item to Cart`
+                          : "Add to Cart"
+                      }
+                      backgroundColor={Colors.green30}
+                    />
+                  ) : (
+                    <Text
+                      center
+                      text60L
+                      style={{ color: "#FFA000", marginLeft: 10 }}
+                    >
+                      Not Available
+                    </Text>
+                  )}
+                </View>
               </View>
             </View>
           </Modal>
