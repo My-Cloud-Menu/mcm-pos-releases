@@ -181,12 +181,12 @@ const ProductItem = ({
                 {product.name.slice(0, 26)}
                 {product.name.length > 26 ? "..." : ""}
               </Text>
-              {product.description && (
+              {/* {product.description && (
                 <Text text65 black style={{ padding: 10 }}>
                   {product.description?.slice(0, 100)}
                   ...
                 </Text>
-              )}
+              )} */}
             </View>
           </View>
         </Pressable>
