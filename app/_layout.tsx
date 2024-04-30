@@ -12,7 +12,7 @@ import useAuthStore from "../modules/auth/AuthStore";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({});
 
 export {
   // Catch any errors thrown by the Layout component.

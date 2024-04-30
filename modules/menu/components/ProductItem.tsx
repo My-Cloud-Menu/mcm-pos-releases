@@ -25,6 +25,7 @@ import {
 import { showAlert } from "../../common/AlertHelper";
 import Counter from "./Counter";
 import AllergiesChipSelector from "./AllergiesChipSelector";
+import { AntDesign } from "@expo/vector-icons";
 
 const getProductVariationsAvailable = (product: Product) => {
   return product.variations.filter(
@@ -314,20 +315,7 @@ const ProductItem = ({
                           backgroundColor: "white",
                         }}
                       >
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 15 15"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z"
-                            fill="currentColor"
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                          ></path>
-                        </svg>
+                        <AntDesign name="close" size={24} color="black" />
                       </Button>
                     </View>
                   </View>
@@ -481,19 +469,7 @@ const ProductItem = ({
           {formatCurrency(product.price, true)}
         </Text>
         <Button onPress={handleOpen} marginT-20 size="medium" fullWidth>
-          {" "}
-          <svg
-            stroke="currentColor"
-            fill="white"
-            stroke-width="0"
-            viewBox="0 0 24 24"
-            color="silver"
-            height="19"
-            width="19"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
-          </svg>
+          <AntDesign name="plus" size={24} color="white" />
         </Button>
       </View>
     </View>
