@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet } from "react-native";
+import { FlatList, Pressable, ScrollView, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -7,6 +7,7 @@ import {
   Text,
   TextField,
   View,
+  Modal,
 } from "react-native-ui-lib";
 import { shadowProps } from "../../common/theme/shadows";
 import { ProductCartVariation, useCartStore } from "../../../stores/cartStore";
@@ -78,6 +79,7 @@ const ProductItem = ({
   const [additionalPrice, setAdditionalPrice] = useState(0);
   const [quantitySelected, setQuantitySelected] = useState(1);
   const [notes, setNotes] = useState("");
+  const { isClose, toggleOpen } = useCartStore();
   const [allergiesSelected, setAllergiesSelected] = useState<string[]>([]);
   const [variationSelected, setVariationSelected] = useState<
     ProductCartVariation | undefined
@@ -100,6 +102,9 @@ const ProductItem = ({
       ingredients: variation.ingredients,
     });
   };
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     setAdditionalPrice(calculateIngredientsPriceTotal(ingredientsSelected));
@@ -110,6 +115,12 @@ const ProductItem = ({
 
   const onDecreaseProductQuantity = () =>
     setQuantitySelected(quantitySelected - 1);
+
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const toggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
 
   const onPressAddToCart = () => {
     if (!validateIngredientsSelection(ingredientsSelected)) {
@@ -130,6 +141,8 @@ const ProductItem = ({
     setQuantitySelected(1);
     setNotes("");
     setAllergiesSelected([]);
+    handleClose();
+    toggleOpen();
     showAlert({
       type: "success",
       title: `(${quantitySelected}) ${product.name} added successfully`,
@@ -141,154 +154,348 @@ const ProductItem = ({
       setQuantitySelected(1);
       setNotes("");
       setAllergiesSelected([]);
-      // setIngredientsSelected([]);
     }
   }, [isActive]);
 
   return (
     <View style={styles.container}>
-      <View flex>
+      <View paddingT-5 paddingH-5>
         <Pressable onPress={() => onPress && onPress()}>
-          <View row marginB-12>
-            <Image
-              source={{ uri: getProductImage(product) }}
-              style={styles.image}
-            />
-            <View marginL-20 style={{ width: "100%" }}>
+          <View>
+            {!product.isImageHidden && (
+              <Image
+                source={{ uri: getProductImage(product) }}
+                style={styles.image}
+              />
+            )}
+            <View style={{ width: "100%" }}>
               <Text
                 text65
                 black
-                style={{ maxWidth: "40%", fontWeight: "bold" }}
+                style={{
+                  maxWidth: "100%",
+                  fontWeight: "bold",
+                  padding: 10,
+                }}
               >
                 {product.name.slice(0, 26)}
                 {product.name.length > 26 ? "..." : ""}
               </Text>
-              <View row style={{ maxWidth: "50%", flexWrap: "wrap" }}>
-                {getIngredientsIncludedInProduct(product, ingredients).map(
-                  (ingredient: Ingredient) => (
-                    <ProductChip
-                      key={`product-${product.id}-ingredientincluded-${ingredient.id}`}
-                      label={ingredient.name}
-                      backgroundColor={
-                        ingredient.stock_status == "instock"
-                          ? "#e0e0e0"
-                          : "#E57373"
-                      }
-                    />
-                  )
-                )}
-              </View>
-              <Text
-                marginT-10
-                text90L
-                color={Colors.gray}
-                style={{ maxWidth: "55%", padding: 5 }}
-              >
-                {product.description}
-              </Text>
-              <Text text65BL black marginT-12 style={{ padding: 5 }}>
-                <Text text100 black $textNeutralLight text65BL>
-                  ${" "}
+              {/* {product.description && (
+                <Text text65 black style={{ padding: 10 }}>
+                  {product.description?.slice(0, 100)}
+                  ...
                 </Text>
-                {formatCurrency(product.price, true)}
-              </Text>
+              )} */}
             </View>
           </View>
         </Pressable>
+        <View>
+          <Modal
+            visible={open}
+            onRequestClose={handleClose}
+            transparent
+            animationType="fade"
+          >
+            <View
+              style={{
+                position: "absolute",
+                height: 650,
+                top: "50%",
+                left: "50%",
+                width: "75%",
+                backgroundColor: "white",
+                borderRadius: 20,
+                transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+                padding: 16,
+                overflowX: "auto",
+                flexDirection: "row",
+                transitionDelay: "10s",
+                transitionDuration: "10s",
+                transitionProperty: "opacity",
+                transitionTimingFunction: "ease-in-out",
+                opacity: open ? 1 : 0,
+                transition: "opacity 3s ease-in-out",
+              }}
+            >
+              <View
+                style={{
+                  width: "40%",
+                }}
+              >
+                <Image
+                  source={{ uri: getProductImage(product) }}
+                  style={{
+                    width: "95%",
+                    height: "100%",
+                    borderRadius: 20,
+                  }}
+                />
+              </View>
+              <View
+                style={{
+                  width: "60%",
+                }}
+              >
+                <ScrollView
+                  style={{ marginBottom: 40 }}
+                  showsVerticalScrollIndicator={false}
+                >
+                  <View
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View style={{ width: "75%" }}>
+                      <Text text65 marginB-3 style={{ fontWeight: "bold" }}>
+                        {product.name}
+                      </Text>
+                      <Text style={{ lineHeight: 20 }}>
+                        {showFullDescription ||
+                        !product.description ||
+                        product.description.length <= 100
+                          ? `${product.description}`
+                          : `${product.description?.slice(0, 100)}... `}
+                        {product.description &&
+                          product.description.length > 100 && (
+                            <Text
+                              style={{
+                                paddingVertical: 1.5,
+                                paddingHorizontal: 6,
+                                borderRadius: 6,
+                                color: "#002C51",
+                                fontWeight: "bold",
+                              }}
+                              onPress={toggleDescription}
+                            >
+                              {showFullDescription ? "Show Less" : "Show More"}
+                            </Text>
+                          )}
+                      </Text>
+                      <Text
+                        text65BL
+                        black
+                        marginR-10
+                        marginT-10
+                        style={{
+                          right: 0,
+                          borderRadius: 8,
+                          width: "fit-content",
+                          padding: 10,
+                        }}
+                      >
+                        <Text>$</Text>
+                        {formatCurrency(product.price, true)}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        position: "absolute",
+                        top: 10,
+                        right: 10,
+                        zIndex: 1,
+                      }}
+                    >
+                      <Button
+                        onPress={handleClose}
+                        color="black"
+                        style={{
+                          backgroundColor: "white",
+                        }}
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 15 15"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12.8536 2.85355C13.0488 2.65829 13.0488 2.34171 12.8536 2.14645C12.6583 1.95118 12.3417 1.95118 12.1464 2.14645L7.5 6.79289L2.85355 2.14645C2.65829 1.95118 2.34171 1.95118 2.14645 2.14645C1.95118 2.34171 1.95118 2.65829 2.14645 2.85355L6.79289 7.5L2.14645 12.1464C1.95118 12.3417 1.95118 12.6583 2.14645 12.8536C2.34171 13.0488 2.65829 13.0488 2.85355 12.8536L7.5 8.20711L12.1464 12.8536C12.3417 13.0488 12.6583 13.0488 12.8536 12.8536C13.0488 12.6583 13.0488 12.3417 12.8536 12.1464L8.20711 7.5L12.8536 2.85355Z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </Button>
+                    </View>
+                  </View>
 
-        {variationsAvailable.length > 0 && (
-          <View paddingH-10 marginB-30>
-            <Text text80 marginB-3 style={{ fontWeight: "bold" }}>
-              Variation
-            </Text>
-            <View row style={{ gap: 8 }}>
-              {variationsAvailable.map((variation: any) => (
-                <Button
-                  flex
-                  variant="iconButtonWithLabelCenterOutline"
-                  active={variationSelected?.id == variation.id}
-                  size="small"
-                  useMinSize
-                  onPress={() => {
-                    onChangeVariation(variation);
+                  <View marginB-30>
+                    {variationsAvailable.length > 0 && (
+                      <View marginT-30>
+                        <Text text80 marginB-3 style={{ fontWeight: "bold" }}>
+                          Variation
+                        </Text>
+
+                        <FlatList
+                          data={variationsAvailable}
+                          renderItem={({ item: variation }) => (
+                            <Button
+                              flex
+                              style={{
+                                marginRight: 10,
+                                marginTop: 5,
+                                backgroundColor:
+                                  variationSelected?.id === variation.id
+                                    ? "#e0e0e0"
+                                    : "#ffffff",
+                                borderColor: "rgb(0, 0, 0)",
+                                paddingVertical: 8,
+                                paddingHorizontal: 7,
+                                borderRadius: 8,
+                              }}
+                              // variant="iconButtonWithLabelCenterOutline"
+                              active={variationSelected?.id == variation.id}
+                              size="small"
+                              useMinSize
+                              onPress={() => {
+                                onChangeVariation(variation);
+                              }}
+                              key={variation.id}
+                            >
+                              <Text>
+                                {variation.name}{" "}
+                                {variation.price !== 0 &&
+                                  `(${formatCurrency(variation.price)})`}
+                              </Text>
+                            </Button>
+                          )}
+                          keyExtractor={(item) => item.id.toString()}
+                          numColumns={3}
+                        />
+                      </View>
+                    )}
+                  </View>
+
+                  <View paddingH-5>
+                    <IngredientAccordion
+                      isActive={true}
+                      product={product}
+                      ingredients={ingredients}
+                      ingredientsGroups={ingredientsGroups}
+                      groupsForSelection={ingredientsSelected}
+                      setGroupsForSelection={setIngredientsSelected}
+                    />
+                  </View>
+
+                  <View marginT-20 paddingH-10 marginB-20>
+                    <View style={{ marginTop: 30 }}>
+                      <AllergiesChipSelector
+                        allergiesSelected={allergiesSelected}
+                        onChangeAllergiesSelected={setAllergiesSelected}
+                      />
+                      <TextField
+                        value={notes}
+                        onChangeText={(value) => {
+                          setNotes(value);
+                        }}
+                        maxLength={150}
+                        placeholder="Comments"
+                        floatingPlaceholder
+                        fieldStyle={{
+                          borderBottomWidth: 1,
+                          borderColor: Colors.black,
+                          paddingBottom: 4,
+                        }}
+                      />
+                    </View>
+                  </View>
+                </ScrollView>
+
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    paddingHorizontal: 10,
+                    marginTop: 20,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+
+                    alignItems: "center",
                   }}
                 >
-                  <Text text80>
-                    {variation.name}{" "}
-                    {variation.price != 0 &&
-                      `(${formatCurrency(variation.price)})`}
-                  </Text>
-                </Button>
-              ))}
+                  <Counter
+                    min={1}
+                    quantity={quantitySelected}
+                    onDecrease={onDecreaseProductQuantity}
+                    onIncrement={onIncrementProductQuantity}
+                  />
+                  {isInStock ? (
+                    <Button
+                      onPress={onPressAddToCart}
+                      size="medium"
+                      style={{ marginTop: 10, marginLeft: 10 }}
+                      label={
+                        quantitySelected !== 1
+                          ? `Add ${quantitySelected} Item to Cart`
+                          : "Add to Cart"
+                      }
+                      backgroundColor={Colors.green30}
+                    />
+                  ) : (
+                    <Text
+                      center
+                      text60L
+                      style={{ color: "#FFA000", marginLeft: 10 }}
+                    >
+                      Not Available
+                    </Text>
+                  )}
+                </View>
+              </View>
             </View>
-          </View>
-        )}
-
-        <View paddingH-5>
-          <IngredientAccordion
-            isActive={isActive}
-            product={product}
-            ingredients={ingredients}
-            ingredientsGroups={ingredientsGroups}
-            groupsForSelection={ingredientsSelected}
-            setGroupsForSelection={setIngredientsSelected}
-          />
+          </Modal>
         </View>
-
-        {isActive && (
-          <View marginT-20 paddingH-10>
-            <TextField
-              value={notes}
-              onChangeText={(value) => {
-                setNotes(value);
-              }}
-              maxLength={150}
-              placeholder="Comments"
-              floatingPlaceholder
-              fieldStyle={{
-                borderBottomWidth: 1,
-                borderColor: Colors.black,
-                paddingBottom: 4,
-              }}
-            />
-            <View style={{ marginTop: 30 }}>
-              <Text style={{ marginBottom: 10 }}>Allergies</Text>
-              <AllergiesChipSelector
-                allergiesSelected={allergiesSelected}
-                onChangeAllergiesSelected={setAllergiesSelected}
-              />
-            </View>
-          </View>
-        )}
       </View>
-      {isInStock && isActive && (
-        <View marginT-35>
-          <Counter
-            min={1}
-            quantity={quantitySelected}
-            onDecrease={onDecreaseProductQuantity}
-            onIncrement={onIncrementProductQuantity}
-          />
-        </View>
-      )}
-      {isInStock ? (
-        <Button
-          onPress={onPressAddToCart}
-          marginT-20
-          marginH-5
-          size="medium"
-          label={
-            quantitySelected != 1
-              ? `Add ${quantitySelected} Item to Cart`
-              : "Add to Cart"
-          }
-          fullWidth
-        />
-      ) : (
-        <Text center text60L style={{ color: "#FFA000" }}>
-          Not Available
+
+      <View
+        paddingH-10
+        paddingB-5
+        style={{ flexDirection: "row", justifyContent: "space-between" }}
+      >
+        <Text
+          text65BL
+          black
+          marginT-12
+          style={{
+            padding: 10,
+            display: "flex",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Text>$</Text>
+          {formatCurrency(product.price, true)}
         </Text>
-      )}
+        <Button onPress={handleOpen} marginT-20 size="medium" fullWidth>
+          {" "}
+          <svg
+            stroke="currentColor"
+            fill="white"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            color="silver"
+            height="19"
+            width="19"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
+          </svg>
+        </Button>
+      </View>
     </View>
   );
 };
@@ -298,11 +505,13 @@ export default ProductItem;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 3,
+    paddingHorizontal: 8,
     paddingVertical: 8,
     marginHorizontal: 3,
     borderRadius: 8,
     backgroundColor: Colors.white,
+    borderColor: Colors.grey50,
+    borderWidth: 1.25,
     ...shadowProps,
   },
   imageContainer: {
@@ -311,9 +520,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   image: {
-    marginLeft: 10,
-    width: 110,
-    height: 110,
+    width: "100%",
+    height: 160,
     borderRadius: 8,
   },
 });

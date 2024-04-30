@@ -4,8 +4,15 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import React, { useEffect } from "react";
-import { Button, Colors, Text, TextField, View } from "react-native-ui-lib";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Colors,
+  Text,
+  TextField,
+  TouchableOpacity,
+  View,
+} from "react-native-ui-lib";
 import CategoriesCarousel from "../../modules/menu/components/CategoriesCarousel";
 import ProductsList from "../../modules/menu/components/ProductsList";
 import UserProfileCard from "../../modules/auth/components/UserProfileCard";
@@ -37,13 +44,25 @@ import {
   checkOpenStatuses,
 } from "../../modules/orders/OrderHelper";
 import CouponCodeInput from "../../modules/menu/components/CouponCodeInput";
+import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 
 const Menu = () => {
   const isFocused = useIsFocused();
-  const { cartProducts, clearCart } = useCartStore();
+  const { cartProducts, clearCart, isClose, toggleClose, toggleOpen } =
+    useCartStore();
   const { selectedCategory } = useGlobal();
   const orderStore = useOrderStore();
   const { resetSplitPayment } = useSplitStore();
+  const [isCustomerNameCollapsed, setCustomerNameCollapsed] = useState(true);
+  const [isCouponCollapsed, setCouponCollapsed] = useState(true);
+
+  const toggleCoupon = () => {
+    setCouponCollapsed(!isCouponCollapsed);
+  };
+
+  const toggleCustomerName = () => {
+    setCustomerNameCollapsed(!isCustomerNameCollapsed);
+  };
 
   const ordersQuery = useQuery({
     queryKey: [ordersQueryKey],
@@ -95,7 +114,34 @@ const Menu = () => {
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
       <View flex paddingT-5 paddingB-0 paddingL-5 paddingR-5>
         <View flex>
-          <CategoriesCarousel />
+          <View
+            row
+            style={
+              {
+                // display: "flex",
+                // justifyContent: "center",
+                // marginRight: 10,
+                // alignItems: "center",
+              }
+            }
+          >
+            <CategoriesCarousel />
+            {/* {!isClose && (
+              <Entypo
+                style={{
+                  backgroundColor: "white",
+                  padding: 20,
+                  borderRadius: 10,
+                  borderColor: "#EAEAEA",
+                  borderWidth: 0.5,
+                }}
+                name="shopping-cart"
+                size={32}
+                color="#606060"
+                onPress={toggleOpen}
+              />
+            )} */}
+          </View>
           <Text marginT-15 marginB-10 text70L>
             {selectedCategory?.name || "All"}
           </Text>
@@ -137,100 +183,181 @@ const Menu = () => {
           }}
         />
       </View>
-      <View
-        flex
-        paddingT-10
-        paddingR-10
-        paddingL-10
-        style={{
-          maxWidth: 295,
-          backgroundColor: Colors.white,
-          borderTopStartRadius: 12,
-          borderBottomStartRadius: 12,
-        }}
-      >
-        <View flex>
-          <UserProfileCard />
-          <ScrollView style={{ paddingRight: 3 }}>
-            {cartProducts.length ? (
-              <>
-                <Text text60 marginT-10>
-                  Cart{" "}
-                  <Text text70>
-                    ({cartProducts.reduce((acc, cal) => acc + cal.quantity, 0)})
+      {isClose && (
+        <View
+          flex
+          paddingT-10
+          paddingR-10
+          paddingL-10
+          style={{
+            maxWidth: 295,
+            backgroundColor: Colors.white,
+            borderTopStartRadius: 12,
+            borderBottomStartRadius: 12,
+          }}
+        >
+          <View flex>
+            <View
+              row
+              style={{ display: "flex", justifyContent: "space-around" }}
+            >
+              <UserProfileCard />
+              <FontAwesome5
+                onPress={toggleClose}
+                name="window-minimize"
+                size={24}
+                color="black"
+              />
+            </View>
+            <ScrollView style={{ paddingRight: 3 }}>
+              {cartProducts.length ? (
+                <>
+                  <Text text60 marginT-10>
+                    Cart{" "}
+                    <Text text70>
+                      (
+                      {cartProducts.reduce((acc, cal) => acc + cal.quantity, 0)}
+                      )
+                    </Text>
                   </Text>
-                </Text>
 
-                <View style={{ backgroundColor: "" }}>
-                  <FlashList
-                    contentContainerStyle={{
-                      paddingTop: 20,
-                      paddingBottom: 50,
-                    }}
-                    ItemSeparatorComponent={() => (
-                      <View style={{ height: 25 }} />
-                    )}
-                    data={cartProducts}
-                    renderItem={({ item, index }) => {
-                      return <CartItem product={item} productIdx={index} />;
-                    }}
+                  <View>
+                    <FlashList
+                      contentContainerStyle={{
+                        paddingTop: 20,
+                        paddingBottom: 50,
+                      }}
+                      ItemSeparatorComponent={() => (
+                        <View style={{ height: 25 }} />
+                      )}
+                      data={cartProducts}
+                      renderItem={({ item, index }) => {
+                        return <CartItem product={item} productIdx={index} />;
+                      }}
+                    />
+                  </View>
+
+                  <CartCharges
+                    cartSummary={orderSummaryQuery.data}
+                    isLoading={
+                      orderSummaryQuery.isLoading ||
+                      orderSummaryQuery.isRefetching
+                    }
                   />
+                </>
+              ) : (
+                <View marginT-30>
+                  <Text center text85>
+                    No products Added
+                  </Text>
+                  <Text $textNeutralLight center>
+                    Add items to start order
+                  </Text>
+                </View>
+              )}
+            </ScrollView>
+          </View>
+          <View paddingB-10>
+            <View style={{ marginTop: 15, marginBottom: 15 }}>
+              <View>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    width: "100%",
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={toggleCustomerName}
+                    style={{
+                      flex: 1,
+                      marginRight: 8,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        marginBottom: 10,
+                        borderWidth: 1,
+                        borderRadius: 20,
+                        padding: 6,
+                        textAlign: "center",
+                        borderColor: Colors.primary,
+                        backgroundColor: isCustomerNameCollapsed
+                          ? "white"
+                          : "#eaeaea",
+                      }}
+                      color={Colors.primary}
+                    >
+                      Customer Name
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={toggleCoupon}
+                    style={{
+                      flex: 1,
+                      marginLeft: 8,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        marginBottom: 10,
+                        borderWidth: 1,
+                        borderRadius: 20,
+                        padding: 6,
+                        textAlign: "center",
+                        borderColor: Colors.primary,
+                        backgroundColor: isCouponCollapsed
+                          ? "white"
+                          : "#eaeaea",
+                      }}
+                      color={Colors.primary}
+                    >
+                      Coupon
+                    </Text>
+                  </TouchableOpacity>
                 </View>
 
-                <CartCharges
-                  cartSummary={orderSummaryQuery.data}
-                  isLoading={
-                    orderSummaryQuery.isLoading ||
-                    orderSummaryQuery.isRefetching
-                  }
-                />
-              </>
-            ) : (
-              <View marginT-30>
-                <Text center text85>
-                  No products Added
-                </Text>
-                <Text $textNeutralLight center>
-                  Add items to start order
-                </Text>
+                {!isCustomerNameCollapsed && (
+                  <TextField
+                    placeholder="Enter the Customer Name"
+                    color={Colors.primary}
+                    labelColor={"#000"}
+                    style={{
+                      marginLeft: 6,
+                    }}
+                    placeholderTextColor={Colors.gray}
+                    value={orderStore.inputValues.first_name}
+                    onChangeText={(value) => {
+                      orderStore.changeInputValue("first_name", value);
+                    }}
+                  />
+                )}
               </View>
+            </View>
+            {!isCouponCollapsed && (
+              <CouponCodeInput
+                cartSummary={orderSummaryQuery.data}
+                onPressApply={() => orderSummaryQuery.refetch()}
+              />
             )}
-          </ScrollView>
+            <ExperienceSelector />
+            <Button
+              disabled={!isCreateOrderAvailable()}
+              onPress={() => createOrderQuery.mutate()}
+              marginT-35
+              labelStyle={{ color: "#fff" }}
+              label={
+                createOrderQuery.isLoading ? (
+                  <ActivityIndicator color={"white"} />
+                ) : (
+                  "Send Order"
+                )
+              }
+            />
+          </View>
         </View>
-
-        <View paddingB-10>
-          <TextField
-            marginV-15
-            label="Customer Name"
-            placeholder="Enter the Customer Name"
-            color={Colors.primary}
-            labelColor={"#000"}
-            placeholderTextColor={Colors.gray}
-            value={orderStore.inputValues.first_name}
-            onChangeText={(value) => {
-              orderStore.changeInputValue("first_name", value);
-            }}
-          />
-          <CouponCodeInput
-            cartSummary={orderSummaryQuery.data}
-            onPressApply={() => orderSummaryQuery.refetch()}
-          />
-          <ExperienceSelector />
-          <Button
-            disabled={!isCreateOrderAvailable()}
-            onPress={() => createOrderQuery.mutate()}
-            marginT-35
-            labelStyle={{ color: "#fff" }}
-            label={
-              createOrderQuery.isLoading ? (
-                <ActivityIndicator color={"white"} />
-              ) : (
-                "Send Order"
-              )
-            }
-          />
-        </View>
-      </View>
+      )}
     </View>
   );
 };

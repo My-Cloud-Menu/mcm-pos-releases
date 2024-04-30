@@ -1,15 +1,18 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
 import { Button, Colors, Image, Text } from "react-native-ui-lib";
-import { Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import axios from "../../common/axios";
 import { Category } from "../../../types";
 import { useGlobal } from "../../../stores/global";
 import { makeMcmRequest } from "../../common/PetitionsHelper";
 import { FlashList } from "@shopify/flash-list";
+import { useCartStore } from "../../../stores/cartStore";
 
 const CategoriesCarousel = () => {
+  const { cartProducts, clearCart, isClose, toggleClose, toggleOpen } =
+    useCartStore();
   const {
     data: { categories },
   } = useQuery<{ categories: Array<Category> }>({
@@ -24,7 +27,7 @@ const CategoriesCarousel = () => {
   };
 
   return (
-    <View style={{ flexWrap: "wrap" }}>
+    <View style={{ width: "100%" }}>
       {/* <FlashList
         estimatedItemSize={246}
         showsHorizontalScrollIndicator={false}
@@ -79,6 +82,7 @@ const CategoriesCarousel = () => {
           flexDirection: "row",
           flexWrap: "wrap",
           rowGap: 5,
+          marginRight: 80,
         }}
       >
         <Button
@@ -186,6 +190,24 @@ const CategoriesCarousel = () => {
           data={categories.filter((category) => category.status == "published")}
         /> */}
       </View>
+      {!isClose && (
+        <Entypo
+          style={{
+            backgroundColor: "white",
+            padding: 20,
+            borderRadius: 10,
+            borderColor: "#EAEAEA",
+            borderWidth: 0.5,
+            right: 0,
+            position: "absolute",
+            height: 81,
+          }}
+          name="shopping-cart"
+          size={32}
+          color="#606060"
+          onPress={toggleOpen}
+        />
+      )}
     </View>
   );
 };

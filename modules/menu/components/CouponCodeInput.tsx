@@ -23,35 +23,44 @@ const CouponCodeInput = (props: props) => {
 
   return (
     <View marginB-10>
-      <View row spread style={{ alignItems: "flex-end" }}>
-        <TextField
-          style={{ width: "100%" }}
-          label="Coupon"
-          placeholder="Enter coupon code"
-          color={Colors.primary}
-          labelColor={"#000"}
-          labelStyle={{ fontWeight: "600" }}
-          placeholderTextColor={Colors.gray}
-          value={orderStore.inputValues.coupon_code}
-          onChangeText={(value) => {
-            orderStore.changeInputValue(
-              "coupon_code",
-              value.toUpperCase().replace(/ /g, "")
-            );
-          }}
-        />
-        {orderStore.inputValues.coupon_code && (
-          <Button
-            size="small"
-            label="Apply"
-            onPress={() => props.onPressApply && props.onPressApply()}
+      <View
+        row
+        spread
+        style={{
+          alignItems: "flex-start",
+          flexDirection: "column",
+        }}
+      >
+        <View row style={{ alignItems: "center" }}>
+          <TextField
+            style={{ width: "100%", marginLeft: 6 }}
+            placeholder="Enter coupon code"
+            color={Colors.primary}
+            labelColor={"#000"}
+            labelStyle={{ fontWeight: "600" }}
+            placeholderTextColor={Colors.gray}
+            value={orderStore.inputValues.coupon_code}
+            onChangeText={(value) => {
+              orderStore.changeInputValue(
+                "coupon_code",
+                value.toUpperCase().replace(/ /g, "")
+              );
+            }}
           />
-        )}
+          {orderStore.inputValues.coupon_code && (
+            <Button
+              size="small"
+              label="Apply"
+              onPress={() => props.onPressApply && props.onPressApply()}
+            />
+          )}
+        </View>
       </View>
       {props.cartSummary?.coupon_feedback?.feedback && (
         <Text
           marginT-5
           style={{
+            marginLeft: 6,
             color: getFeedbackColor(
               props.cartSummary?.coupon_feedback?.feedback
             ),

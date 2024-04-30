@@ -15,10 +15,8 @@ import {
 } from "../MenuApi";
 import { Product } from "mcm-types";
 
-const getColumsNumbers = () => {
-  if (metrics.screenWidth > 900) return 4;
-  else if (metrics.screenWidth > 800) return 3;
-  else return 2;
+const getColumsNumbers = (): number => {
+  return 4;
 };
 
 const ProductsList = () => {
@@ -79,7 +77,7 @@ const ProductsList = () => {
       style={{ height: 122 }}
       numColumns={getColumsNumbers()}
       data={products.map((item) => ({ ...item, image: item.images[0] }))}
-      ItemSeparatorComponent={() => <View style={{ height: 25 }} />}
+      ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
       scrollEnabled
       renderItem={({ item }) => {
         let isActive = productIdsSelected.includes(item.id);

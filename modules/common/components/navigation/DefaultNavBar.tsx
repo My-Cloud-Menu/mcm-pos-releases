@@ -1,5 +1,5 @@
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Colors, Image, Text, View } from "react-native-ui-lib";
 import {
   AntDesign,
@@ -11,6 +11,7 @@ import {
 import { router, useNavigation, usePathname } from "expo-router";
 import useAuthStore from "../../../auth/AuthStore";
 import { showWarningAlert } from "../../AlertHelper";
+import * as Linking from "expo-linking";
 
 const navItems = [
   {
@@ -39,7 +40,7 @@ const navItems = [
   },
   {
     name: "Payments",
-    pathname: "/journal",
+    pathname: "/payments",
     icon: (props = {}) => (
       <FontAwesome5 size={30} name="money-check" {...props} />
     ),
@@ -50,11 +51,22 @@ const navItems = [
     icon: (props = {}) => <AntDesign size={35} name="setting" {...props} />,
   },
 ];
+const redirectToExternalLink = () => {
+  const externalLink =
+    "https://api.whatsapp.com/send/?phone=17873330990&text&type=phone_number&app_absent=0";
+  Linking.openURL(externalLink);
+};
 
 const DefaultNavBar = () => {
   const activePathName = usePathname();
   const navigation = useNavigation();
   const authStore = useAuthStore((state) => state);
+
+  const [activeNavItem, setActiveNavItem] = useState("/welcome");
+
+  useEffect(() => {
+    setActiveNavItem(activePathName);
+  }, [activePathName]);
 
   const onLogoutPress = async () => {
     try {
@@ -82,7 +94,7 @@ const DefaultNavBar = () => {
       <ScrollView>
         <View flex marginT-20>
           {navItems.map((navItem, idx) => {
-            let isNavItemActive = navItem.pathname == activePathName;
+            let isNavItemActive = navItem.pathname === activeNavItem;
             return (
               <Button
                 onPress={() => router.push(navItem.pathname)}
@@ -90,7 +102,10 @@ const DefaultNavBar = () => {
                 variant="iconButtonWithLabelCenter"
                 active={isNavItemActive}
                 marginV-5
-                style={{ width: 100 }}
+                style={{
+                  width: 100,
+                  backgroundColor: isNavItemActive ? "#002c51" : "white",
+                }}
               >
                 {navItem.icon({
                   color: isNavItemActive ? Colors.white : Colors.gray,
@@ -109,23 +124,21 @@ const DefaultNavBar = () => {
         </View>
       </ScrollView>
 
-      {/* <Button
+      <Button
         variant="iconButtonWithLabelCenter"
         marginV-5
-        onPress={onLogoutPress}
+        onPress={redirectToExternalLink}
         disabled={authStore.isLoading}
       >
         {authStore.isLoading ? (
           <ActivityIndicator size="large" />
         ) : (
           <>
-            <MaterialIcons name="logout" size={25} color={Colors.gray} />
-            <Text color={Colors.gray} marginT-8 text90BL>
-              Logout
-            </Text>
+            <MaterialIcons size={35} name="support-agent" />
+            <Text>Support</Text>
           </>
         )}
-      </Button> */}
+      </Button>
     </View>
   );
 };
@@ -145,5 +158,9 @@ const styles = StyleSheet.create({
   logo: {
     width: 50,
     height: 50,
+  },
+  supportIcon: {
+    alignSelf: "center",
+    marginVertical: 20,
   },
 });

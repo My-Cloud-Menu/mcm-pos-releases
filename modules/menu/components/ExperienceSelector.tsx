@@ -97,7 +97,7 @@ const ExperienceSelector = () => {
       <Text text70 style={{ fontWeight: "bold" }}>
         Experience
       </Text>
-      <View row centerH marginT-10 style={{ gap: 20 }}>
+      <View row centerH marginT-10 style={{ gap: 10 }}>
         {paymentMethods.map((item, idx) => {
           let isPaymentMethodActive = inputValues.experience == item.value;
 
