@@ -96,7 +96,7 @@ const AllergiesChipSelector = ({
                 borderColor: isAllergySelected ? Colors.primary : Colors.black,
               },
               onDismiss: () => {},
-              dismissIcon: <></>,
+              dismissIconStyle: { display: "none" },
               onPress: () => onPressAllergyChip(allergy),
             };
           })}
