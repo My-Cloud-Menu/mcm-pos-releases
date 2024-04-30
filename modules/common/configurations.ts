@@ -57,9 +57,9 @@ export const initialECRSetupConfiguration: EcrSetup = {
 export const initialGlobalSetupConfiguration: GlobalSetup = {
   password_length: 4,
   showErrors: false,
-  siteId: "809819161",
+  siteId: "1020501",
   locationId: "",
-  url: "https://api.v3.mycloudmenu.com",
+  url: "https://frontapi.mycloudmenu.com",
   showTableSelector: true,
   employeesShouldSeeJustTheirTables: true,
   masterPassword: "0000",

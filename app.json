@@ -30,7 +30,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.mycloudmenu.mcm.pos",
-      "versionCode": 15
+      "versionCode": 18
     },
     "web": {
       "bundler": "metro",
