@@ -202,12 +202,12 @@ const ProductItem = ({
               style={{
                 position: "absolute",
                 height: 650,
-                top: "50%",
-                left: "50%",
+                top: "15%",
+                left: "15%",
                 width: "75%",
                 backgroundColor: "white",
                 borderRadius: 20,
-                transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
+                justifyContent: "center",
                 shadowColor: "#000",
                 shadowOffset: {
                   width: 0,
@@ -224,7 +224,6 @@ const ProductItem = ({
                 transitionProperty: "opacity",
                 transitionTimingFunction: "ease-in-out",
                 opacity: open ? 1 : 0,
-                transition: "opacity 3s ease-in-out",
               }}
             >
               <View
