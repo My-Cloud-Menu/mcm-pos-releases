@@ -163,7 +163,7 @@ const ProductItem = ({
       <View paddingT-5 paddingH-5>
         <Pressable onPress={() => onPress && onPress()}>
           <View>
-            {!product.isImageHidden && (
+            {cartStore.isImgeHidden && (
               <Image
                 source={{ uri: getProductImage(product) }}
                 style={styles.image}
@@ -226,23 +226,26 @@ const ProductItem = ({
                 opacity: open ? 1 : 0,
               }}
             >
-              <View
-                style={{
-                  width: "40%",
-                }}
-              >
-                <Image
-                  source={{ uri: getProductImage(product) }}
+              {cartStore.isImgeHidden && (
+                <View
                   style={{
-                    width: "95%",
-                    height: "100%",
-                    borderRadius: 20,
+                    width: "40%",
                   }}
-                />
-              </View>
+                >
+                  <Image
+                    source={{ uri: getProductImage(product) }}
+                    style={{
+                      width: "95%",
+                      height: "100%",
+                      borderRadius: 20,
+                    }}
+                  />
+                </View>
+              )}
+
               <View
                 style={{
-                  width: "60%",
+                  flex: 1,
                 }}
               >
                 <ScrollView
