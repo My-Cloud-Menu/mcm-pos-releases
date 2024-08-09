@@ -6,9 +6,9 @@ import { ProductCart, useCartStore } from "../../../stores/cartStore";
 import Counter from "./Counter";
 import { getProductImage, getTotalProductInCart } from "../MenuHelper";
 
-type Props = { product: ProductCart; productIdx: number };
+type Props = { product: ProductCart; productIdx: number; showImage?: boolean };
 
-const CartItem = ({ product, productIdx }: Props) => {
+const CartItem = ({ product, productIdx, showImage }: Props) => {
   const cartStore = useCartStore();
 
   return (
@@ -16,18 +16,19 @@ const CartItem = ({ product, productIdx }: Props) => {
       style={{
         backgroundColor: "#f9f8fb",
         paddingVertical: 2,
-        paddingHorizontal: 1,
         borderRadius: 8,
       }}
     >
-      <View row style={{ padding: 8 }}>
-        <Image
-          source={{ uri: getProductImage(product.product) }}
-          style={styles.image}
-        />
+      <View row style={{ padding: 2 }}>
+        {showImage && (
+          <Image
+            source={{ uri: getProductImage(product.product) }}
+            style={styles.image}
+          />
+        )}
 
-        <View marginL-13 flex>
-          <Text style={{ fontWeight: "bold", fontSize: 16 }} black>
+        <View marginL-7 flex>
+          <Text style={{ color: "#000", fontSize: 16 }} black>
             {product.product.name}
           </Text>
           {product.variation && (
@@ -53,7 +54,7 @@ const CartItem = ({ product, productIdx }: Props) => {
               );
             })}
           </View>
-          <View flex row bottom spread marginT-10 paddingR-8>
+          <View flex row bottom spread marginT-1 paddingR-8>
             <Text $textNeutralHeavy>
               <Text text100L>$</Text>{" "}
               {formatCurrency(getTotalProductInCart(product), true)}
@@ -76,8 +77,8 @@ export default CartItem;
 
 const styles = StyleSheet.create({
   image: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
+    width: 55,
+    borderRadius: 6,
+    marginRight: 6,
   },
 });

@@ -1,9 +1,22 @@
 import Decimal from "decimal.js";
-import { Ingredient, Item_attibute, Product } from "mcm-types";
+import { Category, Ingredient, Item_attibute, Product } from "mcm-types";
 import { showAlert } from "../common/AlertHelper";
 import { ProductCart } from "../../stores/cartStore";
+import { Ionicons } from "@expo/vector-icons";
+import { Colors, Image } from "react-native-ui-lib";
 
 const defaultProductImg = "/assets/images/image-notfound.png";
+
+export const categoryHasAValidImage = (category: Category) => {
+  return category.image?.normal;
+};
+
+export const productHasAValidImage = (product: Product) => {
+  return (
+    product.images.length > 0 &&
+    (product.images[0].thumbnail || product.images[0].normal)
+  );
+};
 
 export const getProductImage = (product: Product) => {
   if (product.images.length == 0 || product.images == null)
@@ -296,4 +309,19 @@ export const isProductInStock = (product: Product) => {
     isInStock = false;
 
   return isInStock;
+};
+
+export const getCategoryImage = (category: Category) => {
+  if (category?.image?.normal) {
+    return (
+      <Image
+        source={{ uri: category.image.normal }}
+        style={{ width: 28, height: 28, borderRadius: 8 }}
+      />
+    );
+  }
+
+  return (
+    <Ionicons name="md-restaurant-outline" size={22} color={Colors.primary} />
+  );
 };

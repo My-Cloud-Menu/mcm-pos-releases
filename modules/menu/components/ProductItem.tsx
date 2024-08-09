@@ -20,6 +20,7 @@ import {
   getIngredientsSelectedFormattedForCart,
   getProductImage,
   isProductInStock,
+  productHasAValidImage,
   validateIngredientsSelection,
 } from "../MenuHelper";
 import { showAlert } from "../../common/AlertHelper";
@@ -64,6 +65,7 @@ type props = {
   onPress?: () => void;
   ingredients: Ingredient[];
   ingredientsGroups: IngredientGroup[];
+  showImage?: boolean;
 };
 
 const ProductItem = ({
@@ -72,6 +74,7 @@ const ProductItem = ({
   onPress = undefined,
   ingredients = [],
   ingredientsGroups = [],
+  showImage,
 }: props) => {
   const cartStore = useCartStore();
 
@@ -160,34 +163,27 @@ const ProductItem = ({
 
   return (
     <View style={styles.container}>
-      <View paddingT-5 paddingH-5>
+      <View>
         <Pressable onPress={() => onPress && onPress()}>
           <View>
-            {cartStore.isImgeHidden && (
+            {showImage && productHasAValidImage(product) && (
               <Image
                 source={{ uri: getProductImage(product) }}
                 style={styles.image}
               />
             )}
-            <View style={{ width: "100%" }}>
+            <View style={{ width: "100%", height: 45 }}>
               <Text
                 text65
-                black
                 style={{
                   maxWidth: "100%",
                   fontWeight: "bold",
                   padding: 10,
                 }}
               >
-                {product.name.slice(0, 26)}
-                {product.name.length > 26 ? "..." : ""}
+                {product.name.slice(0, 27)}
+                {product.name.length > 27 ? "..." : ""}
               </Text>
-              {/* {product.description && (
-                <Text text65 black style={{ padding: 10 }}>
-                  {product.description?.slice(0, 100)}
-                  ...
-                </Text>
-              )} */}
             </View>
           </View>
         </Pressable>
@@ -453,14 +449,16 @@ const ProductItem = ({
       </View>
 
       <View
-        paddingH-10
-        paddingB-5
-        style={{ flexDirection: "row", justifyContent: "space-between" }}
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingRight: 5,
+        }}
       >
         <Text
           text65BL
           black
-          marginT-12
           style={{
             padding: 10,
             display: "flex",
@@ -470,7 +468,7 @@ const ProductItem = ({
           <Text>$</Text>
           {formatCurrency(product.price, true)}
         </Text>
-        <Button onPress={handleOpen} marginT-20 size="medium" fullWidth>
+        <Button onPress={handleOpen} size="small">
           <AntDesign name="plus" size={24} color="white" />
         </Button>
       </View>
@@ -482,9 +480,9 @@ export default ProductItem;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
+    // flex: 1,
+    paddingHorizontal: 4,
+    paddingVertical: 5,
     marginHorizontal: 3,
     borderRadius: 8,
     backgroundColor: Colors.white,
@@ -499,7 +497,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 160,
+    height: 85,
     borderRadius: 8,
   },
 });

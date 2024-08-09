@@ -1,16 +1,19 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
-import { Button, Colors, Image, Text } from "react-native-ui-lib";
-import { Entypo, Ionicons } from "@expo/vector-icons";
+import { Button, Colors, Text } from "react-native-ui-lib";
+import { Entypo } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
-import axios from "../../common/axios";
 import { Category } from "../../../types";
 import { useGlobal } from "../../../stores/global";
 import { makeMcmRequest } from "../../common/PetitionsHelper";
-import { FlashList } from "@shopify/flash-list";
 import { useCartStore } from "../../../stores/cartStore";
+import { categoryHasAValidImage, getCategoryImage } from "../MenuHelper";
 
-const CategoriesCarousel = () => {
+type props = {
+  showCategoryImage?: boolean;
+};
+
+const CategoriesCarousel = (props: props) => {
   const { cartProducts, clearCart, isClose, toggleClose, toggleOpen } =
     useCartStore();
   const {
@@ -28,61 +31,12 @@ const CategoriesCarousel = () => {
 
   return (
     <View style={{ width: "100%" }}>
-      {/* <FlashList
-        estimatedItemSize={246}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        data={categories.map(({ id, name, image: { normal } }) => ({
-          id,
-          name,
-          image: {
-            normal
-          }
-        }))}
-        // data={data}
-        renderItem={({ item }) => {
-          // let isNavItemActive = categoryIdSelected == item.id;
-          let isNavItemActive = false;
-          return (
-            <Button
-              onPress={() => { }}
-              variant="iconButtonWithLabelCenterOutline"
-              active={isNavItemActive}
-              marginV-2
-              marginH-5
-            >
-              {item?.image?.normal ? (
-                <Image
-                  source={{ uri: item.image.normal }}
-                  style={styles.image}
-                />
-              ) : (
-                <Ionicons
-                  name="md-restaurant-outline"
-                  size={27}
-                  color={Colors.primary}
-                />
-              )}
-              <View style={{ maxWidth: 150 }}>
-                <Text
-                  center
-                  color={isNavItemActive ? Colors.primary : Colors.primary}
-                  marginT-14
-                  text80BL
-                >
-                  {item.name}
-                </Text>
-              </View>
-            </Button>
-          );
-        }}
-      /> */}
       <View
         style={{
           flexDirection: "row",
           flexWrap: "wrap",
           rowGap: 5,
-          marginRight: 80,
+          marginRight: isClose ? 5 : 30,
         }}
       >
         <Button
@@ -91,16 +45,13 @@ const CategoriesCarousel = () => {
           active={!selectedCategory?.id}
           marginV-2
           marginH-5
-          style={{ maxHeight: 80 }}
+          style={{ maxHeight: 80, paddingVertical: 2, paddingHorizontal: 10 }}
         >
-          <Image
-            source={{
-              uri: "https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_clear_all_48px-512.png",
-            }}
-            style={styles.image}
-          />
+          {props?.showCategoryImage && (
+            <Entypo name="list" size={24} color={Colors.primary} />
+          )}
           <View style={{ maxWidth: 150 }}>
-            <Text center color={Colors.primary} marginT-14 text80BL>
+            <Text center color={Colors.primary} marginT-5 text80BL>
               {"All"}
             </Text>
           </View>
@@ -117,25 +68,20 @@ const CategoriesCarousel = () => {
                 active={isNavItemActive}
                 marginV-2
                 marginH-5
-                style={{ maxHeight: 80 }}
+                style={{
+                  maxHeight: 80,
+                  paddingVertical: 2,
+                  paddingHorizontal: 10,
+                }}
               >
-                {item?.image?.normal ? (
-                  <Image
-                    source={{ uri: item.image.normal }}
-                    style={styles.image}
-                  />
-                ) : (
-                  <Ionicons
-                    name="md-restaurant-outline"
-                    size={27}
-                    color={Colors.primary}
-                  />
-                )}
+                {props.showCategoryImage &&
+                  categoryHasAValidImage(item) &&
+                  getCategoryImage(item)}
                 <View style={{ maxWidth: 150 }}>
                   <Text
                     center
                     color={isNavItemActive ? Colors.primary : Colors.primary}
-                    marginT-14
+                    marginT-4
                     text80BL
                   >
                     {item.name}
@@ -144,51 +90,6 @@ const CategoriesCarousel = () => {
               </Button>
             );
           })}
-
-        {/* <FlashList
-          scrollEnabled
-          style={{ maxWidth: 100 }}
-          horizontal
-          renderItem={({ item }) => {
-            let isNavItemActive = selectedCategory?.id == item.id;
-            return (
-              <Button
-                onPress={() => onPressCategory(item)}
-                variant="iconButtonWithLabelCenterOutline"
-                active={isNavItemActive}
-                marginV-2
-                marginH-5
-              >
-                {item?.image?.normal ? (
-                  <Image
-                    source={{ uri: item.image.normal }}
-                    style={styles.image}
-                  />
-                ) : (
-                  <Ionicons
-                    name="md-restaurant-outline"
-                    size={27}
-                    color={Colors.primary}
-                  />
-                )}
-                <View style={{ maxWidth: 150 }}>
-                  <Text
-                    center
-                    color={isNavItemActive ? Colors.primary : Colors.primary}
-                    marginT-14
-                    text80BL
-                  >
-                    {item.name}
-                  </Text>
-                </View>
-              </Button>
-            );
-          }}
-          // getItemType={({ item }) => {
-          //   return item.type;
-          // }}
-          data={categories.filter((category) => category.status == "published")}
-        /> */}
       </View>
       {!isClose && (
         <Entypo
@@ -216,8 +117,8 @@ export default CategoriesCarousel;
 
 const styles = StyleSheet.create({
   image: {
-    width: 30,
-    height: 30,
+    width: 28,
+    height: 28,
     borderRadius: 8,
   },
 });

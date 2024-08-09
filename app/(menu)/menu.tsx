@@ -4,15 +4,8 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Colors,
-  Text,
-  TextField,
-  TouchableOpacity,
-  View,
-} from "react-native-ui-lib";
+import React, { useEffect, useMemo, useState } from "react";
+import { Button, Colors, Text, TextField, View } from "react-native-ui-lib";
 import CategoriesCarousel from "../../modules/menu/components/CategoriesCarousel";
 import ProductsList from "../../modules/menu/components/ProductsList";
 import UserProfileCard from "../../modules/auth/components/UserProfileCard";
@@ -39,12 +32,10 @@ import {
 import ExperienceSelector from "../../modules/menu/components/ExperienceSelector";
 import useSplitStore from "../../modules/payment/SplitStore";
 import { useIsFocused } from "@react-navigation/native";
-import {
-  checkClosedStatuses,
-  checkOpenStatuses,
-} from "../../modules/orders/OrderHelper";
+import { checkClosedStatuses } from "../../modules/orders/OrderHelper";
 import CouponCodeInput from "../../modules/menu/components/CouponCodeInput";
-import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import useSetting from "../../modules/settings/hooks/useSetting";
 
 const Menu = () => {
   const isFocused = useIsFocused();
@@ -52,16 +43,19 @@ const Menu = () => {
     useCartStore();
   const { selectedCategory } = useGlobal();
   const orderStore = useOrderStore();
+  const { settings, getFeatureFlag } = useSetting();
   const { resetSplitPayment } = useSplitStore();
   const [isCustomerNameCollapsed, setCustomerNameCollapsed] = useState(true);
   const [isCouponCollapsed, setCouponCollapsed] = useState(true);
 
   const toggleCoupon = () => {
     setCouponCollapsed(!isCouponCollapsed);
+    orderStore.changeInputValue("coupon_code", "");
   };
 
   const toggleCustomerName = () => {
     setCustomerNameCollapsed(!isCustomerNameCollapsed);
+    orderStore.changeInputValue("first_name", "");
   };
 
   const ordersQuery = useQuery({
@@ -110,6 +104,10 @@ const Menu = () => {
     resetSplitPayment();
   }, [isFocused]);
 
+  const shouldShowCategoriesAndProductImages = useMemo(() => {
+    return !getFeatureFlag("pos_prod_menu_no_image");
+  }, [settings]);
+
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
       <View flex paddingT-5 paddingB-0 paddingL-5 paddingR-5>
@@ -125,7 +123,9 @@ const Menu = () => {
               }
             }
           >
-            <CategoriesCarousel />
+            <CategoriesCarousel
+              showCategoryImage={shouldShowCategoriesAndProductImages}
+            />
             {/* {!isClose && (
               <Entypo
                 style={{
@@ -145,7 +145,9 @@ const Menu = () => {
           <Text marginT-15 marginB-10 text70L>
             {selectedCategory?.name || "All"}
           </Text>
-          <ProductsList />
+          <ProductsList
+            showProductImage={shouldShowCategoriesAndProductImages}
+          />
         </View>
         <View
           style={{
@@ -157,7 +159,10 @@ const Menu = () => {
         />
 
         <FlatList
-          style={{ maxHeight: 100 }}
+          style={{
+            maxHeight: 80,
+            display: ordersQuery.data.orders.length == 0 ? "none" : "flex",
+          }}
           keyExtractor={(item) => item.id}
           horizontal={true}
           ItemSeparatorComponent={() => (
@@ -190,7 +195,7 @@ const Menu = () => {
           paddingR-10
           paddingL-10
           style={{
-            maxWidth: 295,
+            maxWidth: 250,
             backgroundColor: Colors.white,
             borderTopStartRadius: 12,
             borderBottomStartRadius: 12,
@@ -198,8 +203,12 @@ const Menu = () => {
         >
           <View flex>
             <View
-              row
-              style={{ display: "flex", justifyContent: "space-around" }}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingRight: 5,
+              }}
             >
               <UserProfileCard />
               <FontAwesome5
@@ -209,10 +218,10 @@ const Menu = () => {
                 color="black"
               />
             </View>
-            <ScrollView style={{ paddingRight: 3 }}>
+            <ScrollView style={{ paddingRight: 3, paddingBottom: 20 }}>
               {cartProducts.length ? (
                 <>
-                  <Text text60 marginT-10>
+                  <Text text65L marginT-10>
                     Cart{" "}
                     <Text text70>
                       (
@@ -224,15 +233,21 @@ const Menu = () => {
                   <View>
                     <FlashList
                       contentContainerStyle={{
-                        paddingTop: 20,
-                        paddingBottom: 50,
+                        paddingTop: 5,
+                        paddingBottom: 20,
                       }}
                       ItemSeparatorComponent={() => (
-                        <View style={{ height: 25 }} />
+                        <View style={{ height: 7 }} />
                       )}
                       data={cartProducts}
                       renderItem={({ item, index }) => {
-                        return <CartItem product={item} productIdx={index} />;
+                        return (
+                          <CartItem
+                            product={item}
+                            productIdx={index}
+                            showImage={shouldShowCategoriesAndProductImages}
+                          />
+                        );
                       }}
                     />
                   </View>
@@ -258,83 +273,52 @@ const Menu = () => {
             </ScrollView>
           </View>
           <View paddingB-10>
-            <View style={{ marginTop: 15, marginBottom: 15 }}>
-              <View>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    width: "100%",
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={toggleCustomerName}
-                    style={{
-                      flex: 1,
-                      marginRight: 8,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        marginBottom: 10,
-                        borderWidth: 1,
-                        borderRadius: 20,
-                        padding: 6,
-                        textAlign: "center",
-                        borderColor: Colors.primary,
-                        backgroundColor: isCustomerNameCollapsed
-                          ? "white"
-                          : "#eaeaea",
-                      }}
-                      color={Colors.primary}
-                    >
-                      Customer Name
-                    </Text>
-                  </TouchableOpacity>
+            <View row>
+              <Button
+                marginR-12
+                size="xSmall"
+                variant={"iconButtonWithLabelCenterOutline"}
+                style={{
+                  backgroundColor: isCustomerNameCollapsed ? null : "#f9f8fb",
+                  height: 32,
+                }}
+                onPress={toggleCustomerName}
+              >
+                <Text black>Customer Name</Text>
+              </Button>
 
-                  <TouchableOpacity
-                    onPress={toggleCoupon}
-                    style={{
-                      flex: 1,
-                      marginLeft: 8,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        marginBottom: 10,
-                        borderWidth: 1,
-                        borderRadius: 20,
-                        padding: 6,
-                        textAlign: "center",
-                        borderColor: Colors.primary,
-                        backgroundColor: isCouponCollapsed
-                          ? "white"
-                          : "#eaeaea",
-                      }}
-                      color={Colors.primary}
-                    >
-                      Coupon
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+              <Button
+                size="xSmall"
+                variant={"iconButtonWithLabelCenterOutline"}
+                style={{
+                  height: 32,
 
-                {!isCustomerNameCollapsed && (
-                  <TextField
-                    placeholder="Enter the Customer Name"
-                    color={Colors.primary}
-                    labelColor={"#000"}
-                    style={{
-                      marginLeft: 6,
-                    }}
-                    placeholderTextColor={Colors.gray}
-                    value={orderStore.inputValues.first_name}
-                    onChangeText={(value) => {
-                      orderStore.changeInputValue("first_name", value);
-                    }}
-                  />
-                )}
-              </View>
+                  backgroundColor: isCouponCollapsed ? null : "#f9f8fb",
+                }}
+                onPress={toggleCoupon}
+              >
+                <Text black>Coupon</Text>
+              </Button>
             </View>
+
+            {!isCustomerNameCollapsed && (
+              <TextField
+                leadingAccessory={<Text text100>Name</Text>}
+                placeholder="Enter the Customer Name"
+                color={Colors.primary}
+                labelColor={"#000"}
+                style={{
+                  marginVertical: 10,
+                  marginLeft: 6,
+                }}
+                placeholderTextColor={Colors.gray}
+                value={orderStore.inputValues.first_name}
+                onChangeText={(value) => {
+                  orderStore.changeInputValue("first_name", value);
+                }}
+              />
+            )}
+
             {!isCouponCollapsed && (
               <CouponCodeInput
                 cartSummary={orderSummaryQuery.data}
@@ -345,7 +329,7 @@ const Menu = () => {
             <Button
               disabled={!isCreateOrderAvailable()}
               onPress={() => createOrderQuery.mutate()}
-              marginT-35
+              marginT-10
               labelStyle={{ color: "#fff" }}
               label={
                 createOrderQuery.isLoading ? (

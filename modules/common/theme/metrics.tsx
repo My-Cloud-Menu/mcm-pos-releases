@@ -2,8 +2,8 @@ import { Dimensions } from "react-native";
 const { width, height } = Dimensions.get("window");
 
 const metrics = {
-  screenWidth: width < height ? width : height,
-  screenHeigth: width < height ? height : width,
+  screenWidth: width,
+  screenHeigth: height,
 };
 
 export default metrics;

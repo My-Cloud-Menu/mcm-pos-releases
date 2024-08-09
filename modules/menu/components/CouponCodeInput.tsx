@@ -33,8 +33,9 @@ const CouponCodeInput = (props: props) => {
       >
         <View row style={{ alignItems: "center" }}>
           <TextField
-            style={{ width: "100%", marginLeft: 6 }}
-            placeholder="Enter coupon code"
+            leadingAccessory={<Text text100>Code</Text>}
+            style={{ marginLeft: 6, width: 140 }}
+            placeholder="Enter Coupon Code"
             color={Colors.primary}
             labelColor={"#000"}
             labelStyle={{ fontWeight: "600" }}
@@ -49,7 +50,7 @@ const CouponCodeInput = (props: props) => {
           />
           {orderStore.inputValues.coupon_code && (
             <Button
-              size="small"
+              size="xSmall"
               label="Apply"
               onPress={() => props.onPressApply && props.onPressApply()}
             />

@@ -11,14 +11,14 @@ const paymentMethods = [
     name: "Takeout",
     value: "pu",
     icon: (props = {}) => (
-      <Entypo name="shopping-bag" size={30} color={Colors.gray} {...props} />
+      <Entypo name="shopping-bag" size={28} color={Colors.gray} {...props} />
     ),
   },
   {
     name: "Table",
     value: "qe",
     icon: (props = {}) => (
-      <FontAwesome5 name="chair" size={30} color={Colors.gray} {...props} />
+      <FontAwesome5 name="chair" size={28} color={Colors.gray} {...props} />
     ),
   },
   {
@@ -27,7 +27,7 @@ const paymentMethods = [
     icon: (props = {}) => (
       <MaterialIcons
         name="delivery-dining"
-        size={30}
+        size={28}
         color={Colors.gray}
         {...props}
       />
@@ -109,7 +109,7 @@ const ExperienceSelector = () => {
               active={isPaymentMethodActive}
               style={{
                 backgroundColor: isPaymentMethodActive ? "" : Colors.graySoft,
-                paddingHorizontal: 19,
+                paddingHorizontal: 12,
               }}
             >
               {item.icon({
@@ -118,7 +118,6 @@ const ExperienceSelector = () => {
               <Text
                 center
                 color={isPaymentMethodActive ? Colors.primary : Colors.primary}
-                marginT-8
                 text75
               >
                 {item.name}

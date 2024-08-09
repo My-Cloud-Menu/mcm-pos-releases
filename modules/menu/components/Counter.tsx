@@ -31,8 +31,8 @@ const Counter = (props: props) => {
           size={16}
           color={Colors.primary}
           style={{
-            paddingVertical: 5,
-            paddingHorizontal: 7,
+            paddingVertical: 3,
+            paddingHorizontal: 5,
             borderRadius: 10,
             borderWidth: 1,
             borderColor: Colors.primary,
@@ -42,7 +42,7 @@ const Counter = (props: props) => {
         <Text
           style={{
             fontWeight: "bold",
-            paddingHorizontal: 10,
+            paddingHorizontal: 5,
             paddingVertical: 2,
             borderRadius: 1,
             fontSize: 16,
@@ -56,8 +56,8 @@ const Counter = (props: props) => {
           size={16}
           color={Colors.primary}
           style={{
-            paddingVertical: 5,
-            paddingHorizontal: 7,
+            paddingVertical: 3,
+            paddingHorizontal: 5,
             color: "white",
             backgroundColor: Colors.primary,
             borderRadius: 5,

@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Alert, Linking, Pressable, StyleSheet } from "react-native";
 import {
   AntDesign,
   Entypo,
@@ -11,10 +11,13 @@ import {
 import { Image, Text, View } from "react-native-ui-lib";
 import { useNavigation } from "expo-router";
 import useOrderStore from "../modules/orders/OrdersStore";
+import useSetting from "../modules/settings/hooks/useSetting";
+import { getLogoComponent } from "../modules/settings/SettingsHelper";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const changeInputValue = useOrderStore((state) => state.changeInputValue);
+  const { settings } = useSetting();
 
   const onPressButton = () =>
     navigation.navigate("(menu)", { screen: "clocksinout" });
@@ -27,6 +30,13 @@ const HomeScreen = () => {
     navigation.navigate("(menu)", { screen: "settings" });
   const onPressLogout = () =>
     navigation.navigate("(menu)", { screen: "clocksinout" });
+
+  const onPressContactSupport = () => {
+    const externalLink =
+      "https://api.whatsapp.com/send/?phone=17873330990&text&type=phone_number&app_absent=0";
+
+    Linking.openURL(externalLink);
+  };
 
   const onPressOrderExperience = (experience = "pu") => {
     changeInputValue("experience", experience);
@@ -42,12 +52,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Image
-          resizeMode="contain"
-          style={styles.logo}
-          assetGroup="assets"
-          assetName="logoMain"
-        />
+        {getLogoComponent({ settings: settings, styles: styles.logo })}
       </View>
 
       <View style={styles.cardsContainer}>
@@ -143,7 +148,7 @@ const HomeScreen = () => {
 
       <View style={styles.footer}>
         <View style={styles.iconsContainer}>
-          <Pressable onPress={onPressButton} style={styles.iconWithText}>
+          {/* <Pressable onPress={onPressButton} style={styles.iconWithText}>
             <Ionicons
               name="home"
               size={55}
@@ -151,7 +156,7 @@ const HomeScreen = () => {
               style={styles.footerIconfooter}
             />
             <Text style={styles.footerText}>Home</Text>
-          </Pressable>
+          </Pressable> */}
           <Pressable onPress={onPressMenu} style={styles.iconWithText}>
             <MaterialIcons
               name="restaurant"
@@ -198,6 +203,19 @@ const HomeScreen = () => {
             />
             <Text style={styles.footerText}>Settings</Text>
           </Pressable>
+          <Pressable
+            onPress={onPressContactSupport}
+            style={styles.iconWithText}
+          >
+            <MaterialIcons
+              name="support-agent"
+              size={55}
+              color="#9e2820"
+              style={styles.footerIconfooter}
+            />
+            <Text style={styles.footerText}>Support</Text>
+          </Pressable>
+
           <View style={{ flex: 1 }}>
             <Pressable onPress={onPressLogout} style={styles.iconWithText}>
               <Ionicons
@@ -228,7 +246,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 200,
     height: 200,
-    borderRadius: 30,
+    borderRadius: 15,
     marginTop: 20,
     marginBottom: 70,
   },

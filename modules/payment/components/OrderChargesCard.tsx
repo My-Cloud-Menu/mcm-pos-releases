@@ -22,32 +22,32 @@ const OrderChargesCard = ({ order }: props) => {
   return (
     <View style={[styles.container]}>
       <View style={styles.charge}>
-        <Text text60L>Subtotal</Text>
-        <Text text60L>{formatCurrency(order.cart.subtotal)}</Text>
+        <Text text65L>Subtotal</Text>
+        <Text text65L>{formatCurrency(order.cart.subtotal)}</Text>
       </View>
       <View style={styles.charge}>
-        <Text text60L>Taxes</Text>
-        <Text text60L>{formatCurrency(order.cart.total_tax)}</Text>
+        <Text text65L>Taxes</Text>
+        <Text text65L>{formatCurrency(order.cart.total_tax)}</Text>
       </View>
       {order.cart.fee_lines
         .filter((fee) => fee.total != "0.00")
         .map((fee) => (
           <View key={`${fee.name}`} style={styles.charge}>
-            <Text text60L>{getFeeLabel(fee.name)}</Text>
-            <Text text60L>{formatCurrency(fee.total)}</Text>
+            <Text text65L>{getFeeLabel(fee.name)}</Text>
+            <Text text65L>{formatCurrency(fee.total)}</Text>
           </View>
         ))}
       <View style={styles.charge}>
-        <Text text60L>Tips</Text>
-        <Text text60L>{formatCurrency(tip || 0)}</Text>
+        <Text text65L>Tips</Text>
+        <Text text65L>{formatCurrency(tip || 0)}</Text>
       </View>
       <View style={styles.charge}>
-        <Text text60L>Descuentos</Text>
-        <Text text60L> {formatCurrency(order.cart.discount_total)}</Text>
+        <Text text65L>Descuentos</Text>
+        <Text text65L> {formatCurrency(order.cart.discount_total)}</Text>
       </View>
       <View style={styles.charge}>
-        <Text text60L>Pagado</Text>
-        <Text text60L> {formatCurrency(order.paid)}</Text>
+        <Text text65L>Pagado</Text>
+        <Text text65L> {formatCurrency(order.paid)}</Text>
       </View>
 
       <View style={styles.charge}>
@@ -66,8 +66,8 @@ const styles = StyleSheet.create({
   },
   titles: { fontSize: fonts.size.lg, fontWeight: fonts.weight.semi },
   charge: {
-    width: 250,
-    marginVertical: 9,
+    width: 280,
+    marginVertical: 5,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",

@@ -1,6 +1,13 @@
 import { StyleSheet, ActivityIndicator, ScrollView, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Button, Colors, StateScreen, Text, View } from "react-native-ui-lib";
+import {
+  Button,
+  Colors,
+  ExpandableSection,
+  StateScreen,
+  Text,
+  View,
+} from "react-native-ui-lib";
 import { Stack, router } from "expo-router";
 import { Order, ecrSaleResponse } from "../../../types";
 import TipSelector from "../../../modules/payment/components/TipSelector";
@@ -35,6 +42,7 @@ import { orderQueryKey } from "../../orders/OrdersApi";
 import { useIsFocused } from "@react-navigation/native";
 import { ecrStatusCheckerKey } from "../../auth/AuthApi";
 import { printECRCustomReceipt } from "../../receipt/ReceiptApi";
+import { AntDesign } from "@expo/vector-icons";
 
 interface props {
   order: Order;
@@ -67,6 +75,8 @@ const PaymentScreen = ({ order }: props) => {
   const [ecrResultCreated, setEcrResultCreated] = useState<
     ecrSaleResponse | undefined
   >(undefined);
+
+  const [isChargeDetailsExpanded, setIsChargeDetailsExpanded] = useState(false);
 
   const createPaymentQuery = useMutation({
     onError: (error) => {
@@ -163,31 +173,45 @@ const PaymentScreen = ({ order }: props) => {
       <ScrollView>
         <View flex centerH paddingB-60>
           <Stack.Screen options={{ title: `Payment - Order #${order.id}` }} />
-          <Text marginT-15 text50L>
-            Total a Pagar
-          </Text>
-          <View>
-            <Text text20 marginT-5 marginB-20>
-              $ {amountFinalTotal}{" "}
-            </Text>
-            <View
-              row
-              center
-              style={{ position: "absolute", left: 190, top: 23 }}
-            >
-              <SplitPaymentCounter />
-              <Button
-                marginL-3
-                onPress={() => goToSplitPaymentScreen(order.id, order)}
-                size="xSmall"
-                label="Split Amount"
-                style={{
-                  paddingHorizontal: 12,
-                  backgroundColor: Colors.green,
-                }}
-              />
-            </View>
-          </View>
+          <ExpandableSection
+            expanded={isChargeDetailsExpanded}
+            sectionHeader={
+              <View center>
+                <Text marginT-15 text50L>
+                  Total a Pagar
+                </Text>
+                <View row center style={{ marginLeft: 100 }}>
+                  <AntDesign
+                    name={isChargeDetailsExpanded ? "minus" : "plus"}
+                    size={25}
+                    color="#2a2a2a"
+                    style={{ marginTop: 5 }}
+                  />
+                  <Text marginL-10 text20>
+                    {amountFinalTotal}{" "}
+                  </Text>
+                  <View row center>
+                    <SplitPaymentCounter />
+                    <Button
+                      marginL-3
+                      onPress={() => goToSplitPaymentScreen(order.id, order)}
+                      size="xSmall"
+                      label="Split Amount"
+                      style={{
+                        paddingHorizontal: 12,
+                        backgroundColor: Colors.green,
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            }
+            onPress={() => {
+              setIsChargeDetailsExpanded(!isChargeDetailsExpanded);
+            }}
+          >
+            <OrderChargesCard order={order} />
+          </ExpandableSection>
 
           <Text center text65 marginT-10>
             Method
@@ -197,9 +221,9 @@ const PaymentScreen = ({ order }: props) => {
             Tip
           </Text>
           <TipSelector paymentTotal={amountBaseForTips} />
-          <View marginT-40>
+          {/* <View marginT-40>
             <OrderChargesCard order={order} />
-          </View>
+          </View> */}
         </View>
       </ScrollView>
       <View paddingB-20>

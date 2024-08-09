@@ -14,7 +14,7 @@ const CartCharges = ({ cartSummary, isLoading }: props) => {
   if (isLoading || !Boolean(cartSummary)) return <ActivityIndicator />;
 
   return (
-    <View paddingT-10 flex style={{}}>
+    <View paddingT-10 flex style={{ rowGap: 4 }}>
       <View row spread>
         <Text text80>Subtotal</Text>
         <Text text80>
@@ -23,8 +23,18 @@ const CartCharges = ({ cartSummary, isLoading }: props) => {
         </Text>
       </View>
 
-      {cartSummary.tax_lines.map((taxLine) => (
-        <View row spread marginT-13>
+      <View row spread>
+        <Text text80 $textNeutral>
+          Taxes
+        </Text>
+        <Text text80>
+          <Text text100L>$ </Text>
+          {cartSummary.total_tax}
+        </Text>
+      </View>
+
+      {/* {cartSummary.tax_lines.map((taxLine) => (
+        <View row spread>
           <Text text80 $textNeutral>
             {taxLine.label} ({taxLine.rate}%)
           </Text>
@@ -33,12 +43,23 @@ const CartCharges = ({ cartSummary, isLoading }: props) => {
             {taxLine.tax_total}
           </Text>
         </View>
-      ))}
+      ))} */}
 
-      {cartSummary.fee_lines
+      {Number(cartSummary?.fee_total) > 0 && (
+        <View row spread>
+          <Text text80 $textNeutral>
+            Fees
+          </Text>
+          <Text text80>
+            <Text text100L>$ </Text>
+            {cartSummary.fee_total}
+          </Text>
+        </View>
+      )}
+      {/* {cartSummary.fee_lines
         .filter((fee_line) => new Decimal(fee_line.total).greaterThan("0.00"))
         .map((fee_lines) => (
-          <View row spread marginT-13>
+          <View row spread>
             <Text text80 $textNeutral>
               {fee_lines.name}
             </Text>
@@ -47,10 +68,10 @@ const CartCharges = ({ cartSummary, isLoading }: props) => {
               {fee_lines.total}
             </Text>
           </View>
-        ))}
+        ))} */}
 
       {cartSummary.coupon_lines.map((coupon: any) => (
-        <View row spread marginT-13>
+        <View row spread>
           <Text text80 green10>
             COUPON: {coupon.code}
           </Text>
@@ -65,15 +86,15 @@ const CartCharges = ({ cartSummary, isLoading }: props) => {
 
       <View
         style={{
-          marginTop: 15,
+          marginTop: 3,
           borderTopWidth: 1,
           borderTopColor: Colors.gray,
           borderStyle: "dashed",
         }}
       />
-      <View row spread centerV marginT-16>
+      <View row spread centerV marginT-3>
         <Text text60>Total</Text>
-        <Text text60 style={{ padding: 10 }}>
+        <Text text60>
           <Text text100L style={{}}>
             ${" "}
           </Text>

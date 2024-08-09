@@ -20,11 +20,11 @@ const UserProfileCard = () => {
       >
         <View marginL-20 marginR-50>
           <Text text80L $textNeutralLight>
-            I'm a Waiter
+            Welcome,
           </Text>
           <Text text65>{name || "Guest"}</Text>
         </View>
-        <Feather name="bell" size={22} color={Colors.grayActive} />
+        {/* <Feather name="bell" size={22} color={Colors.grayActive} /> */}
       </View>
     </View>
   );
@@ -33,7 +33,7 @@ const UserProfileCard = () => {
 export default UserProfileCard;
 
 const styles = StyleSheet.create({
-  container: { maxWidth: "95%", marginBottom: 5 },
+  container: { marginBottom: 5 },
   image: {
     width: 45,
     height: 45,

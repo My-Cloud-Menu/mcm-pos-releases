@@ -202,6 +202,11 @@ export const sendLogs = (
 
   logMessage += `\n${JSON.stringify(log)}\n`;
 
+  if (__DEV__) {
+    console.log(logMessage);
+    return;
+  }
+
   makeMcmRequest("admin/logs", "POST", {
     app: "orderandpay",
     logs: logMessage,

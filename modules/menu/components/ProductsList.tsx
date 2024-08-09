@@ -16,10 +16,23 @@ import {
 import { Product } from "mcm-types";
 
 const getColumsNumbers = (): number => {
-  return 4;
+  console.log(metrics.screenWidth);
+  if (metrics.screenWidth < 1250) {
+    return 3;
+  } else if (metrics.screenWidth < 1500) {
+    return 4;
+  } else if (metrics.screenWidth < 1700) {
+    return 5;
+  } else {
+    return 6;
+  }
 };
 
-const ProductsList = () => {
+type props = {
+  showProductImage?: boolean;
+};
+
+const ProductsList = (props: props) => {
   const { data: productResponse } = useQuery({
     queryKey: [productsQueryKey],
     queryFn: () => getProducts(),
@@ -79,16 +92,20 @@ const ProductsList = () => {
       data={products.map((item) => ({ ...item, image: item.images[0] }))}
       ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
       scrollEnabled
+      keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => {
         let isActive = productIdsSelected.includes(item.id);
         return (
-          <ProductItem
-            ingredients={ingredientsQuery.data.ingredients}
-            ingredientsGroups={ingredientsGroupsQuery.data.ingredients_groups}
-            product={item}
-            isActive={isActive}
-            onPress={() => onPressProduct(item)}
-          />
+          <View style={{ flex: 1, maxWidth: 400 }}>
+            <ProductItem
+              showImage={props?.showProductImage}
+              ingredients={ingredientsQuery.data.ingredients}
+              ingredientsGroups={ingredientsGroupsQuery.data.ingredients_groups}
+              product={item}
+              isActive={isActive}
+              onPress={() => onPressProduct(item)}
+            />
+          </View>
         );
       }}
     />
