@@ -17,7 +17,7 @@ const useSetting = () => {
     select: (data) => {
       console.log("settings", data);
 
-      data.Features = ["pos_prod_menu_no_image"];
+      // data.Features = ["pos_prod_menu_no_image"];
 
       return data;
     },
