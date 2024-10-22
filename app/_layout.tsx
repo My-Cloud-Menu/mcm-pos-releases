@@ -77,9 +77,8 @@ function RootLayoutNav() {
         <QueryClientProvider client={queryClient}>
           <StatusBar style="light" backgroundColor={Colors.primary} />
           <View style={{ flex: 1, backgroundColor: Colors.graySoft }}>
-            <WebSocketGlobal>
-              <Slot />
-            </WebSocketGlobal>
+            <WebSocketGlobal />
+            <Slot />
           </View>
 
           <FlashMessage position="top" />

@@ -255,7 +255,7 @@ const WebSocketGlobal = () => {
       closeWebSocket();
 
       const websocket = new WebSocket(getWebSocketUrl(), setup.apiKey);
-
+      console.log("Inntentando conectar", setup.apiKey, setup.url, setup.id);
       websocket.onopen = () => {
         websocket.send(
           JSON.stringify({
