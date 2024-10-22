@@ -33,6 +33,8 @@ export interface GlobalSetup {
   apiKey: string;
   timeout: number;
   timeOffSet: number;
+  noConnectionMessage?: string;
+  id: string;
 }
 
 export const initialECRSetupConfiguration: EcrSetup = {
@@ -55,6 +57,7 @@ export const initialECRSetupConfiguration: EcrSetup = {
 };
 
 export const initialGlobalSetupConfiguration: GlobalSetup = {
+  id: "ID-DE-PRUEBA",
   password_length: 4,
   showErrors: false,
   siteId: "1020501",

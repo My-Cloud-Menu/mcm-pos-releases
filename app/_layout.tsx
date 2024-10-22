@@ -11,6 +11,7 @@ import { Colors } from "react-native-ui-lib";
 import useAuthStore from "../modules/auth/AuthStore";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import WebSocketGlobal from "../modules/common/WebSocketGlobal";
 
 export const queryClient = new QueryClient({});
 
@@ -76,7 +77,9 @@ function RootLayoutNav() {
         <QueryClientProvider client={queryClient}>
           <StatusBar style="light" backgroundColor={Colors.primary} />
           <View style={{ flex: 1, backgroundColor: Colors.graySoft }}>
-            <Slot />
+            <WebSocketGlobal>
+              <Slot />
+            </WebSocketGlobal>
           </View>
 
           <FlashMessage position="top" />

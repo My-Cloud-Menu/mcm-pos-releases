@@ -13,6 +13,10 @@ export const makeEcrLogon = async () => {
   return makeEcrRequest("logon");
 };
 
+export const makeEcrLogout = async () => {
+  return makeEcrRequest("logoff");
+};
+
 export const login = async (pin: string) => {
   try {
     const response = await makeMcmRequest("front/employees/login", "POST", {

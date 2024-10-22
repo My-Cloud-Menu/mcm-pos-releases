@@ -280,3 +280,34 @@ export const getEcrJournal = async () => {
 
   return response;
 };
+
+export const getJournal = async ({
+  target_reference,
+  start,
+}: {
+  target_reference?: string;
+  start?: string;
+}) => {
+  const data = {
+    target_reference,
+    start,
+  };
+
+  const response = await makeEcrRequest("journal", data, 120000);
+
+  return response;
+};
+
+export const getECRTransactionStatus = async (
+  signal: any | undefined = undefined
+) => {
+  return makeEcrRequest("status", {}, 10000);
+};
+
+export const getECRDetailedReport = async () => {
+  return await makeEcrRequest(
+    "detailedReport",
+    { receipt_output: "html" },
+    30000
+  );
+};

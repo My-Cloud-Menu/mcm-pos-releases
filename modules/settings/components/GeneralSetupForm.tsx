@@ -47,6 +47,18 @@ const GeneralSetupForm = () => {
           <View style={styles.inputContainer}>
             <TextField
               onChangeText={(value) =>
+                setNewValues({ ...newValues, id: value })
+              }
+              value={newValues.id}
+              label="Device ID"
+              placeholder="Device ID"
+              {...textFieldCustomProps}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <TextField
+              onChangeText={(value) =>
                 setNewValues({ ...newValues, siteId: value })
               }
               value={newValues.siteId}
