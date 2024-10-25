@@ -5,16 +5,19 @@ import metrics from "../modules/common/theme/metrics";
 import { Ionicons } from "@expo/vector-icons";
 import fonts from "../modules/common/theme/fonts";
 import { router } from "expo-router";
+import useEcrStore from "../modules/ecr/EcrStore";
+import RequestInitialCode from "../components/RequestInitialCode";
 
 const version = "2.0.5";
 
 const HomeScreen = () => {
+  const { firstSetup } = useEcrStore();
   const goWaiterLogin = () => {
     router.push(`/login?title=MOZO&subTitle=Welcome`);
   };
 
   const goAdminLogin = () => {
-    router.push(`/login?title=ADMIN&subTitle=`);
+    router.push(`/login?title=ADMIN&subTitle=`); 11
   };
 
   const onPressConfig = () => {
@@ -22,6 +25,12 @@ const HomeScreen = () => {
 
     // showAlert({ title: "We are working on it", type: "warning" });
   };
+
+
+  console.log({ firstSetup })
+  if (firstSetup) {
+    return <RequestInitialCode />
+  }
 
   return (
     <View style={styles.container}>
@@ -33,7 +42,7 @@ const HomeScreen = () => {
           color="black"
           style={styles.iconConfig}
           onPress={onPressConfig}
-          // onPress={goSetupPage}
+        // onPress={goSetupPage}
         />
       </View>
 
@@ -43,7 +52,7 @@ const HomeScreen = () => {
           style={styles.logo}
           assetName="logoMain"
           assetGroup="assets"
-          // source={require("../assets/icon.png")}
+        // source={require("../assets/icon.png")}
         />
         <Text style={styles.title}>My Cloud</Text>
         {/* <Image

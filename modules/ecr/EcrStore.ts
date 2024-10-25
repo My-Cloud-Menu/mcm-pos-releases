@@ -17,11 +17,14 @@ interface EcrStore {
   saveSetup: (newSetup: EcrSetup) => void;
   setCurrentBachNumber: (newBatchNumber: string) => void;
   increaseCurrentBatchNumber: () => void;
+  firstSetup: boolean
+  setFirstSetup: (newFirstSetup: boolean) => void
 }
 
 const useEcrStore = create<EcrStore>()(
   persist(
     (set, get) => ({
+      firstSetup: false,
       isLoading: false,
       isLogged: false,
       error: null,
@@ -43,6 +46,9 @@ const useEcrStore = create<EcrStore>()(
       },
       saveSetup: (newSetup: EcrSetup) => {
         set(() => ({ setup: newSetup }));
+      },
+      setFirstSetup: (newFirstSetup: boolean) => {
+        set(() => ({ firstSetup: newFirstSetup }));
       },
       login: async () => {
         set(() => ({ isLoading: true, error: null }));

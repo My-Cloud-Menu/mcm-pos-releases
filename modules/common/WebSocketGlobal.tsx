@@ -14,8 +14,9 @@ import useGlobalStore from "./GlobalStore";
 import constants from "expo-constants";
 import { useEffect, useState } from "react";
 import useIsInternetConnected from "./hooks/useIsInternetConnected";
+import { getECRSetup } from "../../components/RequestInitialCode";
 
-const handleWebSocketActions = async (event: MessageEvent, websocket: any) => {
+const handleWebSocketActions = async (event: MessageEvent, websocket: any, saveECRSetup: any, saveGlobalSetup: any) => {
   try {
     const onSuccess = (payload: Record<string, any>) => {
       websocket.send(
@@ -126,6 +127,8 @@ const handleWebSocketActions = async (event: MessageEvent, websocket: any) => {
           start: start,
         });
 
+        console.log({ journalResult })
+
         makeEcrLogout().then().catch();
 
         onSuccess({
@@ -167,6 +170,7 @@ const handleWebSocketActions = async (event: MessageEvent, websocket: any) => {
         break;
 
       case "invalidateAllData":
+        console.log("invalidated");
         queryClient.invalidateQueries();
 
         onSuccess({ details: "All data invalidated" });
@@ -177,7 +181,6 @@ const handleWebSocketActions = async (event: MessageEvent, websocket: any) => {
         queryClient.invalidateQueries();
 
         clearCart();
-
         router.push("/(menu)/menu");
 
         onSuccess({ details: "All data invalidated" });
@@ -201,6 +204,16 @@ const handleWebSocketActions = async (event: MessageEvent, websocket: any) => {
         router.push("/(menu)/menu");
 
         onSuccess({ details: "Cart cleared successfully" });
+        break;
+
+      case "sync":
+        const newSetup = data?.payload?.newSetup;
+        const parsedECRSetup = getECRSetup(newSetup);
+        console.log("over:", newSetup.setup)
+        // console.log({ parsedECRSetup });
+        saveECRSetup(parsedECRSetup);
+        saveGlobalSetup(newSetup.setup)
+        onSuccess({ details: "Sync successfully" });
         break;
 
       case "getKioskVersion":
@@ -233,6 +246,8 @@ const handleWebSocketActions = async (event: MessageEvent, websocket: any) => {
 const WebSocketGlobal = () => {
   const [ws, setWs] = useState<any>(null);
   const setup = useGlobalStore((state) => state.setup);
+  const { saveSetup: saveECRSetup } = useEcrStore();
+  const { saveSetup: saveGlobalSetup } = useGlobalStore();
   const { isConnected } = useIsInternetConnected();
 
   const getWebSocketUrl = () => {
@@ -252,7 +267,8 @@ const WebSocketGlobal = () => {
 
   const connect = () => {
     try {
-      closeWebSocket();
+      console.log('breakpoint #2')
+      // closeWebSocket();
 
       const websocket = new WebSocket(getWebSocketUrl(), setup.apiKey);
       console.log("Inntentando conectar", setup.apiKey, setup.url, setup.id);
@@ -266,10 +282,10 @@ const WebSocketGlobal = () => {
       };
 
       websocket.onmessage = (event) => {
-        handleWebSocketActions(event, websocket).then().catch();
+        handleWebSocketActions(event, websocket, saveECRSetup, saveGlobalSetup).then().catch();
       };
 
-      websocket.onclose = () => {};
+      websocket.onclose = () => { };
 
       setWs(websocket);
     } catch (err) {
@@ -282,6 +298,7 @@ const WebSocketGlobal = () => {
 
     // Clean up the WebSocket connection when the component is unmounted
     return () => {
+      console.log("breakpoint #3")
       closeWebSocket();
     };
   }, [setup.siteId, setup.id]);
@@ -292,7 +309,7 @@ const WebSocketGlobal = () => {
       if (ws) {
         ws.close();
       }
-    } catch {}
+    } catch { }
   };
 
   useEffect(() => {
@@ -304,6 +321,7 @@ const WebSocketGlobal = () => {
           connect();
         } else if (!isConnected) {
           if (isWebSocketOpen) {
+            console.log("breakpoint #1")
             closeWebSocket();
           }
         } else {

@@ -108,6 +108,8 @@ const Menu = () => {
     return !getFeatureFlag("pos_prod_menu_no_image");
   }, [settings]);
 
+
+
   return (
     <View style={{ width: "100%", backgroundColor: Colors.graySoft }} flex row>
       <View flex paddingT-5 paddingB-0 paddingL-5 paddingR-5>

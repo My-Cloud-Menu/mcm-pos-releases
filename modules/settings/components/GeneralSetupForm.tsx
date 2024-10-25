@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -31,6 +31,13 @@ const GeneralSetupForm = () => {
   const { setup, saveSetup } = useGlobalStore((state) => state);
 
   const [newValues, setNewValues] = useState(setup);
+
+  useEffect(() => {
+    console.log({ setup });
+    if (setup) {
+      setNewValues(setup);
+    }
+  }, [setup])
 
   const onSaveChanges = () => {
     saveSetup(newValues);

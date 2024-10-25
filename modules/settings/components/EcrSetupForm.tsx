@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -29,8 +29,12 @@ export const textFieldCustomProps = {
 
 const EcrSetupForm = () => {
   const { setup, saveSetup } = useEcrStore((state) => state);
-
   const [newValues, setNewValues] = useState(setup);
+
+
+  useEffect(() => {
+    setNewValues(setup)
+  }, [setup]);
 
   const onSaveChanges = () => {
     saveSetup(newValues);
