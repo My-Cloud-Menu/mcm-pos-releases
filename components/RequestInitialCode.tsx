@@ -6,6 +6,7 @@ import axios from '../modules/common/axios';
 import { makeMcmRequest } from '../modules/common/PetitionsHelper';
 import useEcrStore from '../modules/ecr/EcrStore';
 import { useNavigation } from 'expo-router';
+import useGlobalStore from '../modules/common/GlobalStore';
 
 export const getECRSetup = (response: any) => {
     const { verifoneSetup } = response;
@@ -14,20 +15,32 @@ export const getECRSetup = (response: any) => {
     return verifoneSetup;
 }
 
+export const getGlobalSetup = (response: any) => {
+    const { setup } = response;
+    // verifoneSetup.last_reference = parseInt(f.last_reference);
+    setup.id = response.id;
+    setup.siteId = response.site_id;
+    return setup;
+}
+
 const RequestInitialCode = () => {
     const navigation: any = useNavigation();
     const [code, setCode] = useState('');
-    const { saveSetup, setFirstSetup } = useEcrStore();
+    const { saveSetup: setECRSetup, setFirstSetup } = useEcrStore();
+    const { saveSetup: setGlobalSetup } = useGlobalStore();
 
     async function setSetup() {
         try {
 
             const f = await makeMcmRequest(`admin/devices-configuration/${code}`);
             const scrSetup = getECRSetup(f);
-            saveSetup(scrSetup);
-            setFirstSetup(true);
-            navigation.navigate("(menu)", { screen: "menu" });
+            const globalSetup = getGlobalSetup(f);
+            setECRSetup(scrSetup);
+            setGlobalSetup(globalSetup);
+            setFirstSetup(false);
             console.log({ scrSetup });
+            navigation.navigate("(menu)", { screen: "menu" });
+
         } catch (error) {
             Alert.alert('No device configuration found for this code');
         }

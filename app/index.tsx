@@ -25,12 +25,10 @@ const HomeScreen = () => {
 
     // showAlert({ title: "We are working on it", type: "warning" });
   };
-
-
-  console.log({ firstSetup })
-  if (firstSetup) {
-    return <RequestInitialCode />
-  }
+  console.log('dos: ', firstSetup)
+  // if (firstSetup) {
+  //   return <RequestInitialCode />
+  // }
 
   return (
     <View style={styles.container}>

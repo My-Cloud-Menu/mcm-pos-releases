@@ -31,13 +31,12 @@ const GeneralSetupForm = () => {
   const { setup, saveSetup } = useGlobalStore((state) => state);
 
   const [newValues, setNewValues] = useState(setup);
-
+  console.log({ newValues });
   useEffect(() => {
-    console.log({ setup });
     if (setup) {
       setNewValues(setup);
     }
-  }, [setup])
+  }, [setup]);
 
   const onSaveChanges = () => {
     saveSetup(newValues);

@@ -12,6 +12,10 @@ import useAuthStore from "../modules/auth/AuthStore";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import WebSocketGlobal from "../modules/common/WebSocketGlobal";
+import useGlobalStore from "../modules/common/GlobalStore";
+import { initialGlobalSetupConfiguration } from "../modules/common/configurations";
+import { useGlobal } from "../stores/global";
+import useEcrStore from "../modules/ecr/EcrStore";
 
 export const queryClient = new QueryClient({});
 
@@ -57,11 +61,21 @@ function RootLayoutNav() {
   const employeeLogged = useAuthStore((state) => state.employeeLogged);
   const pathname = usePathname();
   const navigation = useNavigation();
-
+  const { saveSetup } = useGlobalStore();
+  const { setFirstSetup, firstSetup } = useEcrStore();
+  console.log({ firstSetup });
+  // setFirstSetup(true)
+  // saveSetup(initialGlobalSetupConfiguration)
   useEffect(() => {
+
     if (["/", "/login"].includes(pathname) && Boolean(employeeLogged)) {
-      navigation.navigate("(menu)", { screen: "menu" });
+      if (firstSetup) {
+        navigation.navigate('request-initial-code')
+      } else {
+        navigation.navigate("(menu)", { screen: "menu" });
+      }
     }
+
 
     if (
       !["/", "/login", "/settings"].includes(pathname) &&
@@ -69,7 +83,7 @@ function RootLayoutNav() {
     ) {
       navigation.dispatch({ type: "POP_TO_TOP" });
     }
-  }, [pathname]);
+  }, [pathname, firstSetup]);
 
   return (
     <SafeAreaProvider>

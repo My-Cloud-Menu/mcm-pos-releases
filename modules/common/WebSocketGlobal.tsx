@@ -14,7 +14,7 @@ import useGlobalStore from "./GlobalStore";
 import constants from "expo-constants";
 import { useEffect, useState } from "react";
 import useIsInternetConnected from "./hooks/useIsInternetConnected";
-import { getECRSetup } from "../../components/RequestInitialCode";
+import { getECRSetup, getGlobalSetup } from "../../components/RequestInitialCode";
 
 const handleWebSocketActions = async (event: MessageEvent, websocket: any, saveECRSetup: any, saveGlobalSetup: any) => {
   try {
@@ -207,12 +207,15 @@ const handleWebSocketActions = async (event: MessageEvent, websocket: any, saveE
         break;
 
       case "sync":
+        console.log("here")
         const newSetup = data?.payload?.newSetup;
+        console.log({ newSetup })
         const parsedECRSetup = getECRSetup(newSetup);
-        console.log("over:", newSetup.setup)
+        const parsedGlobalRSetup = getGlobalSetup(newSetup);
+        // console.log("over:", newSetup.setup)
         // console.log({ parsedECRSetup });
         saveECRSetup(parsedECRSetup);
-        saveGlobalSetup(newSetup.setup)
+        saveGlobalSetup(parsedGlobalRSetup);
         onSuccess({ details: "Sync successfully" });
         break;
 
@@ -298,7 +301,7 @@ const WebSocketGlobal = () => {
 
     // Clean up the WebSocket connection when the component is unmounted
     return () => {
-      console.log("breakpoint #3")
+      // console.log("breakpoint #3")
       closeWebSocket();
     };
   }, [setup.siteId, setup.id]);
