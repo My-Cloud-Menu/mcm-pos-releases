@@ -24,7 +24,7 @@ interface EcrStore {
 const useEcrStore = create<EcrStore>()(
   persist(
     (set, get) => ({
-      firstSetup: false,
+      firstSetup: true,
       isLoading: false,
       isLogged: false,
       error: null,

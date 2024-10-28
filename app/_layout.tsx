@@ -63,12 +63,14 @@ function RootLayoutNav() {
   const navigation = useNavigation();
   const { saveSetup } = useGlobalStore();
   const { setFirstSetup, firstSetup } = useEcrStore();
-  console.log({ firstSetup });
+
   // setFirstSetup(true)
   // saveSetup(initialGlobalSetupConfiguration)
-  useEffect(() => {
 
+  useEffect(() => {
+    console.log({ firstSetup })
     if (["/", "/login"].includes(pathname) && Boolean(employeeLogged)) {
+      console.log("i told you")
       if (firstSetup) {
         navigation.navigate('request-initial-code')
       } else {
@@ -82,6 +84,11 @@ function RootLayoutNav() {
       !Boolean(employeeLogged)
     ) {
       navigation.dispatch({ type: "POP_TO_TOP" });
+    }
+
+
+    if (firstSetup) {
+      navigation.navigate('request-initial-code')
     }
   }, [pathname, firstSetup]);
 
