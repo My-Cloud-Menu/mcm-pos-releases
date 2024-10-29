@@ -270,11 +270,9 @@ const WebSocketGlobal = () => {
 
   const connect = () => {
     try {
-      console.log('breakpoint #2')
-      // closeWebSocket();
-
-      const websocket = new WebSocket(getWebSocketUrl(), setup.apiKey);
       console.log("Inntentando conectar", setup.apiKey, setup.url, setup.id);
+      const websocket = new WebSocket(getWebSocketUrl(), setup.apiKey);
+
       websocket.onopen = () => {
         websocket.send(
           JSON.stringify({
@@ -288,7 +286,10 @@ const WebSocketGlobal = () => {
         handleWebSocketActions(event, websocket, saveECRSetup, saveGlobalSetup).then().catch();
       };
 
-      websocket.onclose = () => { };
+      websocket.onclose = () => {
+        console.log("WebSocket closed, attempting reconnect...");
+        setTimeout(connect, 5000); // Retry connection after a short delay
+      };
 
       setWs(websocket);
     } catch (err) {
@@ -309,7 +310,7 @@ const WebSocketGlobal = () => {
   const closeWebSocket = () => {
     console.warn("Closing WebSocket connection");
     try {
-      if (ws) {
+      if (ws && ws.readyState === WebSocket.OPEN) {
         ws.close();
       }
     } catch { }
